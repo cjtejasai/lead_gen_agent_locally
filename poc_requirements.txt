@@ -1,0 +1,21 @@
+# POC Requirements - Audio Recording & Speech-to-Text
+# Lightweight dependencies for testing
+
+# Audio recording
+pyaudio==0.2.14
+sounddevice==0.4.6
+soundfile==0.12.1
+numpy==1.26.2
+
+# Speech-to-Text (Local models)
+# Option 1: OpenAI Whisper (best quality, needs decent CPU/GPU)
+openai-whisper==20231117
+
+# Option 2: Vosk (faster, lighter, offline)
+vosk==0.3.45
+
+# Option 3: SpeechRecognition (easiest, uses various backends)
+SpeechRecognition==3.10.0
+
+# Utilities
+python-dotenv==1.0.0

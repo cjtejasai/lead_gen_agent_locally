@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+env/
+
+# Environment
+.env
+.env.local
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+recordings/
+transcripts/
+processed/
+*.wav
+*.mp3
+
+# Node
+node_modules/
+.next/
+dist/
+build/
+
+# Logs
+*.log
+logs/
