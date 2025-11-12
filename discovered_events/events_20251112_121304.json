@@ -1,0 +1,230 @@
+{
+  "user_name": "Professional User",
+  "generated_date": "2024-06-01",
+  "total_events_found": 14,
+  "must_attend": [
+    {
+      "event_name": "/function1 AI Conference & Exhibition",
+      "tagline": "Exhibition and conference showcasing AI solutions, startup pitch competition",
+      "date": "November 18-19, 2025",
+      "time": "TBA",
+      "location": "Dubai",
+      "why_relevant": "Strong focus on AI and speaking opportunities aligned with user interests in AI startups and ecosystem",
+      "key_topics": [
+        "Artificial Intelligence",
+        "Startup Pitches",
+        "Innovation"
+      ],
+      "expected_attendees_speakers": "Medium-large AI community, leading experts",
+      "registration_link": "https://fnctn1.com/",
+      "estimated_cost": "Premium (not listed)",
+      "relevance_score": 9
+    },
+    {
+      "event_name": "Dubai AI Week 2025",
+      "tagline": "Week-long AI event featuring retreats, assemblies, championships, and festivities",
+      "date": "Late 2025 (various dates)",
+      "time": "TBD",
+      "location": "Dubai",
+      "why_relevant": "Large international AI community, excellent for networking and innovation exposure",
+      "key_topics": [
+        "Artificial Intelligence",
+        "Tech Innovation",
+        "Competitions"
+      ],
+      "expected_attendees_speakers": "Large international AI professionals",
+      "registration_link": "https://week.dub.ai/",
+      "estimated_cost": "Variable",
+      "relevance_score": 9
+    },
+    {
+      "event_name": "HODL Summit 2025",
+      "tagline": "Leading blockchain and crypto conference with global networking and top speakers",
+      "date": "November 11-14, 2025",
+      "time": "TBD",
+      "location": "Dubai",
+      "why_relevant": "Top event for blockchain, crypto investment opportunities, and strategic partnerships",
+      "key_topics": [
+        "Blockchain",
+        "Cryptocurrency",
+        "Networking"
+      ],
+      "expected_attendees_speakers": "Large global blockchain and crypto professionals",
+      "registration_link": "https://hodlsummit.com/dubai2025/",
+      "estimated_cost": "Premium",
+      "relevance_score": 10
+    },
+    {
+      "event_name": "TOKEN2049 Dubai 2026",
+      "tagline": "Major crypto ecosystem event focusing on innovation, investment, and partnerships",
+      "date": "April 29-30, 2026",
+      "time": "TBD",
+      "location": "Madinat Jumeirah Resort, Dubai",
+      "why_relevant": "Key global crypto event aligned with investment and partnership interests",
+      "key_topics": [
+        "Cryptocurrency",
+        "Blockchain",
+        "Investment Opportunities"
+      ],
+      "expected_attendees_speakers": "Thousands of global leaders and investors",
+      "registration_link": "https://www.token2049.com/dubai",
+      "estimated_cost": "Premium",
+      "relevance_score": 10
+    },
+    {
+      "event_name": "17th Annual INSEAD Private Equity & Venture Capital Conference",
+      "tagline": "Premier private equity and venture capital industry meeting with extensive networking",
+      "date": "November 4, 2025",
+      "time": "TBA",
+      "location": "Singapore",
+      "why_relevant": "High-value PE & VC networking, ideal for investment opportunities and partnerships",
+      "key_topics": [
+        "Venture Capital",
+        "Private Equity",
+        "Networking"
+      ],
+      "expected_attendees_speakers": "Large regional and international investors and startups",
+      "registration_link": "https://www.svca.org.sg/supported-events",
+      "estimated_cost": "Premium",
+      "relevance_score": 8
+    },
+    {
+      "event_name": "London 2025 Venture Capital World Summit",
+      "tagline": "Focus on increased investment activities and VC trends in London",
+      "date": "November 6, 2025",
+      "time": "TBA",
+      "location": "London",
+      "why_relevant": "Centrally relevant for VC trends, partnerships, and investments in preferred location",
+      "key_topics": [
+        "Venture Capital",
+        "Investment Trends",
+        "Networking"
+      ],
+      "expected_attendees_speakers": "Large investors and startup community",
+      "registration_link": "https://vcworldsummit.com/london-2025/",
+      "estimated_cost": "Premium",
+      "relevance_score": 9
+    },
+    {
+      "event_name": "Abu Dhabi Finance Week (ADFW) 2025",
+      "tagline": "Major finance, investment, and innovation event with 20,000+ participants, 600+ speakers",
+      "date": "December 8-11, 2025",
+      "time": "TBA",
+      "location": "Al Maryah Island, Abu Dhabi",
+      "why_relevant": "High-impact finance and investment event with broad innovation focus and networking",
+      "key_topics": [
+        "Finance",
+        "Investment",
+        "Innovation"
+      ],
+      "expected_attendees_speakers": "Over 20,000 participants and 600+ speakers",
+      "registration_link": "https://adfw.ae/",
+      "estimated_cost": "Premium",
+      "relevance_score": 8
+    },
+    {
+      "event_name": "Global AI Show 2025",
+      "tagline": "AI innovation summit exploring trends and investment opportunities",
+      "date": "December 8-9, 2025",
+      "time": "TBA",
+      "location": "Abu Dhabi",
+      "why_relevant": "Focused on AI innovation and investment, attracting large expert audience",
+      "key_topics": [
+        "Artificial Intelligence",
+        "Innovation",
+        "Investment"
+      ],
+      "expected_attendees_speakers": "5,000+ AI experts and professionals",
+      "registration_link": "https://fox5sandiego.com/business/press-releases/ein-presswire/865547686/global-ai-show-2025-vap-group-and-abu-dhabi-bureau-unite-to-host-ai-futurists-on-dec-8-9-2025/",
+      "estimated_cost": "Premium",
+      "relevance_score": 9
+    }
+  ],
+  "should_attend": [
+    {
+      "event_name": "AIMX Singapore 2025",
+      "tagline": "AI and tech startup conference focused on innovation in SE Asia",
+      "date": "November 26-28, 2025",
+      "time": "TBA",
+      "location": "Sands Expo & Convention Centre, Singapore",
+      "why_relevant": "Relevant AI and startup innovation event with premium networking and investment potential",
+      "key_topics": [
+        "Artificial Intelligence",
+        "Startup Ecosystem",
+        "Innovation"
+      ],
+      "expected_attendees_speakers": "Growing startup and investor community",
+      "registration_link": "https://startupevents.org/startup-events-calendar",
+      "estimated_cost": "Premium",
+      "relevance_score": 9
+    },
+    {
+      "event_name": "AML 360 AI Summit 2025",
+      "tagline": "AI applications in anti-money laundering, suited for investment and strategic partnerships",
+      "date": "November 20, 2025",
+      "time": "TBA",
+      "location": "Dubai",
+      "why_relevant": "Niche focus on AI plus finance and partnerships in MENA",
+      "key_topics": [
+        "Artificial Intelligence",
+        "Anti-Money Laundering",
+        "Finance"
+      ],
+      "expected_attendees_speakers": "Medium audience",
+      "registration_link": "N/A (requires follow up)",
+      "estimated_cost": "Not listed",
+      "relevance_score": 7
+    },
+    {
+      "event_name": "Hub71 Events",
+      "tagline": "Series of dynamic startup and investment networking events supported by Abu Dhabi\u2019s tech ecosystem",
+      "date": "Various dates post November 2025",
+      "time": "Varies",
+      "location": "Abu Dhabi",
+      "why_relevant": "Diverse startup and investment networking aligned with user's interests in MENA region",
+      "key_topics": [
+        "Startup Ecosystem",
+        "Investment",
+        "Networking"
+      ],
+      "expected_attendees_speakers": "Startups, investors, corporates",
+      "registration_link": "https://www.hub71.com/events",
+      "estimated_cost": "Varies, generally premium",
+      "relevance_score": 8
+    },
+    {
+      "event_name": "Mayfair Venture Capital Industry Tech Networking Breakfast",
+      "tagline": "Relaxed networking opportunity for venture capital and tech professionals",
+      "date": "November 27, 2025",
+      "time": "TBA",
+      "location": "Mayfair, London",
+      "why_relevant": "Networking among VC and tech professionals, potential for partnerships",
+      "key_topics": [
+        "Venture Capital",
+        "Tech Networking"
+      ],
+      "expected_attendees_speakers": "Medium sized VC & tech professionals",
+      "registration_link": "N/A",
+      "estimated_cost": "Premium",
+      "relevance_score": 7
+    },
+    {
+      "event_name": "Responsible Investment Forum: Europe 2025",
+      "tagline": "Forum focusing on responsible investing impacting VCs and startups",
+      "date": "November 18-19, 2025",
+      "time": "TBA",
+      "location": "155 Bishopsgate, London",
+      "why_relevant": "Relevant from venture capital and responsible investment angle",
+      "key_topics": [
+        "Responsible Investing",
+        "Venture Capital",
+        "Impact Investing"
+      ],
+      "expected_attendees_speakers": "Medium to large audience",
+      "registration_link": "https://www.peievents.com/en/event/responsible-investment-forum-europe/",
+      "estimated_cost": "Premium",
+      "relevance_score": 7
+    }
+  ],
+  "nice_to_attend": []
+}

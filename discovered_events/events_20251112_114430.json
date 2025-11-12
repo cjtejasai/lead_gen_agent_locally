@@ -1,0 +1,293 @@
+{
+  "user_name": "user",
+  "generated_date": "2024-06-01",
+  "total_events_found": 18,
+  "must_attend": [
+    {
+      "event_name": "World AI Technology Expo Dubai 2025",
+      "tagline": "Largest global AI show focusing on innovation and business applications",
+      "date": "October 2025",
+      "time": "TBA",
+      "location": "Dubai World Trade Centre, Dubai, UAE",
+      "why_relevant": "Top AI event with business innovation focus and speaking opportunities, aligns with interest in AI startups and AI conference speaking.",
+      "key_topics": [
+        "Artificial Intelligence",
+        "AI Innovation",
+        "Business Applications",
+        "Workshops",
+        "Hackathons"
+      ],
+      "attendees_speakers": "Thousands of AI professionals, business leaders, top AI companies, and keynote speakers worldwide.",
+      "registration_link": "https://worldaiexpo.io/",
+      "estimated_cost": "Premium pricing; details on website",
+      "relevance_score": 10
+    },
+    {
+      "event_name": "Binance Blockchain Week Dubai 2025",
+      "tagline": "Major blockchain event connecting crypto innovators with keynote speakers and exclusive sessions",
+      "date": "December 3-4, 2025",
+      "time": "TBA",
+      "location": "Coca-Cola Arena, Dubai, UAE",
+      "why_relevant": "Key for blockchain, crypto, Web3 networking and strategic partnerships in Dubai; premium event with speaking opportunities.",
+      "key_topics": [
+        "Blockchain",
+        "Cryptocurrency",
+        "Web3",
+        "Innovation",
+        "Networking"
+      ],
+      "attendees_speakers": "Thousands of crypto innovators and industry leaders.",
+      "registration_link": "https://www.binanceblockchainweek.com/",
+      "estimated_cost": "Early-bird $150, Full $600",
+      "relevance_score": 10
+    },
+    {
+      "event_name": "Singapore 2025 Venture Capital World Summit",
+      "tagline": "Premier VC conference enabling networking and investment opportunities",
+      "date": "February 17, 2025",
+      "time": "TBA",
+      "location": "O2Work - Collyer Quay Center, Singapore",
+      "why_relevant": "Critical for venture capital and startup ecosystem interests; high ROI and strategic partnerships potential in Singapore.",
+      "key_topics": [
+        "Venture Capital",
+        "Investment Opportunities",
+        "Networking",
+        "Startups"
+      ],
+      "attendees_speakers": "High-net-worth investors, venture capitalists, family offices.",
+      "registration_link": "https://vcworldsummit.com/singapore/",
+      "estimated_cost": "Premium (registration via Eventbrite)",
+      "relevance_score": 9
+    }
+  ],
+  "should_attend": [
+    {
+      "event_name": "Machines Can See 2025 AI Summit",
+      "tagline": "Middle East's largest annual AI summit focused on computer vision breakthroughs",
+      "date": "April 23-24, 2025",
+      "time": "TBA",
+      "location": "Dubai, UAE",
+      "why_relevant": "Relevant to AI tech innovation focus and offers high-quality networking within regional AI community.",
+      "key_topics": [
+        "Artificial Intelligence",
+        "Computer Vision",
+        "Technology Breakthroughs"
+      ],
+      "attendees_speakers": "Several hundred industry experts, academics, AI entrepreneurs.",
+      "registration_link": "https://machinescansee.com/",
+      "estimated_cost": "Invitation required; premium",
+      "relevance_score": 8
+    },
+    {
+      "event_name": "Blockchain Life 2025",
+      "tagline": "15th International Forum on Web3, cryptocurrencies, and mining with exhibitions",
+      "date": "October 28-29, 2025",
+      "time": "TBA",
+      "location": "Dubai, UAE",
+      "why_relevant": "Major blockchain and crypto event with broad international attendance and investment opportunities.",
+      "key_topics": [
+        "Blockchain",
+        "Cryptocurrency",
+        "Web3",
+        "Mining",
+        "Networking"
+      ],
+      "attendees_speakers": "~15,000 participants from 130 countries.",
+      "registration_link": "https://blockchain-life.com/",
+      "estimated_cost": "Starting around $149",
+      "relevance_score": 9
+    },
+    {
+      "event_name": "HODL Summit 2025 Dubai",
+      "tagline": "Leading blockchain and crypto conference with panels and networking",
+      "date": "October 2025",
+      "time": "TBA",
+      "location": "Dubai, UAE",
+      "why_relevant": "Strong blockchain and crypto community event with premium audience and strategic sessions.",
+      "key_topics": [
+        "Blockchain",
+        "Cryptocurrency",
+        "Networking",
+        "Panels"
+      ],
+      "attendees_speakers": "Large premium international crowd.",
+      "registration_link": "https://hodlsummit.com/dubai2025/",
+      "estimated_cost": "Premium",
+      "relevance_score": 8
+    },
+    {
+      "event_name": "15th Global Blockchain Congress",
+      "tagline": "Blockchain discussions, exhibits, and international delegates",
+      "date": "October 30-31, 2025",
+      "time": "TBA",
+      "location": "Dubai, UAE",
+      "why_relevant": "Important blockchain event in Dubai supporting industry insights and networking.",
+      "key_topics": [
+        "Blockchain",
+        "Exhibits",
+        "International Delegates"
+      ],
+      "attendees_speakers": "Hundreds to thousands.",
+      "registration_link": "https://www.gbc-uae.com/",
+      "estimated_cost": "Premium",
+      "relevance_score": 7
+    },
+    {
+      "event_name": "CryptoExpo Dubai 2025",
+      "tagline": "Leading event showcasing crypto and blockchain innovations",
+      "date": "May 21-22, 2025",
+      "time": "TBA",
+      "location": "Dubai World Trade Centre, Dubai, UAE",
+      "why_relevant": "Strong crypto innovation focus with broad networking and premium attendance.",
+      "key_topics": [
+        "Cryptocurrency",
+        "Blockchain",
+        "Innovation"
+      ],
+      "attendees_speakers": "Large international audience.",
+      "registration_link": "https://cryptoexpodubai.com/",
+      "estimated_cost": "Premium registration",
+      "relevance_score": 7
+    },
+    {
+      "event_name": "Bitcoin MENA 2025 (Abu Dhabi)",
+      "tagline": "Leading Bitcoin conference in Middle East with innovation and investment focus",
+      "date": "December 8-9, 2025",
+      "time": "TBA",
+      "location": "Abu Dhabi National Exhibition Centre (ADNEC), Abu Dhabi, UAE",
+      "why_relevant": "Prime Bitcoin event in MENA region aligning with cryptocurrency and investment goals.",
+      "key_topics": [
+        "Bitcoin",
+        "Investment",
+        "Community",
+        "Innovation"
+      ],
+      "attendees_speakers": "Several thousand.",
+      "registration_link": "https://mena.b.tc/",
+      "estimated_cost": "Premium",
+      "relevance_score": 8
+    },
+    {
+      "event_name": "Asia PE-VC Summit 2025",
+      "tagline": "Summit for private equity and venture capital leaders in Asia",
+      "date": "September 10-11, 2025",
+      "time": "TBA",
+      "location": "Grand Copthorne Waterfront, Singapore",
+      "why_relevant": "Important Asia VC/PE event for investment and partnership interests.",
+      "key_topics": [
+        "Private Equity",
+        "Venture Capital",
+        "Deals",
+        "Partnerships"
+      ],
+      "attendees_speakers": "Senior fund managers, investors.",
+      "registration_link": "https://events.dealstreetasia.com/sg-2025/",
+      "estimated_cost": "Premium",
+      "relevance_score": 8
+    },
+    {
+      "event_name": "Venture & Capital 2025 - Investment Conference Singapore",
+      "tagline": "Exclusive event for professional investors, VCs, and family offices",
+      "date": "2025 (TBA)",
+      "time": "TBA",
+      "location": "Singapore",
+      "why_relevant": "Targeted VC and investment event promising high ROI and strategic networking.",
+      "key_topics": [
+        "Venture Capital",
+        "Investment",
+        "Family Offices"
+      ],
+      "attendees_speakers": "Select investors and startups.",
+      "registration_link": "https://www.wholesaleinvestor.com/event/venture-capital-2025-investment-conference-singapore-25/",
+      "estimated_cost": "Premium",
+      "relevance_score": 8
+    }
+  ],
+  "nice_to_attend": [
+    {
+      "event_name": "International Conference on Artificial Intelligence, Metaverse, and Cybersecurity (ICAMAC2025)",
+      "tagline": "Conference on AI applications, metaverse, and cybersecurity trends",
+      "date": "October 17-18, 2025",
+      "time": "TBA",
+      "location": "Dubai, UAE",
+      "why_relevant": "Relevant but broader focus outside direct investment opportunities, useful for AI ecosystem awareness.",
+      "key_topics": [
+        "Artificial Intelligence",
+        "Metaverse",
+        "Cybersecurity"
+      ],
+      "attendees_speakers": "Hundreds of researchers and industry specialists.",
+      "registration_link": "https://www.icamac.com/",
+      "estimated_cost": "Check website",
+      "relevance_score": 6
+    },
+    {
+      "event_name": "SVCA Annual Conference 2026 (Preview)",
+      "tagline": "Leading private equity and venture capital conference focusing on bridging regional markets",
+      "date": "February 5, 2026",
+      "time": "TBA",
+      "location": "Singapore",
+      "why_relevant": "Relevant to venture capital interests but later date and lower immediate ROI compared to others.",
+      "key_topics": [
+        "Private Equity",
+        "Venture Capital",
+        "Regional Markets"
+      ],
+      "attendees_speakers": "Institutional investors and fund managers.",
+      "registration_link": "https://www.svca.org.sg/events",
+      "estimated_cost": "Premium",
+      "relevance_score": 7
+    },
+    {
+      "event_name": "London Tech Week (2025)",
+      "tagline": "Annual tech event covering AI, blockchain, and startups in London",
+      "date": "Summer 2025 (TBA)",
+      "time": "TBA",
+      "location": "London, UK",
+      "why_relevant": "Good for networking and ecosystem awareness in preferred location, but dates and details pending.",
+      "key_topics": [
+        "Artificial Intelligence",
+        "Blockchain",
+        "Startups",
+        "Technology"
+      ],
+      "attendees_speakers": "Tech professionals, startups, investors.",
+      "registration_link": "https://londontechweek.com/",
+      "estimated_cost": "Premium",
+      "relevance_score": 7
+    },
+    {
+      "event_name": "AI Summit London 2025",
+      "tagline": "AI-focused summit in London for business and tech professionals",
+      "date": "Summer 2025 (TBA)",
+      "time": "TBA",
+      "location": "London, UK",
+      "why_relevant": "Focused AI event in London, useful for speaking opportunities and networking locally.",
+      "key_topics": [
+        "Artificial Intelligence",
+        "Business Applications"
+      ],
+      "attendees_speakers": "Industry experts, business leaders.",
+      "registration_link": "https://theaisummit.com/london/",
+      "estimated_cost": "Premium",
+      "relevance_score": 7
+    },
+    {
+      "event_name": "Crypto Expo London (2025)",
+      "tagline": "Cryptocurrency and blockchain expo in London",
+      "date": "2025 (TBA)",
+      "time": "TBA",
+      "location": "London, UK",
+      "why_relevant": "Crypto networking and industry insights in London, less established dates.",
+      "key_topics": [
+        "Blockchain",
+        "Cryptocurrency",
+        "Networking"
+      ],
+      "attendees_speakers": "Crypto industry professionals and enthusiasts.",
+      "registration_link": "TBA",
+      "estimated_cost": "Premium",
+      "relevance_score": 6
+    }
+  ]
+}

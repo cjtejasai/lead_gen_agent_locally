@@ -1,0 +1,27 @@
+{
+  "generated_at": "2025-11-12T09:45:12.526912",
+  "leads": [
+    {
+      "name": "SPEAKER_00",
+      "needs": [
+        "deep learning research collaboration",
+        "software development partnerships"
+      ],
+      "offers": [
+        "academic collaboration",
+        "technical expertise"
+      ],
+      "contact_priority": "high"
+    },
+    {
+      "name": "SPEAKER_01",
+      "needs": [
+        "academic research partners"
+      ],
+      "offers": [
+        "deep learning insights"
+      ],
+      "contact_priority": "medium"
+    }
+  ]
+}

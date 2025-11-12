@@ -1,230 +1,328 @@
-# Ayka Lead Generation Platform - Architecture
+# AYKA Platform - Complete Architecture (Non-Technical Friendly)
 
-## Overview
-A platform that processes audio/video data from wearable devices at events to identify collaboration opportunities using LLMs and graph-based interest matching.
-
-## System Architecture
+## System Architecture Diagram
 
 ```
-┌─────────────────┐
-│  Wearable Device│  (Pendant/Locket - Hardware)
-│  Audio/Video    │
-└────────┬────────┘
-         │ Upload
-         ▼
-┌─────────────────────────────────────────────────────────┐
-│                    Backend Platform                      │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │         1. Data Ingestion API (FastAPI)          │  │
-│  │    - Receive audio/video from pendant            │  │
-│  │    - Queue processing jobs                       │  │
-│  └──────────────┬───────────────────────────────────┘  │
-│                 │                                        │
-│                 ▼                                        │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │      2. Speech-to-Text Processing Pipeline       │  │
-│  │    - Whisper API / AssemblyAI                    │  │
-│  │    - Extract transcripts with timestamps         │  │
-│  │    - Speaker diarization                         │  │
-│  └──────────────┬───────────────────────────────────┘  │
-│                 │                                        │
-│                 ▼                                        │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │      3. LLM-based Agentic Analysis System        │  │
-│  │    Agent 1: Content Analyzer                     │  │
-│  │      - Extract topics, interests, pain points    │  │
-│  │      - Identify business needs/offerings         │  │
-│  │                                                   │  │
-│  │    Agent 2: Entity Extractor                     │  │
-│  │      - Extract person names, companies           │  │
-│  │      - Categorize user type (CEO/Student/Other)  │  │
-│  │                                                   │  │
-│  │    Agent 3: Intent Classifier                    │  │
-│  │      - Looking for: investment, partnership,     │  │
-│  │        collaboration, hiring, learning, etc.     │  │
-│  └──────────────┬───────────────────────────────────┘  │
-│                 │                                        │
-│                 ▼                                        │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │      4. Graph Database (Neo4j)                   │  │
-│  │    Nodes:                                        │  │
-│  │      - Person (name, category, contact)          │  │
-│  │      - Interest (topic, domain)                  │  │
-│  │      - Event (name, date, location)              │  │
-│  │      - Company (name, industry)                  │  │
-│  │      - Need (type, description)                  │  │
-│  │      - Offering (type, description)              │  │
-│  │                                                   │  │
-│  │    Relationships:                                │  │
-│  │      - INTERESTED_IN                             │  │
-│  │      - WORKS_AT                                  │  │
-│  │      - ATTENDED                                  │  │
-│  │      - LOOKING_FOR                               │  │
-│  │      - OFFERS                                    │  │
-│  │      - MATCHED_WITH (score, reason)              │  │
-│  └──────────────┬───────────────────────────────────┘  │
-│                 │                                        │
-│                 ▼                                        │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │      5. Matching & Lead Generation Engine        │  │
-│  │    - Graph traversal algorithms                  │  │
-│  │    - Semantic similarity (embeddings)            │  │
-│  │    - LLM-based match scoring                     │  │
-│  │    - Generate collaboration suggestions          │  │
-│  └──────────────┬───────────────────────────────────┘  │
-│                 │                                        │
-│                 ▼                                        │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │      6. Calendar Integration & Scheduling        │  │
-│  │    - Generate meeting links                      │  │
-│  │    - Calendar invites (Google/Outlook)           │  │
-│  │    - Follow-up reminders                         │  │
-│  └──────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────┘
-         │
-         ▼
-┌─────────────────────────────────────────────────────────┐
-│           Frontend (Next.js + Modern UI)                 │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │  Dashboard                                       │  │
-│  │    - Upload pendant recordings                   │  │
-│  │    - View processing status                      │  │
-│  │    - Match recommendations feed                  │  │
-│  │    - Interest graph visualization                │  │
-│  │    - Lead pipeline (kanban view)                 │  │
-│  │    - Calendar integration                        │  │
-│  │    - Analytics & insights                        │  │
-│  └──────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         👥 USERS (Mobile & Web)                         │
+│                                                                         │
+│  📱 Mobile App (React Native)        💻 Web App (Next.js)              │
+│  - Click to record conversations     - Click to record conversations   │
+│  - See extracted leads                - See extracted leads             │
+│  - Browse events                      - Browse events                   │
+│  - Contact management                 - Contact management              │
+└────────────────────────────────┬────────────────────────────────────────┘
+                                 │
+                                 │ Internet (HTTPS - Secure)
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    🌐 AWS LOAD BALANCER                                 │
+│  Purpose: Distributes traffic across multiple servers                   │
+│  Why: Handles many users at once, prevents crashes                      │
+└────────────────────────────────┬────────────────────────────────────────┘
+                                 │
+                    ┌────────────┴────────────┐
+                    │                         │
+                    ▼                         ▼
+         ┌──────────────────┐      ┌──────────────────┐
+         │  🖥️ SERVER 1     │      │  🖥️ SERVER 2     │
+         │  (AWS EC2)       │      │  (AWS EC2)       │
+         │                  │      │                  │
+         │  FastAPI (Python)│      │  FastAPI (Python)│
+         │                  │      │                  │
+         │  What it does:   │      │  What it does:   │
+         │  ✓ User login    │      │  ✓ User login    │
+         │  ✓ Upload audio  │      │  ✓ Upload audio  │
+         │  ✓ Fetch leads   │      │  ✓ Fetch leads   │
+         │  ✓ Get events    │      │  ✓ Get events    │
+         └────────┬─────────┘      └────────┬─────────┘
+                  │                         │
+                  └────────────┬────────────┘
+                               │
+                               │ Talks to databases & storage
+                               │
+        ┌──────────────────────┼──────────────────────┐
+        │                      │                      │
+        ▼                      ▼                      ▼
+┌────────────────┐   ┌────────────────┐   ┌────────────────┐
+│ 💾 DATABASE    │   │ ⚡ REDIS        │   │ 📦 S3 STORAGE  │
+│ (PostgreSQL)   │   │ (In-Memory)    │   │ (AWS S3)       │
+│                │   │                │   │                │
+│ Stores:        │   │ Stores:        │   │ Stores:        │
+│ ✓ Users        │   │ ✓ Who's logged │   │ ✓ Audio files  │
+│ ✓ Recordings   │   │   in (sessions)│   │ ✓ Exports      │
+│ ✓ Transcripts  │   │ ✓ Job queue    │   │                │
+│ ✓ Leads/Contacts│  │ ✓ Cache (fast  │   │ Why separate:  │
+│ ✓ Events       │   │   access)      │   │ Audio files    │
+│ ✓ User profiles│   │                │   │ are large,     │
+│                │   │ Why needed:    │   │ keep DB clean  │
+│ Why needed:    │   │ Speed! Temp    │   │                │
+│ Permanent data │   │ data, jobs     │   │                │
+│ storage        │   │                │   │                │
+└────────────────┘   └────────┬───────┘   └────────────────┘
+                              │
+                              │ Job Queue (tells GPU what to process)
+                              │
+                              ▼
+                   ┌────────────────────┐
+                   │  📋 CELERY WORKER  │
+                   │  (Task Manager)    │
+                   │                    │
+                   │  What it does:     │
+                   │  ✓ Manages jobs    │
+                   │  ✓ Sends to GPU    │
+                   │  ✓ Tracks progress │
+                   └──────────┬─────────┘
+                              │
+                              │ Sends audio processing jobs
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                     🎮 GPU SERVER (E2E Cloud)                           │
+│                     Why: Heavy AI processing needs powerful GPU          │
+│                                                                         │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │  1️⃣ WHISPER AI (Speech to Text)                                │   │
+│  │     - Converts audio → text                                     │   │
+│  │     - Processing time: 2-5 minutes for 30-min audio             │   │
+│  │     - Saves to: PostgreSQL (transcripts table)                  │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+│                                                                         │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │  2️⃣ PYANNOTE AI (Speaker Detection)                            │   │
+│  │     - Identifies who said what                                  │   │
+│  │     - Labels: Speaker 1, Speaker 2, etc.                        │   │
+│  │     - Saves to: PostgreSQL (speakers table)                     │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+│                                                                         │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │  3️⃣ LEAD GENERATION AGENT (CrewAI + GPT-4)                     │   │
+│  │     - Reads transcript                                          │   │
+│  │     - Finds people mentioned                                    │   │
+│  │     - Extracts: names, companies, roles, needs                  │   │
+│  │     - Searches LinkedIn for profiles                            │   │
+│  │     - Saves to: PostgreSQL (leads table)                        │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+│                                                                         │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │  4️⃣ EVENT DISCOVERY AGENT (CrewAI + GPT-4)                     │   │
+│  │     - Reads user profile (interests, location)                  │   │
+│  │     - Searches Google for events                                │   │
+│  │     - Filters by relevance                                      │   │
+│  │     - Ranks: must attend, should attend, nice to attend         │   │
+│  │     - Saves to: PostgreSQL (events table)                       │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+│                                                                         │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │  5️⃣ EMAIL AGENT (CrewAI + GPT-4)                               │   │
+│  │     - Creates beautiful HTML email                              │   │
+│  │     - Includes leads + events                                   │   │
+│  │     - Sends via Gmail SMTP                                      │   │
+│  │     - Saves log to: PostgreSQL (email_logs table)               │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+│                                                                         │
+│  Total Processing Time: 3-8 minutes per recording                       │
+└─────────────────────────────────────────────────────────────────────────┘
+
 ```
 
-## User Categories
+---
 
-### 1. CEO / Investor
-- **Looking for:** Investment opportunities, partnerships, acquisitions, strategic connections
-- **Offers:** Funding, mentorship, network access, business development
+## Why Each Component? (Simple Explanations)
 
-### 2. Students
-- **Looking for:** Internships, learning opportunities, mentorship, career guidance, projects
-- **Offers:** Fresh perspectives, technical skills, enthusiasm, research capabilities
+### 1. **Why 2 Servers (FastAPI on EC2)?**
+- **Reason**: If one server crashes, the other keeps working
+- **Benefit**: Website stays online 24/7
+- **Analogy**: Like having 2 cashiers at a store - if one is busy, the other serves customers
 
-### 3. General / Other
-- **Looking for:** Various (collaborations, partnerships, hiring, services, etc.)
-- **Offers:** Various (expertise, services, products, connections, etc.)
+### 2. **Why PostgreSQL Database?**
+- **Reason**: Store all user data permanently
+- **What's stored**: Users, recordings, leads, events, everything
+- **Analogy**: Like a filing cabinet that never loses data
 
-## Data Flow
+### 3. **Why Redis?**
+- **Reason 1**: Super fast temporary storage (100x faster than PostgreSQL)
+- **Reason 2**: Manages job queue (who's next in line for processing)
+- **Reason 3**: Remembers who's logged in
+- **Analogy**: Like sticky notes for quick reminders vs. filing cabinet for permanent records
 
-1. **Recording Phase**
-   - User wears pendant at event
-   - Device continuously records audio (with user consent)
-   - Recording stored locally with timestamps
+### 4. **Why S3 Storage?**
+- **Reason**: Audio files are HUGE (30-min recording = 50-100MB)
+- **Benefit**: Don't clog the database with large files
+- **Analogy**: Like a warehouse for bulky items vs. office desk for documents
 
-2. **Upload Phase**
-   - User uploads recording via mobile app or web dashboard
-   - Files stored in cloud storage (S3/GCS)
-   - Processing job queued
+### 5. **Why Separate GPU Server?**
+- **Reason**: AI processing needs powerful hardware (expensive)
+- **Benefit**: Only pay for GPU when processing, not 24/7
+- **Cost**: GPU = $200/month, Regular server = $30/month
+- **Analogy**: Like renting a bulldozer only when you need it vs. owning a car
 
-3. **Processing Phase**
-   - Speech-to-text conversion
-   - Speaker diarization (identify different speakers)
-   - Transcript generated with timestamps
+### 6. **Why Load Balancer?**
+- **Reason**: Distributes users across servers evenly
+- **Benefit**: No single server gets overloaded
+- **Analogy**: Like a traffic cop directing cars to less busy lanes
 
-4. **Analysis Phase**
-   - LLM agents analyze transcript:
-     - Extract key topics and interests
-     - Identify pain points and needs
-     - Extract offerings and capabilities
-     - Categorize user intent
-     - Extract entities (people, companies)
+---
 
-5. **Graph Population**
-   - Create/update nodes in Neo4j
-   - Establish relationships based on analysis
-   - Store embeddings for semantic search
+## Complete Data Flow (Step by Step)
 
-6. **Matching Phase**
-   - Run matching algorithms
-   - Find complementary needs/offerings
-   - Score matches using LLM
-   - Generate collaboration suggestions
+```
+1. 👤 User opens app/website
+   ↓
+2. 🔐 User logs in
+   → Server checks PostgreSQL (users table)
+   → Redis stores session (you're logged in)
+   ↓
+3. 🎙️ User clicks "Record" → Audio captured
+   ↓
+4. 📤 Audio uploaded
+   → Sent to S3 (audio storage)
+   → Metadata saved in PostgreSQL (recordings table)
+   → Job created in Redis queue
+   ↓
+5. 🎮 GPU server picks up job
+   ↓
+6. 🗣️ Whisper converts speech → text
+   → Saved to PostgreSQL (transcripts table)
+   ↓
+7. 👥 Pyannote identifies speakers
+   → Saved to PostgreSQL (speakers table)
+   ↓
+8. 🤖 Lead Agent analyzes transcript
+   → Finds people, companies, opportunities
+   → Searches LinkedIn
+   → Saved to PostgreSQL (leads table)
+   ↓
+9. 📅 Event Agent searches for events
+   → Finds relevant conferences/meetups
+   → Ranks by relevance
+   → Saved to PostgreSQL (events table)
+   ↓
+10. 📧 Email Agent sends summary
+    → HTML email with leads + events
+    → Saved to PostgreSQL (email_logs table)
+    ↓
+11. ✅ User sees results
+    → API fetches from PostgreSQL
+    → Redis caches for fast access
+    → Displayed on app/website
+```
 
-7. **Lead Generation**
-   - Present matches in dashboard
-   - Provide context and reasoning
-   - Enable one-click calendar scheduling
-   - Track lead status and follow-ups
+---
 
-## Technology Stack
+## Optional: Graph Database (Phase 2)
 
-### Backend
-- **Framework:** FastAPI (Python)
-- **Task Queue:** Celery + Redis
-- **Database:** Neo4j (graph) + PostgreSQL (relational)
-- **Storage:** AWS S3 / Google Cloud Storage
-- **Speech-to-Text:** OpenAI Whisper API / AssemblyAI
-- **LLM:** OpenAI GPT-4 / Anthropic Claude
-- **Embeddings:** OpenAI text-embedding-3
+### Neo4j - Why Later?
 
-### Frontend
-- **Framework:** Next.js 14+ (App Router)
-- **UI Library:** shadcn/ui + Tailwind CSS
-- **State Management:** Zustand / React Query
-- **Visualization:** D3.js / Recharts for graphs
-- **Calendar:** Cal.com API integration
+**What it does**: Connects people by shared interests
 
-### Infrastructure
-- **Containerization:** Docker
-- **Orchestration:** Docker Compose (dev) / Kubernetes (prod)
-- **CI/CD:** GitHub Actions
-- **Monitoring:** Sentry + Prometheus + Grafana
+**Example**:
+- You like: AI, Crypto, Startups
+- John likes: AI, Crypto
+- Sarah likes: AI, Startups
+- **Neo4j finds**: "You should meet John and Sarah - you have common interests!"
 
-## Security & Privacy Considerations
+**Why not now**: Adds complexity, not needed for MVP
 
-1. **Consent Management**
-   - Users must explicitly consent to recording
-   - Event-level and conversation-level consent tracking
+**When to add**: When you have 1000+ users and want smart matching
 
-2. **Data Encryption**
-   - At-rest: AES-256 encryption
-   - In-transit: TLS 1.3
+---
 
-3. **Access Control**
-   - Role-based access control (RBAC)
-   - Users can only see their own recordings and matches
+## Technology Choices - Why These?
 
-4. **Data Retention**
-   - Configurable retention policies
-   - Right to be forgotten (GDPR compliance)
+### Backend: FastAPI (Python)
+- **Why**: Fast, modern, easy to add AI
+- **Alternative**: Node.js/Express (slower for AI tasks)
 
-5. **PII Protection**
-   - Automatic detection and redaction of sensitive info
-   - Anonymization options
+### Frontend: Next.js
+- **Why**: Works on all devices, SEO-friendly
+- **Alternative**: Plain React (no SEO)
 
-## Scalability Considerations
+### Mobile: React Native
+- **Why**: Write once, works on iOS + Android
+- **Alternative**: Native apps (need 2 codebases)
 
-1. **Async Processing**
-   - All heavy processing (STT, LLM) done asynchronously
-   - Job queue with retry mechanisms
+### Database: PostgreSQL
+- **Why**: Reliable, handles millions of records, free
+- **Alternative**: MongoDB (less structure, not ideal for our use case)
 
-2. **Caching**
-   - Redis for API response caching
-   - Embedding cache for repeat queries
+### GPU: E2E Cloud
+- **Why**: Cheaper than AWS GPU (50% less)
+- **Alternative**: AWS GPU (2x cost)
 
-3. **Rate Limiting**
-   - API rate limits per user/tier
-   - LLM usage quotas
+---
 
-4. **Database Optimization**
-   - Neo4j indexes on frequently queried properties
-   - PostgreSQL connection pooling
+## Cost Breakdown (Monthly)
 
-## Future Enhancements
+| Component | Why Needed | Cost |
+|-----------|------------|------|
+| 2× API Servers (EC2) | Handle user requests, always online | $60 |
+| PostgreSQL Database | Store all data permanently | $20 |
+| Redis Cache | Fast access, job queue | $15 |
+| S3 Storage | Store audio files | $10 |
+| GPU Server (E2E) | AI processing (Whisper, Agents) | $200 |
+| Load Balancer | Distribute traffic | $20 |
+| **TOTAL** | | **$325/month** |
 
-1. Real-time processing during events
-2. Mobile app for pendant management
-3. Multi-language support
-4. Video analysis (facial recognition, object detection)
-5. Integration with CRM systems (Salesforce, HubSpot)
-6. AI-generated follow-up emails
-7. Sentiment analysis
-8. Industry-specific matching algorithms
+**For comparison**:
+- Hiring 1 person to manually process recordings: $3000+/month
+- Our AI does it automatically: $325/month
+
+---
+
+## Scalability - What Happens When You Grow?
+
+### 10 Users
+- 1 API server
+- Small database
+- **Cost**: $150/month
+
+### 100 Users
+- 2 API servers
+- Medium database
+- **Cost**: $325/month (current plan)
+
+### 1,000 Users
+- 5 API servers (auto-scaling)
+- 2 GPU servers
+- Larger database
+- **Cost**: $800/month
+
+### 10,000 Users
+- 20+ API servers
+- 5+ GPU servers
+- Database replicas
+- **Cost**: $3,000-5,000/month
+- **Revenue needed**: $10,000+/month (break even at $10/user)
+
+---
+
+## Security & Privacy
+
+### How Data is Protected
+
+1. **Encryption in Transit**: All data encrypted during transfer (HTTPS)
+2. **Encryption at Rest**: Database encrypted on disk
+3. **Access Control**: Only you see your data
+4. **Backups**: Daily automatic backups (7 days)
+5. **Audio Storage**: Can be auto-deleted after processing (GDPR compliant)
+
+### Who Can Access What?
+
+- **Users**: Only their own data
+- **Admins**: Only with permission (audit logged)
+- **AI Agents**: No permanent storage, process and delete
+
+---
+
+## Summary - Why This Architecture?
+
+✅ **Reliable**: If one server fails, others keep working
+✅ **Fast**: Redis caching, optimized queries
+✅ **Scalable**: Add more servers as users grow
+✅ **Cost-effective**: Only pay for GPU when processing
+✅ **Secure**: Industry-standard encryption and access control
+✅ **Maintainable**: Modular design, easy to update
+
+**Bottom Line**: Professional, production-ready system that can handle growth from 10 to 10,000 users.

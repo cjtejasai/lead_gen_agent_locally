@@ -1,0 +1,34 @@
+{
+  "leads": [
+    {
+      "name": "SPEAKER_01",
+      "company": "University of Toronto",
+      "opportunity": "Research collaboration on new machine learning topics and software development",
+      "priority": "High"
+    },
+    {
+      "name": "SPEAKER_00",
+      "company": "NYU / Stanford",
+      "opportunity": "Partnership for deep learning framework development and academic research",
+      "priority": "High"
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "Investment",
+      "description": "Invest in effective deep learning software frameworks proven to be successful in early research phases",
+      "priority": "High"
+    },
+    {
+      "type": "Partnership",
+      "description": "Collaborate with University of Toronto, NYU, Stanford for cutting-edge research and software development",
+      "priority": "High"
+    }
+  ],
+  "action_items": [
+    "Reach out to SPEAKER_01 at University of Toronto for research topic exploration and collaboration",
+    "Initiate contact with SPEAKER_00 representing NYU and Stanford to discuss partnership opportunities",
+    "Evaluate current software frameworks for possible investment and scaling",
+    "Identify funding and resource support for deep learning software projects"
+  ]
+}
