@@ -272,7 +272,7 @@ export default function RecordPage() {
                           setSelectedDevice(device.deviceId)
                           setShowDeviceMenu(false)
                         }}
-                        className="w-full text-left px-4 py-3 hover:bg-blue-50 dark:hover:bg-purple-900/20 transition-colors flex items-center justify-between"
+                        className="w-full text-left px-4 py-3 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors flex items-center justify-between"
                       >
                         <span className="text-gray-900 dark:text-white">{device.label}</span>
                         {selectedDevice === device.deviceId && (
@@ -288,7 +288,7 @@ export default function RecordPage() {
 
           {/* Recording Visualizer */}
           <div className="mb-8">
-            <div className="relative h-48 bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl flex items-center justify-center overflow-hidden">
+            <div className="relative h-48 bg-gradient-to-br from-blue-100 to-cyan-100 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-2xl flex items-center justify-center overflow-hidden">
               {/* Animated waves when recording */}
               {(status === 'recording' || status === 'paused') && (
                 <div className="absolute inset-0 flex items-center justify-center">
