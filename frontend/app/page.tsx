@@ -103,38 +103,62 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* Feature Cards - Two Main Features */}
-          <div className="grid md:grid-cols-2 gap-12 mt-20 max-w-5xl mx-auto">
-            <FeatureCard
-              icon={<Calendar className="w-10 h-10" />}
-              title="AI Event Discovery"
-              description="Our AI agent analyzes your profile, interests, and business goals to discover perfect networking events. Get personalized recommendations that match your professional needs."
-              delay={0.2}
-            />
-            <FeatureCard
-              icon={<Mic className="w-10 h-10" />}
-              title="Smart Recording & Lead Gen"
-              description="Record conversations at events with Bluetooth device. Our AI transcribes, identifies speakers, extracts business opportunities, and generates qualified leads automatically."
-              delay={0.4}
-            />
+          {/* Agent Team Section */}
+          <div className="mt-20">
+            <h2 className="text-4xl font-bold text-center mb-4 text-gray-900 dark:text-white">
+              Meet Your AI Agent Team
+            </h2>
+            <p className="text-center text-gray-600 dark:text-gray-400 mb-16 text-lg">
+              Three specialized AI agents working together to supercharge your networking
+            </p>
+
+            <div className="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto">
+              <AgentCard
+                icon={<Target className="w-12 h-12" />}
+                name="Arya"
+                role="Event Scout"
+                description="Arya scouts networking events that match your interests and business goals. He analyzes your profile and finds perfect opportunities where you can grow your network."
+                gradient="from-blue-500 to-cyan-500"
+                delay={0.2}
+              />
+              <AgentCard
+                icon={<Mic className="w-12 h-12" />}
+                name="Dhwani"
+                role="Voice Intelligence"
+                description="Dhwani listens to every conversation with state-of-the-art AI. She performs speaker diarization (identifies who's talking), eliminates background noise, and creates accurate transcripts."
+                gradient="from-purple-500 to-pink-500"
+                delay={0.4}
+              />
+              <AgentCard
+                icon={<Sparkles className="w-12 h-12" />}
+                name="Lakshya"
+                role="Lead Generator"
+                description="Lakshya analyzes your conversations and automatically generates qualified leads. He extracts contact information, identifies business opportunities, and provides actionable insights."
+                gradient="from-orange-500 to-red-500"
+                delay={0.6}
+              />
+            </div>
           </div>
 
-          {/* Sub-Features */}
-          <div className="grid md:grid-cols-3 gap-8 mt-16">
-            <SubFeature
-              icon={<Brain className="w-6 h-6" />}
-              title="AI-Powered Matching"
-              description="Automatically matches people's needs with your offerings"
-            />
-            <SubFeature
-              icon={<Users className="w-6 h-6" />}
-              title="Speaker Diarization"
-              description="Identifies and separates different speakers in conversations"
-            />
-            <SubFeature
+          {/* How It Works */}
+          <div className="grid md:grid-cols-3 gap-8 mt-20">
+            <WorkflowStep
+              number="1"
               icon={<Target className="w-6 h-6" />}
-              title="Lead Generation"
-              description="Extracts actionable leads with contact info and follow-up insights"
+              title="Discover Events"
+              description="Arya finds events matching your profile"
+            />
+            <WorkflowStep
+              number="2"
+              icon={<Mic className="w-6 h-6" />}
+              title="Record Conversations"
+              description="Dhwani captures and transcribes with precision"
+            />
+            <WorkflowStep
+              number="3"
+              icon={<Sparkles className="w-6 h-6" />}
+              title="Generate Leads"
+              description="Lakshya extracts opportunities automatically"
             />
           </div>
 
@@ -178,24 +202,66 @@ function FeatureCard({
   )
 }
 
-function SubFeature({
+function AgentCard({
+  icon,
+  name,
+  role,
+  description,
+  gradient,
+  delay,
+}: {
+  icon: React.ReactNode
+  name: string
+  role: string
+  description: string
+  gradient: string
+  delay: number
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay }}
+      whileHover={{ y: -8 }}
+      className="relative p-8 rounded-3xl glass-effect shadow-xl hover:shadow-2xl transition-all border-2 border-gray-200 dark:border-gray-700"
+    >
+      <div className={`inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br ${gradient} text-white mb-6 shadow-lg`}>
+        {icon}
+      </div>
+      <h3 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">
+        {name}
+      </h3>
+      <p className={`text-sm font-semibold mb-4 bg-gradient-to-r ${gradient} bg-clip-text text-transparent`}>
+        {role}
+      </p>
+      <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+        {description}
+      </p>
+    </motion.div>
+  )
+}
+
+function WorkflowStep({
+  number,
   icon,
   title,
   description,
 }: {
+  number: string
   icon: React.ReactNode
   title: string
   description: string
 }) {
   return (
-    <div className="text-center p-6 rounded-xl hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-colors">
-      <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 mb-4">
-        {icon}
+    <div className="text-center relative">
+      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-blue-900 to-cyan-600 text-white font-bold text-2xl mb-4 shadow-lg">
+        {number}
       </div>
-      <h4 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">
+      <h4 className="text-xl font-bold mb-2 text-gray-900 dark:text-white flex items-center justify-center gap-2">
+        {icon}
         {title}
       </h4>
-      <p className="text-sm text-gray-600 dark:text-gray-400">{description}</p>
+      <p className="text-gray-600 dark:text-gray-400">{description}</p>
     </div>
   )
 }
