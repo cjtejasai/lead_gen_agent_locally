@@ -8,6 +8,8 @@ from pathlib import Path
 from typing import Optional, Dict, Any
 from loguru import logger
 import os
+import subprocess
+import tempfile
 
 
 class TranscriptionService:
@@ -67,6 +69,40 @@ class TranscriptionService:
             logger.warning("Continuing without speaker diarization")
             self.enable_diarization = False
 
+    def _convert_to_wav(self, audio_path: Path) -> Path:
+        """
+        Convert audio file to 16kHz mono WAV for optimal Whisper processing
+
+        Args:
+            audio_path: Path to input audio file
+
+        Returns:
+            Path to converted WAV file (or original if already WAV)
+        """
+        # If already WAV, check sample rate
+        if str(audio_path).endswith('.wav'):
+            return audio_path
+
+        # Convert webm/mp3/m4a to WAV
+        logger.info(f"Converting {audio_path.suffix} to 16kHz mono WAV...")
+        temp_wav = tempfile.NamedTemporaryFile(suffix='.wav', delete=False)
+        temp_wav.close()
+
+        try:
+            subprocess.run([
+                'ffmpeg', '-i', str(audio_path),
+                '-ar', '16000',  # 16kHz sample rate (Whisper optimal)
+                '-ac', '1',       # Mono channel
+                '-y',             # Overwrite output
+                temp_wav.name
+            ], check=True, capture_output=True, text=True)
+
+            logger.info(f"Converted to WAV: {temp_wav.name}")
+            return Path(temp_wav.name)
+        except subprocess.CalledProcessError as e:
+            logger.error(f"Audio conversion failed: {e.stderr}")
+            raise RuntimeError(f"Failed to convert audio: {e.stderr}")
+
     def transcribe(self, audio_path: Path) -> Dict[str, Any]:
         """
         Transcribe audio file with optional speaker diarization
@@ -91,10 +127,20 @@ class TranscriptionService:
 
         logger.info(f"Transcribing: {audio_path}")
 
+        # Convert to WAV if needed
+        converted_path = None
+        try:
+            audio_file_to_use = self._convert_to_wav(audio_path)
+            if audio_file_to_use != audio_path:
+                converted_path = audio_file_to_use
+        except Exception as e:
+            logger.warning(f"Conversion failed, using original file: {e}")
+            audio_file_to_use = audio_path
+
         try:
             # Transcribe with Whisper
             result = self.model.transcribe(
-                str(audio_path),
+                str(audio_file_to_use),
                 language="en",
                 task="transcribe",
                 fp16=False
@@ -157,6 +203,14 @@ class TranscriptionService:
         except Exception as e:
             logger.error(f"Transcription failed: {e}")
             raise
+        finally:
+            # Clean up temporary WAV file if created
+            if converted_path and converted_path.exists():
+                try:
+                    converted_path.unlink()
+                    logger.info(f"Cleaned up temporary WAV: {converted_path}")
+                except Exception as e:
+                    logger.warning(f"Could not delete temporary WAV: {e}")
 
 
 # Singleton instance
