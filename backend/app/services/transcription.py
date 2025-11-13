@@ -127,15 +127,18 @@ class TranscriptionService:
 
         logger.info(f"Transcribing: {audio_path}")
 
-        # Convert to WAV if needed
+        # TEMPORARILY DISABLED: Convert to WAV if needed
+        # Issue: Conversion causing "you you you" repetition
+        # Need to debug ffmpeg parameters
         converted_path = None
-        try:
-            audio_file_to_use = self._convert_to_wav(audio_path)
-            if audio_file_to_use != audio_path:
-                converted_path = audio_file_to_use
-        except Exception as e:
-            logger.warning(f"Conversion failed, using original file: {e}")
-            audio_file_to_use = audio_path
+        audio_file_to_use = audio_path
+        # try:
+        #     audio_file_to_use = self._convert_to_wav(audio_path)
+        #     if audio_file_to_use != audio_path:
+        #         converted_path = audio_file_to_use
+        # except Exception as e:
+        #     logger.warning(f"Conversion failed, using original file: {e}")
+        #     audio_file_to_use = audio_path
 
         try:
             # Transcribe with Whisper
@@ -151,7 +154,7 @@ class TranscriptionService:
             if self.enable_diarization and self.diarization_pipeline:
                 try:
                     logger.info("Running speaker diarization...")
-                    diarization = self.diarization_pipeline(str(audio_path))
+                    diarization = self.diarization_pipeline(str(audio_file_to_use))
 
                     # Map time ranges to speakers
                     for segment, _, speaker in diarization.itertracks(yield_label=True):
