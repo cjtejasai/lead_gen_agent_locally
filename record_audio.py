@@ -257,12 +257,8 @@ def main():
     else:
         print("\nUsing default input device")
 
-    # Model selection
-    print("\nWhisper model:")
-    print("  1. tiny   - Fast")
-    print("  2. base   - Recommended")
-    model_choice = input("Select (1/2) [default: 2]: ").strip()
-    model_name = "tiny" if model_choice == "1" else "base"
+
+
 
     # Create output files
     session_time = datetime.now().strftime('%Y%m%d_%H%M%S')

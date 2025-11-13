@@ -211,16 +211,22 @@ export default function EventsPage() {
       <header className="bg-white/80 backdrop-blur-sm border-b border-blue-100 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <Link href="/dashboard" className="flex items-center gap-3">
-              <Image
-                src="/lyncsea-logo.png"
-                alt="Lyncsea"
-                width={120}
-                height={120}
-                className="rounded-lg"
-              />
-              <span className="text-4xl font-bold text-gradient tracking-tight">Lyncsea</span>
-            </Link>
+            <div className="flex items-center gap-6">
+              <Link href="/dashboard" className="flex items-center gap-3">
+                <Image
+                  src="/lyncsea-logo.png"
+                  alt="Lyncsea"
+                  width={100}
+                  height={100}
+                  className="rounded-lg"
+                />
+                <span className="text-3xl font-bold text-gradient tracking-tight">Lyncsea</span>
+              </Link>
+              <span className="text-2xl font-bold text-gray-400">|</span>
+              <span className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent">
+                🎯 Arya - Event Scout
+              </span>
+            </div>
 
             <nav className="flex items-center gap-4">
               <Link

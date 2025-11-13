@@ -87,14 +87,14 @@ export default function Dashboard() {
 
             {/* Navigation Links */}
             <div className="flex items-center gap-6 ml-8">
-              <Link href="/record" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">
-                Record
+              <Link href="/arya" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">
+                🎯 Arya
               </Link>
-              <Link href="/events" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">
-                Events
+              <Link href="/dhwani" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">
+                🎙️ Dhwani
               </Link>
-              <Link href="/recordings" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">
-                Recordings
+              <Link href="/lakshya" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">
+                💼 Lakshya
               </Link>
             </div>
 
