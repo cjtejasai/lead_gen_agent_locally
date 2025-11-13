@@ -181,8 +181,8 @@ async def process_recording(recording_id: int, db: Session = Depends(get_db)):
         # Get audio file path
         audio_path = storage.get_full_path(recording.file_path)
 
-        # Transcribe with Whisper
-        transcription_service = get_transcription_service(model_size="base")
+        # Transcribe with Whisper + pyannote diarization
+        transcription_service = get_transcription_service(model_size="base", enable_diarization=True)
         result = transcription_service.transcribe(audio_path)
 
         # Save transcript to database
@@ -190,17 +190,17 @@ async def process_recording(recording_id: int, db: Session = Depends(get_db)):
             recording_id=recording_id,
             full_text=result["text"],
             language=result["language"],
-            confidence_score=0.95,  # Whisper doesn't provide overall confidence
+            confidence_score=0.95,
             word_count=len(result["text"].split())
         )
         db.add(transcript)
         db.flush()  # Get transcript ID
 
-        # Save segments
+        # Save segments with speaker info
         for idx, seg in enumerate(result["segments"]):
             segment = TranscriptSegment(
                 transcript_id=transcript.id,
-                speaker_id="SPEAKER_00",  # No diarization yet
+                speaker_id=seg.get("speaker", "SPEAKER_00"),  # Use diarization result
                 text=seg["text"],
                 start_time=seg["start"],
                 end_time=seg["end"],
@@ -224,6 +224,7 @@ async def process_recording(recording_id: int, db: Session = Depends(get_db)):
             "status": "completed",
             "transcript_length": len(result["text"]),
             "num_segments": len(result["segments"]),
+            "num_speakers": result.get("num_speakers", 1),
             "duration": result["duration"]
         }
 
