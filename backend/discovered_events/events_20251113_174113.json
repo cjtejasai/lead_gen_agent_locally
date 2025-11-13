@@ -1,0 +1,154 @@
+{
+  "user_name": "User",
+  "generated_date": "2024-06",
+  "total_events_found": 8,
+  "must_attend": [
+    {
+      "event_name": "AI Summit London 2025",
+      "tagline": "Flagship event of London Tech Week focused on AI innovations and applications",
+      "date_time": "June 11-12, 2025",
+      "location": "Tobacco Dock, London, UK",
+      "why_relevant": "Top-tier AI event with broad tech and business leader attendance, vital for investor networking and AI insights.",
+      "key_topics": [
+        "AI innovations",
+        "AI applications",
+        "Tech leadership",
+        "Business integration"
+      ],
+      "expected_attendees": "Thousands of tech professionals and business leaders",
+      "speakers": "300+ speakers and 100+ tech sessions",
+      "registration_link": "https://www.splunk.com/en_us/blog/learn/ai-artificial-intelligence-conferences-events.html",
+      "estimated_cost": "Not specified",
+      "relevance_score": 9
+    },
+    {
+      "event_name": "Data + AI Summit 2025",
+      "tagline": "Premier event focusing on data, analytics, and AI skill development",
+      "date_time": "Dates TBD 2025",
+      "location": "Typically in USA (TBD)",
+      "why_relevant": "Key for networking with thousands of data and AI professionals and gaining advanced skills relevant to AI/ML and business growth.",
+      "key_topics": [
+        "Data analytics",
+        "AI skill development",
+        "Networking",
+        "Business intelligence"
+      ],
+      "expected_attendees": "Thousands of data and AI professionals",
+      "speakers": "Top experts and industry leaders (specifics TBD)",
+      "registration_link": "https://www.databricks.com/dataaisummit",
+      "estimated_cost": "Not specified",
+      "relevance_score": 9
+    },
+    {
+      "event_name": "Advertising Week New York 2025",
+      "tagline": "Premier marketing event covering advertising, marketing, and media trends",
+      "date_time": "October 6-9, 2025",
+      "location": "New York City, USA",
+      "why_relevant": "Exceptional networking and investor exposure in marketing with a vast lineup of speakers and sessions.",
+      "key_topics": [
+        "Advertising trends",
+        "Marketing strategies",
+        "Media innovations",
+        "Investor networking"
+      ],
+      "expected_attendees": "10,000+ attendees",
+      "speakers": "1,200+ speakers and 500+ sessions",
+      "registration_link": "https://advertisingweek.com/event/awnewyork-2025",
+      "estimated_cost": "Varies (registration required)",
+      "relevance_score": 8
+    },
+    {
+      "event_name": "INBOUND 2025 - HubSpot's Marketing & Sales Conference",
+      "tagline": "Conference for business, marketing, and sales leaders to connect and network",
+      "date_time": "September 3-5, 2025",
+      "location": "San Francisco, CA, USA",
+      "why_relevant": "Large-scale marketing event ideal for connecting with diverse professionals and investors in marketing and sales sectors.",
+      "key_topics": [
+        "Marketing",
+        "Sales",
+        "Networking",
+        "Workshops",
+        "Business growth"
+      ],
+      "expected_attendees": "20,000+ attendees",
+      "speakers": "Leading industry speakers (specifics at website)",
+      "registration_link": "https://www.inbound.com/",
+      "estimated_cost": "Not specified",
+      "relevance_score": 8
+    }
+  ],
+  "should_attend": [
+    {
+      "event_name": "AI & Machine Learning Summit at Data Summit 2025",
+      "tagline": "Featured event covering the latest trends in AI and machine learning",
+      "date_time": "May 14-15, 2025",
+      "location": "Hyatt Regency Boston, Boston, MA, USA",
+      "why_relevant": "Strong focus on AI/ML trends and opportunities to network with data practitioners and industry professionals.",
+      "key_topics": [
+        "AI trends",
+        "Machine learning",
+        "Data analytics",
+        "Networking panels"
+      ],
+      "expected_attendees": "Approx. 500+ industry professionals and data practitioners",
+      "speakers": "Keynotes and panelists (details on site)",
+      "registration_link": "https://www.dbta.com/DataSummit/2025/AIMachineLearningSummit.aspx",
+      "estimated_cost": "Not specified",
+      "relevance_score": 9
+    },
+    {
+      "event_name": "2025 Conference on Artificial Intelligence, Machine Learning, and Business Analytics",
+      "tagline": "Focus on AI/ML and digital impact on business models",
+      "date_time": "December 5-6, 2025",
+      "location": "Columbia Business School, New York, USA",
+      "why_relevant": "Academic and industry interplay on AI/ML business applications ideal for investor insights and innovation.",
+      "key_topics": [
+        "Artificial intelligence",
+        "Machine learning",
+        "Business analytics",
+        "Digital technology impact"
+      ],
+      "expected_attendees": "Several hundred academics and industry professionals",
+      "speakers": "Professors, industry leaders, PhD students",
+      "registration_link": "https://business.columbia.edu/faculty/divisions/marketing/conferences/2025-AI-ML",
+      "estimated_cost": "Not listed (likely academic pricing)",
+      "relevance_score": 9
+    },
+    {
+      "event_name": "Digital Summit Series 2025",
+      "tagline": "Series of digital marketing conferences focusing on latest tactics and networking",
+      "date_time": "Various dates through 2025",
+      "location": "Multiple global cities",
+      "why_relevant": "Offers tactical marketing insights and regional networking, suitable for ongoing learning and investor connections.",
+      "key_topics": [
+        "Digital marketing",
+        "Trends",
+        "Tactics",
+        "Networking"
+      ],
+      "expected_attendees": "Hundreds to thousands depending on location",
+      "speakers": "Varies by event",
+      "registration_link": "https://www.digitalsummit.com/",
+      "estimated_cost": "Varies",
+      "relevance_score": 7
+    }
+  ],
+  "nice_to_attend": [
+    {
+      "event_name": "AMA Symposium for the Marketing of Higher Education 2025",
+      "tagline": "Leading event shaping higher education marketing strategies",
+      "date_time": "June 2025 (specific dates TBD)",
+      "location": "Location TBD, USA",
+      "why_relevant": "Focuses on academic marketing insights which may be niche unless user's focus is higher education marketing.",
+      "key_topics": [
+        "Higher education marketing",
+        "Academic marketing strategies"
+      ],
+      "expected_attendees": "Several hundred attendees",
+      "speakers": "Industry and academic marketing professionals",
+      "registration_link": "https://www.ama.org/events/conference/2025-ama-symposium-for-the-marketing-of-higher-education/",
+      "estimated_cost": "Not specified",
+      "relevance_score": 6
+    }
+  ]
+}

@@ -242,6 +242,41 @@ class AgentAnalysisResponse(BaseModel):
     model_used: str
 
 
+# Auth Schemas
+class UserSignup(BaseModel):
+    email: EmailStr
+    password: str = Field(..., min_length=8)
+    full_name: str
+    interests: List[str] = []
+    location: Optional[str] = None
+    looking_for: List[str] = []
+
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    user: UserResponse
+
+
+class TokenData(BaseModel):
+    email: Optional[str] = None
+
+
+class UserProfileUpdate(BaseModel):
+    full_name: Optional[str] = None
+    company: Optional[str] = None
+    role: Optional[str] = None
+    location: Optional[str] = None
+    interests: Optional[List[str]] = None
+    hobbies: Optional[List[str]] = None
+    looking_for: Optional[List[str]] = None
+
+
 # Error Schemas
 class ErrorResponse(BaseModel):
     detail: str

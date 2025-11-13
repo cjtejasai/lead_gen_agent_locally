@@ -1,0 +1,119 @@
+{
+  "user_name": "Professional User",
+  "generated_date": "2024-06-14",
+  "total_events_found": 10,
+  "must_attend": [
+    {
+      "event_name": "International Conference on Machine Learning (ICML) 2025",
+      "tagline": "Premier conference on cutting-edge AI and machine learning research",
+      "date_time": "July 13-19, 2025",
+      "location": "Vancouver Convention Center, Vancouver, Canada",
+      "why_relevant": "Top AI & ML research event with global leaders; essential for latest advances and networking with academics and industry experts.",
+      "key_topics": "AI models, machine learning algorithms, data science, workshops, tutorials",
+      "expected_attendees_speakers": "Several thousand global participants including leading professors, industry leaders, PhD students",
+      "registration_link": "https://icml.cc/",
+      "estimated_cost": "Varies by registration type, academic and industry rates",
+      "relevance_score": 10
+    },
+    {
+      "event_name": "INBOUND 2025",
+      "tagline": "HubSpot\u2019s flagship marketing and sales conference",
+      "date_time": "September 3-5, 2025",
+      "location": "San Francisco, CA, USA",
+      "why_relevant": "Major marketing event with focus on AI in marketing, sales, and investor networking opportunities.",
+      "key_topics": "Marketing strategy, sales enablement, AI marketing, business growth, networking",
+      "expected_attendees_speakers": "20,000+ attendees from marketing and sales sectors, industry leaders",
+      "registration_link": "https://www.inbound.com/",
+      "estimated_cost": "Mid-tier to premium pricing",
+      "relevance_score": 9
+    },
+    {
+      "event_name": "International Conference on Artificial Intelligence and Machine Learning (AIM-2026)",
+      "tagline": "State-of-the-art research and expert networking in AI and ML",
+      "date_time": "April 27-29, 2026",
+      "location": "San Francisco, CA, USA",
+      "why_relevant": "Strong AI & ML focus, excellent for industry networking including investors, with premium attendance.",
+      "key_topics": "Artificial Intelligence, Machine Learning, Expert presentations, Networking opportunities",
+      "expected_attendees_speakers": "Several hundred to 1000+ attendees, expert speakers",
+      "registration_link": "https://artificialintelligence.unitedscientificgroup.org/",
+      "estimated_cost": "Likely mid-tier to premium",
+      "relevance_score": 9
+    },
+    {
+      "event_name": "Digital Marketing Conference #DMWF Expo North America 2025",
+      "tagline": "Focus on digital marketing strategy and AI marketing automation",
+      "date_time": "2025 (specific dates TBA)",
+      "location": "New York, NY, USA",
+      "why_relevant": "Combines marketing and AI automation with strong networking potential among experts and investors.",
+      "key_topics": "Digital marketing, AI marketing automation, strategy, networking",
+      "expected_attendees_speakers": "1000+ marketing professionals and industry experts",
+      "registration_link": "https://www.digitalmarketing-conference.com/northamerica/",
+      "estimated_cost": "Typically mid-tier",
+      "relevance_score": 9
+    }
+  ],
+  "should_attend": [
+    {
+      "event_name": "Machine Learning Conference 2025",
+      "tagline": "Conference covering AI and Reinforcement Learning",
+      "date_time": "November 13-14, 2025",
+      "location": "Global (location not specified)",
+      "why_relevant": "Focused on AI and ML with a practitioner orientation and investor presence possible.",
+      "key_topics": "Artificial Intelligence, Reinforcement Learning, practitioner sessions",
+      "expected_attendees_speakers": "Several hundred to over a thousand attendees",
+      "registration_link": "https://aiml.events/",
+      "estimated_cost": "Likely mid-tier",
+      "relevance_score": 8
+    },
+    {
+      "event_name": "2025 ANA Masters of Marketing Conference",
+      "tagline": "Leading marketing conference to accelerate brand and business growth",
+      "date_time": "October 2025 (exact dates TBD)",
+      "location": "USA (specific city TBD)",
+      "why_relevant": "High-level marketing minds, networking with marketing leaders and potential investors.",
+      "key_topics": "Marketing strategy, brand growth, networking",
+      "expected_attendees_speakers": "1000+ marketing professionals",
+      "registration_link": "https://www.ana.net/content/show/id/ms-anc-oct25-agenda",
+      "estimated_cost": "Mid-tier to premium",
+      "relevance_score": 8
+    },
+    {
+      "event_name": "Global Machine Learning Conferences 2025",
+      "tagline": "Series of AI & ML conferences across Munich, New York, Berlin",
+      "date_time": "Multiple dates in 2025",
+      "location": "Munich, Germany; New York, USA; Berlin, Germany",
+      "why_relevant": "AI & ML industry exchange across global locations, good for networking and market insights.",
+      "key_topics": "Machine Learning advancements, AI industry trends",
+      "expected_attendees_speakers": "Medium to large crowds, AI experts and industry leaders",
+      "registration_link": "https://mlconference.ai/",
+      "estimated_cost": "Varies, generally mid-tier",
+      "relevance_score": 8
+    }
+  ],
+  "nice_to_attend": [
+    {
+      "event_name": "The Caltech and University of Chicago Conference on AI+Science 2025",
+      "tagline": "Bridging AI and scientific discovery",
+      "date_time": "November 10-11, 2025",
+      "location": "Chen 100, Caltech, Pasadena, CA, USA",
+      "why_relevant": "Niche focus on AI in science, smaller scale, good for academic connections.",
+      "key_topics": "AI in scientific research, computational methods",
+      "expected_attendees_speakers": "Few hundred attendees, academics and researchers",
+      "registration_link": "https://aiscienceconference.caltech.edu/",
+      "estimated_cost": "Not publicly stated",
+      "relevance_score": 7
+    },
+    {
+      "event_name": "2025 AMA Symposium for the Marketing of Higher Education",
+      "tagline": "Marketing strategies for higher education professionals",
+      "date_time": "2025 (exact date TBD)",
+      "location": "USA (location TBD)",
+      "why_relevant": "Niche market segment in marketing, smaller community.",
+      "key_topics": "Higher education marketing strategies",
+      "expected_attendees_speakers": "Several hundred attendees",
+      "registration_link": "https://www.ama.org/events/conference/2025-ama-symposium-for-the-marketing-of-higher-education/",
+      "estimated_cost": "Mid-tier expected",
+      "relevance_score": 6
+    }
+  ]
+}

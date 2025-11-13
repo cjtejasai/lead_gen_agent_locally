@@ -1,0 +1,437 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import Image from 'next/image'
+import { motion } from 'framer-motion'
+import {
+  Calendar, MapPin, ExternalLink, Bookmark,
+  Check, Trash2, RefreshCw, ArrowLeft
+} from 'lucide-react'
+
+interface Event {
+  id: number
+  title: string
+  description: string | null
+  url: string | null
+  date: string | null
+  location: string | null
+  event_type: string | null
+  relevance_score: number | null
+  relevance_reason: string | null
+  source: string | null
+  matched_interests: string[] | null
+  is_saved: boolean
+  is_attending: boolean
+  created_at: string
+}
+
+export default function EventsPage() {
+  const router = useRouter()
+  const [events, setEvents] = useState<Event[]>([])
+  const [loading, setLoading] = useState(true)
+  const [discovering, setDiscovering] = useState(false)
+  const [refreshing, setRefreshing] = useState(false)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      router.push('/login')
+      return
+    }
+    fetchEvents()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // Empty deps to fetch on every mount
+
+  const fetchEvents = async () => {
+    try {
+      const token = localStorage.getItem('token')
+      // Add timestamp to prevent caching
+      const timestamp = new Date().getTime()
+      const response = await fetch(`http://localhost:8000/api/v1/events/?_t=${timestamp}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        cache: 'no-store'
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setEvents(data)
+      } else if (response.status === 401) {
+        router.push('/login')
+      } else {
+        setError('Failed to fetch events')
+      }
+    } catch (err) {
+      setError('Error loading events')
+    } finally {
+      setLoading(false)
+      setRefreshing(false)
+    }
+  }
+
+  const handleRefresh = async () => {
+    setRefreshing(true)
+    setError('')
+    await fetchEvents()
+  }
+
+  const handleDiscoverEvents = async () => {
+    setDiscovering(true)
+    try {
+      const token = localStorage.getItem('token')
+      const response = await fetch('http://localhost:8000/api/v1/events/discover', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+
+      if (response.ok) {
+        // Redirect to animation page to show progress
+        router.push('/onboarding/agent-working')
+      } else {
+        setError('Failed to start event discovery')
+        setDiscovering(false)
+      }
+    } catch (err) {
+      setError('Error starting discovery')
+      setDiscovering(false)
+    }
+  }
+
+  const handleSaveEvent = async (eventId: number) => {
+    try {
+      const token = localStorage.getItem('token')
+      const response = await fetch(`http://localhost:8000/api/v1/events/${eventId}/save`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+
+      if (response.ok) {
+        setEvents(events.map(e =>
+          e.id === eventId ? { ...e, is_saved: true } : e
+        ))
+      }
+    } catch (err) {
+      console.error('Error saving event:', err)
+    }
+  }
+
+  const handleAttendEvent = async (eventId: number) => {
+    try {
+      const token = localStorage.getItem('token')
+      const response = await fetch(`http://localhost:8000/api/v1/events/${eventId}/attend`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+
+      if (response.ok) {
+        setEvents(events.map(e =>
+          e.id === eventId ? { ...e, is_attending: true } : e
+        ))
+      }
+    } catch (err) {
+      console.error('Error marking attendance:', err)
+    }
+  }
+
+  const handleDeleteEvent = async (eventId: number) => {
+    try {
+      const token = localStorage.getItem('token')
+      const response = await fetch(`http://localhost:8000/api/v1/events/${eventId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+
+      if (response.ok) {
+        setEvents(events.filter(e => e.id !== eventId))
+      }
+    } catch (err) {
+      console.error('Error deleting event:', err)
+    }
+  }
+
+  const handleClearAllEvents = async () => {
+    if (!confirm('Are you sure you want to delete all events? This cannot be undone.')) {
+      return
+    }
+
+    try {
+      const token = localStorage.getItem('token')
+      // Delete all events one by one
+      const deletePromises = events.map(event =>
+        fetch(`http://localhost:8000/api/v1/events/${event.id}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        })
+      )
+
+      await Promise.all(deletePromises)
+      setEvents([])
+    } catch (err) {
+      console.error('Error clearing all events:', err)
+      setError('Failed to clear all events')
+    }
+  }
+
+  const getRelevanceBadge = (score: number | null) => {
+    if (!score) return { color: 'bg-gray-500', text: 'Unknown' }
+    if (score >= 8) return { color: 'bg-green-500', text: 'Must Attend' }
+    if (score >= 5) return { color: 'bg-yellow-500', text: 'Should Attend' }
+    return { color: 'bg-blue-500', text: 'Nice to Attend' }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading events...</p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50">
+      {/* Header */}
+      <header className="bg-white/80 backdrop-blur-sm border-b border-blue-100 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <Link href="/dashboard" className="flex items-center gap-3">
+              <Image
+                src="/lyncsea-logo.png"
+                alt="Lyncsea"
+                width={120}
+                height={120}
+                className="rounded-lg"
+              />
+              <span className="text-4xl font-bold text-gradient tracking-tight">Lyncsea</span>
+            </Link>
+
+            <nav className="flex items-center gap-4">
+              <Link
+                href="/dashboard"
+                className="text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-3"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Back to Dashboard
+              </Link>
+            </nav>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Header Section */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+            Discovered Events
+          </h1>
+          <p className="text-gray-600">
+            AI-curated networking events based on your interests
+          </p>
+        </div>
+
+        {/* Action Bar */}
+        <div className="mb-8 flex items-center gap-4 flex-wrap">
+          <button
+            onClick={handleDiscoverEvents}
+            disabled={discovering}
+            className="flex items-center gap-3 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <RefreshCw className={`w-5 h-5 ${discovering ? 'animate-spin' : ''}`} />
+            {discovering ? 'Discovering...' : 'Discover New Events'}
+          </button>
+
+          <button
+            onClick={handleRefresh}
+            disabled={refreshing}
+            className="flex items-center gap-3 px-6 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <RefreshCw className={`w-5 h-5 ${refreshing ? 'animate-spin' : ''}`} />
+            {refreshing ? 'Refreshing...' : 'Refresh List'}
+          </button>
+
+          {events.length > 0 && (
+            <button
+              onClick={handleClearAllEvents}
+              className="flex items-center gap-3 px-6 py-3 bg-red-100 text-red-700 rounded-xl hover:bg-red-200 transition-colors"
+            >
+              <Trash2 className="w-5 h-5" />
+              Clear All Events
+            </button>
+          )}
+
+          <div className="text-sm text-gray-600">
+            {events.length} event{events.length !== 1 ? 's' : ''} found
+          </div>
+        </div>
+
+        {error && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-600">
+            {error}
+          </div>
+        )}
+
+        {/* Events Grid */}
+        {events.length === 0 ? (
+          <div className="text-center py-16">
+            <Calendar className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-700 mb-2">
+              No events discovered yet
+            </h3>
+            <p className="text-gray-500 mb-6">
+              Click "Discover New Events" to start finding relevant networking opportunities
+            </p>
+          </div>
+        ) : (
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {events.map((event, index) => {
+              const badge = getRelevanceBadge(event.relevance_score)
+
+              return (
+                <motion.div
+                  key={event.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+                >
+                  {/* Event Header */}
+                  <div className="p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className={`px-3 py-1 rounded-full text-xs font-semibold text-white ${badge.color}`}>
+                        {badge.text}
+                      </div>
+
+                      <div className="flex gap-3">
+                        {!event.is_saved && (
+                          <button
+                            onClick={() => handleSaveEvent(event.id)}
+                            className="text-gray-400 hover:text-blue-600 transition-colors"
+                            title="Save event"
+                          >
+                            <Bookmark className="w-5 h-5" />
+                          </button>
+                        )}
+                        {event.is_saved && (
+                          <Bookmark className="w-5 h-5 text-cyan-600 fill-current" />
+                        )}
+
+                        <button
+                          onClick={() => handleDeleteEvent(event.id)}
+                          className="text-gray-400 hover:text-red-600 transition-colors"
+                          title="Delete event"
+                        >
+                          <Trash2 className="w-5 h-5" />
+                        </button>
+                      </div>
+                    </div>
+
+                    <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2">
+                      {event.title}
+                    </h3>
+
+                    {event.description && (
+                      <p className="text-sm text-gray-600 mb-4 line-clamp-3">
+                        {event.description}
+                      </p>
+                    )}
+
+                    {/* Event Details */}
+                    <div className="space-y-2 mb-4">
+                      {event.date && (
+                        <div className="flex items-center gap-3 text-sm text-gray-600">
+                          <Calendar className="w-4 h-4" />
+                          {event.date}
+                        </div>
+                      )}
+
+                      {event.location && (
+                        <div className="flex items-center gap-3 text-sm text-gray-600">
+                          <MapPin className="w-4 h-4" />
+                          {event.location}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Relevance Reason */}
+                    {event.relevance_reason && (
+                      <div className="mb-4 p-3 bg-blue-50 rounded-lg">
+                        <p className="text-xs text-blue-700 font-medium mb-1">
+                          Why this matters:
+                        </p>
+                        <p className="text-xs text-blue-600 line-clamp-2">
+                          {event.relevance_reason}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Matched Interests */}
+                    {event.matched_interests && event.matched_interests.length > 0 && (
+                      <div className="mb-4 flex flex-wrap gap-3">
+                        {event.matched_interests.slice(0, 3).map((interest, idx) => (
+                          <span
+                            key={idx}
+                            className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full"
+                          >
+                            {interest}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Action Buttons */}
+                    <div className="flex gap-3">
+                      {!event.is_attending && (
+                        <button
+                          onClick={() => handleAttendEvent(event.id)}
+                          className="flex-1 px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors text-sm font-semibold"
+                        >
+                          Mark Attending
+                        </button>
+                      )}
+                      {event.is_attending && (
+                        <div className="flex-1 px-4 py-2 bg-green-100 text-green-700 rounded-lg text-sm font-semibold flex items-center justify-center gap-3">
+                          <Check className="w-4 h-4" />
+                          Attending
+                        </div>
+                      )}
+
+                      {event.url && (
+                        <a
+                          href={event.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm font-semibold flex items-center gap-3"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                          Visit
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              )
+            })}
+          </div>
+        )}
+      </main>
+    </div>
+  )
+}

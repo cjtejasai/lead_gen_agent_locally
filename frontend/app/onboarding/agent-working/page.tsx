@@ -1,0 +1,280 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Sparkles, Search, Brain, Mail, CheckCircle, Calendar } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+
+const stages = [
+  {
+    id: 1,
+    icon: <Brain className="w-12 h-12" />,
+    title: 'Analyzing Your Profile',
+    description: 'Understanding your interests and networking goals...',
+    duration: 3000,
+    color: 'from-blue-900 to-cyan-600'
+  },
+  {
+    id: 2,
+    icon: <Search className="w-12 h-12" />,
+    title: 'Searching for Events',
+    description: 'Discovering relevant conferences, meetups, and networking opportunities...',
+    duration: 5000,
+    color: 'from-blue-600 to-purple-600'
+  },
+  {
+    id: 3,
+    icon: <Sparkles className="w-12 h-12" />,
+    title: 'Curating Matches',
+    description: 'Ranking events by relevance and networking potential...',
+    duration: 3000,
+    color: 'from-pink-600 to-purple-600'
+  },
+  {
+    id: 4,
+    icon: <Mail className="w-12 h-12" />,
+    title: 'Preparing Your Digest',
+    description: 'Creating your personalized event recommendations...',
+    duration: 2000,
+    color: 'from-purple-600 to-blue-600'
+  },
+  {
+    id: 5,
+    icon: <CheckCircle className="w-12 h-12" />,
+    title: 'All Set!',
+    description: 'Your AI agents are ready to work for you 24/7',
+    duration: 2000,
+    color: 'from-green-600 to-purple-600'
+  }
+]
+
+export default function AgentWorkingPage() {
+  const router = useRouter()
+  const [currentStage, setCurrentStage] = useState(0)
+  const [progress, setProgress] = useState(0)
+  const [jobStatus, setJobStatus] = useState<'running' | 'completed' | 'failed'>('running')
+  const [eventsFound, setEventsFound] = useState(0)
+
+  // Poll backend for job status
+  useEffect(() => {
+    const checkJobStatus = async () => {
+      try {
+        const token = localStorage.getItem('token')
+        const response = await fetch('http://localhost:8000/api/v1/events/', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        })
+
+        if (response.ok) {
+          const events = await response.json()
+          if (events.length > 0) {
+            setEventsFound(events.length)
+            setJobStatus('completed')
+            setCurrentStage(stages.length - 1) // Jump to completion stage
+          }
+        }
+      } catch (error) {
+        console.error('Error checking job status:', error)
+      }
+    }
+
+    // Poll every 5 seconds
+    const pollInterval = setInterval(checkJobStatus, 5000)
+    checkJobStatus() // Check immediately
+
+    return () => clearInterval(pollInterval)
+  }, [])
+
+  useEffect(() => {
+    // Progress through stages
+    if (currentStage < stages.length - 1 && jobStatus === 'running') {
+      const stage = stages[currentStage]
+      const progressInterval = setInterval(() => {
+        setProgress((prev) => {
+          if (prev >= 100) {
+            clearInterval(progressInterval)
+            return 100
+          }
+          return prev + (100 / (stage.duration / 100))
+        })
+      }, 100)
+
+      const stageTimeout = setTimeout(() => {
+        setProgress(0)
+        setCurrentStage((prev) => Math.min(prev + 1, stages.length - 2)) // Don't auto-complete
+      }, stage.duration)
+
+      return () => {
+        clearInterval(progressInterval)
+        clearTimeout(stageTimeout)
+      }
+    } else if (jobStatus === 'completed' && currentStage === stages.length - 1) {
+      // Job complete - show final stage briefly then redirect
+      setTimeout(() => {
+        router.push('/events')
+      }, 3000)
+    }
+  }, [currentStage, router, jobStatus])
+
+  const currentStageData = stages[currentStage] || stages[stages.length - 1]
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 dark:from-gray-950 dark:via-purple-950/20 dark:to-gray-950 flex items-center justify-center p-4">
+      <div className="max-w-2xl w-full">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <motion.div
+            animate={{
+              scale: [1, 1.2, 1],
+              rotate: [0, 180, 360],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+            className="inline-flex items-center justify-center mb-6"
+          >
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-900 to-cyan-600 rounded-full blur-2xl opacity-50"></div>
+              <Sparkles className="w-20 h-20 text-blue-600 relative" />
+            </div>
+          </motion.div>
+
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            Our AI Agents Are Working For You
+          </h1>
+          <p className="text-lg text-gray-600 dark:text-gray-400">
+            Sit back and relax! This usually takes about 20-30 seconds.
+          </p>
+        </div>
+
+        {/* Main Card */}
+        <div className="glass-effect rounded-2xl p-8 shadow-lg mb-8">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentStage}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+              className="text-center"
+            >
+              {/* Stage Icon */}
+              <motion.div
+                animate={{
+                  scale: [1, 1.1, 1],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+                className={`inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-r ${currentStageData.color} text-white mb-6 shadow-lg`}
+              >
+                {currentStageData.icon}
+              </motion.div>
+
+              {/* Stage Title */}
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
+                {currentStageData.title}
+              </h2>
+
+              {/* Stage Description */}
+              <p className="text-gray-600 dark:text-gray-400 mb-8">
+                {jobStatus === 'completed' && eventsFound > 0
+                  ? `Found ${eventsFound} personalized events for you!`
+                  : currentStageData.description}
+              </p>
+
+              {/* Progress Bar */}
+              <div className="relative w-full h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mb-4">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${progress}%` }}
+                  transition={{ duration: 0.1 }}
+                  className={`absolute top-0 left-0 h-full bg-gradient-to-r ${currentStageData.color} rounded-full`}
+                />
+                {/* Shimmer effect */}
+                <motion.div
+                  animate={{
+                    x: ['-100%', '200%'],
+                  }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: 'linear',
+                  }}
+                  className="absolute top-0 left-0 h-full w-1/3 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                />
+              </div>
+
+              {/* Progress Text */}
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Step {currentStage + 1} of {stages.length}
+              </p>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* Info Cards */}
+        <div className="grid md:grid-cols-3 gap-4">
+          <InfoCard
+            icon={<Calendar className="w-6 h-6" />}
+            title="Daily Updates"
+            description="Get fresh event recommendations every day"
+          />
+          <InfoCard
+            icon={<Mail className="w-6 h-6" />}
+            title="Email Digest"
+            description="Personalized event digest in your inbox"
+          />
+          <InfoCard
+            icon={<Sparkles className="w-6 h-6" />}
+            title="Auto Refresh"
+            description="Events update automatically based on your activity"
+          />
+        </div>
+
+        {/* Can Leave Notice */}
+        <div className="mt-8 text-center">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+            You don't need to stay on this page!
+          </p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            We'll send you an email when your personalized event recommendations are ready.
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function InfoCard({
+  icon,
+  title,
+  description,
+}: {
+  icon: React.ReactNode
+  title: string
+  description: string
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="glass-effect rounded-xl p-4 text-center"
+    >
+      <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 dark:bg-purple-900/30 text-blue-600 mb-3">
+        {icon}
+      </div>
+      <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">
+        {title}
+      </h3>
+      <p className="text-xs text-gray-600 dark:text-gray-400">
+        {description}
+      </p>
+    </motion.div>
+  )
+}

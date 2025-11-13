@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
     # Database - PostgreSQL
-    DATABASE_URL: str = "postgresql://postgres:postgres@localhost:5432/ayka_leadgen"
+    DATABASE_URL: str = "postgresql://ayka:ayka123@localhost:5433/ayka"
 
     # Neo4j
     NEO4J_URI: str = "bolt://localhost:7687"
@@ -59,7 +59,7 @@ class Settings(BaseSettings):
     CELERY_RESULT_BACKEND: str = "redis://localhost:6379/0"
 
     # CORS
-    CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:8000"]
+    CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:3001", "http://localhost:8000"]
 
     # File Upload
     MAX_UPLOAD_SIZE: int = 500000000  # 500MB

@@ -1,0 +1,162 @@
+{
+  "user_name": "Professional User",
+  "generated_date": "2024-06-05",
+  "total_events_found": 8,
+  "must_attend": [
+    {
+      "event_name": "ICML 2026 - Forty-Third International Conference on Machine Learning",
+      "tagline": "The premier global machine learning research and industry conference",
+      "date_time": "Dates to be announced in 2026 (likely mid-year)",
+      "location": "COEX Convention & Exhibition Center, Seoul, South Korea",
+      "why_relevant": "Largest, most prestigious ML conference with top researchers, investors, and industry experts. Ideal for AI/ML interest and investor networking.",
+      "key_topics": [
+        "Machine Learning Research",
+        "Industry Applications",
+        "Networking"
+      ],
+      "expected_attendees_speakers": "2000+ global experts, researchers, and investors",
+      "registration_link": "https://icml.cc/Conferences/2026",
+      "estimated_cost": "Mid-tier academic and industry rates; details on website",
+      "relevance_score": 10,
+      "networking_potential": 10,
+      "roi_potential": 10
+    },
+    {
+      "event_name": "NextGen Data 2026 - Global Summit on AI, ML & Data Science",
+      "tagline": "Global summit for AI, machine learning, and data science advancements",
+      "date_time": "March 30-31, 2026",
+      "location": "Barcelona, Spain",
+      "why_relevant": "Focus on emerging AI/ML technologies with strong investor presence and global networking opportunities.",
+      "key_topics": [
+        "AI",
+        "Machine Learning",
+        "Data Science",
+        "Emerging Technologies"
+      ],
+      "expected_attendees_speakers": "800+ professionals including investors and tech leaders",
+      "registration_link": "https://globalaidatascience.com/",
+      "estimated_cost": "Mid-tier pricing; details on website",
+      "relevance_score": 9,
+      "networking_potential": 9,
+      "roi_potential": 9
+    },
+    {
+      "event_name": "Third International Conference on Artificial Intelligence and Machine Learning (AIM-2026)",
+      "tagline": "Cutting-edge AI and ML research and industry panel discussions",
+      "date_time": "April 27-29, 2026",
+      "location": "San Francisco, CA, USA",
+      "why_relevant": "Brings global AI/ML experts and investors; strong sessions on future trends; mid-tier pricing fits budget.",
+      "key_topics": [
+        "Artificial Intelligence",
+        "Machine Learning",
+        "Industry Trends",
+        "Investment"
+      ],
+      "expected_attendees_speakers": "500+ researchers, industry leaders, investors",
+      "registration_link": "https://artificialintelligence.unitedscientificgroup.org/",
+      "estimated_cost": "Mid-tier; details on website",
+      "relevance_score": 9,
+      "networking_potential": 8,
+      "roi_potential": 8
+    }
+  ],
+  "should_attend": [
+    {
+      "event_name": "AI+IM Global Summit 2026",
+      "tagline": "Unlocking AI and Information Management potential worldwide",
+      "date_time": "Date TBD 2026",
+      "location": "Global/Virtual and possibly physical venues",
+      "why_relevant": "Focus on AI plus info management; industry leaders and investors present; virtual option increases access.",
+      "key_topics": [
+        "AI",
+        "Information Management",
+        "Industry Leadership",
+        "Investment"
+      ],
+      "expected_attendees_speakers": "1000+ global professionals and investors",
+      "registration_link": "https://www.aiim.org/aiim-global-summit-2026",
+      "estimated_cost": "Mid-tier pricing upon registration",
+      "relevance_score": 8,
+      "networking_potential": 8,
+      "roi_potential": 8
+    },
+    {
+      "event_name": "Artificial Intelligence Conference 2026",
+      "tagline": "Premier AI tech event with deep learning, NLP, and robotics",
+      "date_time": "August 17-19, 2026",
+      "location": "Tokyo, Japan",
+      "why_relevant": "Focus on deep learning and robotics aligns with AI interests; good networking with investors.",
+      "key_topics": [
+        "Deep Learning",
+        "Natural Language Processing",
+        "Robotics",
+        "Networking"
+      ],
+      "expected_attendees_speakers": "600+ AI professionals and investors",
+      "registration_link": "https://mindspaceconferences.com/artificialintelligence/",
+      "estimated_cost": "Mid-tier registration fees",
+      "relevance_score": 8,
+      "networking_potential": 7,
+      "roi_potential": 7
+    },
+    {
+      "event_name": "INBOUND 2025 - HubSpot's Marketing & Sales Conference",
+      "tagline": "Modern marketing and sales strategies for business leaders",
+      "date_time": "September 3-5, 2025",
+      "location": "San Francisco, USA",
+      "why_relevant": "Large marketing event with investor presence; strong marketing topic relevance and networking.",
+      "key_topics": [
+        "Marketing Strategies",
+        "Sales",
+        "Networking",
+        "Technology"
+      ],
+      "expected_attendees_speakers": "25,000+ business, marketing leaders, investors",
+      "registration_link": "https://www.inbound.com/",
+      "estimated_cost": "Mid-tier registration required",
+      "relevance_score": 7,
+      "networking_potential": 9,
+      "roi_potential": 7
+    }
+  ],
+  "nice_to_attend": [
+    {
+      "event_name": "Digital Marketing World Forum (DMWF) Expo North America 2025",
+      "tagline": "Strategic digital marketing insights with AI and automation tracks",
+      "date_time": "2025 (specific dates TBD)",
+      "location": "New York, USA",
+      "why_relevant": "Relevant marketing focus with AI marketing overlap; good networking but smaller scale than INBOUND.",
+      "key_topics": [
+        "Digital Marketing",
+        "AI Marketing",
+        "Marketing Automation",
+        "Networking"
+      ],
+      "expected_attendees_speakers": "1500+",
+      "registration_link": "https://www.digitalmarketing-conference.com/northamerica/",
+      "estimated_cost": "Mid-tier pricing",
+      "relevance_score": 6,
+      "networking_potential": 7,
+      "roi_potential": 6
+    },
+    {
+      "event_name": "2025 ANA Masters of B2B Marketing Conference",
+      "tagline": "Masterclasses and case studies in B2B marketing",
+      "date_time": "June 2025",
+      "location": "USA (exact city TBD)",
+      "why_relevant": "Focused on B2B marketing; useful if looking for specialized marketing insights; moderate networking.",
+      "key_topics": [
+        "B2B Marketing",
+        "Masterclasses",
+        "Case Studies",
+        "Networking"
+      ],
+      "expected_attendees_speakers": "1000+ marketing professionals",
+      "registration_link": "https://www.ana.net/content/show/id/ms-b2banc-jun25",
+      "estimated_cost": "Mid-tier pricing",
+      "relevance_score": 5,
+      "networking_potential": 6,
+      "roi_potential": 6
+    }
+  ]
+}

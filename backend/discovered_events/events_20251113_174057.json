@@ -1,0 +1,136 @@
+{
+  "user_name": "User",
+  "generated_date": "2024-06-07",
+  "total_events_found": 7,
+  "must_attend": [
+    {
+      "event_name": "Forty-Second International Conference on Machine Learning (ICML 2025)",
+      "tagline": "Premier global event for machine learning research and industry innovation",
+      "date_time": "July 13-19, 2025",
+      "location": "Vancouver Convention Center, Vancouver, Canada",
+      "why_relevant": "Top AI & ML conference with extensive academic and industry presences; ideal for networking with investors and tech leaders",
+      "key_topics": [
+        "Machine Learning",
+        "Artificial Intelligence",
+        "Industry Innovation",
+        "Research Techniques"
+      ],
+      "expected_attendees": "Several thousand researchers, practitioners, and industry leaders",
+      "expected_speakers": "Leading AI/ML researchers and industry experts",
+      "registration_link": "https://icml.cc/",
+      "estimated_cost": "Varies; early bird and student rates available, mid-tier for professionals",
+      "relevance_score": 10
+    },
+    {
+      "event_name": "INBOUND 2025 - HubSpot's Marketing & Sales Conference",
+      "tagline": "Major marketing and sales conference blending business growth strategies",
+      "date_time": "September 3-5, 2025",
+      "location": "San Francisco, CA, USA",
+      "why_relevant": "Large-scale marketing event covering sales and growth strategies with substantial investor-oriented networking opportunities",
+      "key_topics": [
+        "Marketing",
+        "Sales",
+        "Business Growth",
+        "Networking"
+      ],
+      "expected_attendees": "Tens of thousands of marketing and sales professionals, executives",
+      "expected_speakers": "Top marketing leaders and business growth experts",
+      "registration_link": "https://www.inbound.com/",
+      "estimated_cost": "Mid-tier ticket options with early bird pricing",
+      "relevance_score": 9
+    },
+    {
+      "event_name": "Third International Conference on Artificial Intelligence and Machine Learning (AIM-2026)",
+      "tagline": "International gathering focused on AI & ML developments and business networking",
+      "date_time": "April 27-29, 2026",
+      "location": "San Francisco, CA, USA",
+      "why_relevant": "Focus on AI/ML advances with strong business and investor networking potential; aligns with mid-tier budget",
+      "key_topics": [
+        "Artificial Intelligence",
+        "Machine Learning",
+        "Business Networking",
+        "Innovation"
+      ],
+      "expected_attendees": "Hundreds to low thousands of AI/ML professionals and investors",
+      "expected_speakers": "Industry experts and academic leaders in AI/ML",
+      "registration_link": "https://artificialintelligence.unitedscientificgroup.org/",
+      "estimated_cost": "Mid-tier pricing",
+      "relevance_score": 9
+    },
+    {
+      "event_name": "Machine Learning Conference Munich Edition (MLcon Munich 2026)",
+      "tagline": "Discussing advancements in ML with networking focused on investment opportunities",
+      "date_time": "2026 (check updates)",
+      "location": "Munich, Germany",
+      "why_relevant": "Strong ML focus with networking sessions designed to attract investors and industry professionals",
+      "key_topics": [
+        "Machine Learning",
+        "Investment Opportunities",
+        "Networking",
+        "Industry Trends"
+      ],
+      "expected_attendees": "Several hundred participants",
+      "expected_speakers": "Academic and industry ML experts",
+      "registration_link": "https://mlconference.ai/munich/",
+      "estimated_cost": "Mid-tier pricing",
+      "relevance_score": 9
+    }
+  ],
+  "should_attend": [
+    {
+      "event_name": "2025 ANA Masters of Marketing Conference",
+      "tagline": "Top marketing minds exploring brand growth and success",
+      "date_time": "October 2025 (dates TBA)",
+      "location": "Likely USA (check website)",
+      "why_relevant": "Strong marketing focus with moderator-size audience and professional mid-tier pricing",
+      "key_topics": [
+        "Marketing",
+        "Brand Growth",
+        "Marketing Strategy"
+      ],
+      "expected_attendees": "Hundreds to 1000+ marketing professionals",
+      "expected_speakers": "Top marketing leaders",
+      "registration_link": "https://www.ana.net/content/show/id/ms-anc-oct25-agenda",
+      "estimated_cost": "Mid-tier professional pricing",
+      "relevance_score": 8
+    },
+    {
+      "event_name": "World Social Marketing Conference - Alicante 2025",
+      "tagline": "Focus on social marketing and behavior change strategies",
+      "date_time": "2025 (check updates)",
+      "location": "Alicante, Spain",
+      "why_relevant": "Niche focus on social marketing, relevant to marketing interests with medium networking potential",
+      "key_topics": [
+        "Social Marketing",
+        "Behavior Change",
+        "Workshops",
+        "Plenaries"
+      ],
+      "expected_attendees": "Several hundred professionals",
+      "expected_speakers": "Experts in social marketing",
+      "registration_link": "https://wsmconference.com/alicante-2025",
+      "estimated_cost": "Competitive mid-tier fees",
+      "relevance_score": 7
+    }
+  ],
+  "nice_to_attend": [
+    {
+      "event_name": "The Caltech and University of Chicago Conference on AI+Science 2025",
+      "tagline": "Exploring AI applications in scientific research",
+      "date_time": "November 10-11, 2025",
+      "location": "Chen 100, Caltech, Pasadena, CA",
+      "why_relevant": "Specialized AI in science focus, smaller audience; good for niche academic interest",
+      "key_topics": [
+        "AI",
+        "Scientific Research",
+        "Applications",
+        "AI Science"
+      ],
+      "expected_attendees": "A few hundred scientists and AI researchers",
+      "expected_speakers": "Leading AI scientists",
+      "registration_link": "https://aiscienceconference.caltech.edu/",
+      "estimated_cost": "Not specified; check website",
+      "relevance_score": 8
+    }
+  ]
+}

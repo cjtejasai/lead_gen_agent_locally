@@ -1,0 +1,168 @@
+{
+  "user_name": "User",
+  "generated_date": "2024-06-29",
+  "total_events_found": 9,
+  "must_attend": [
+    {
+      "event_name": "AI Con USA 2026",
+      "tagline": "Enterprise AI Summit with Investor Networking",
+      "date_time": "June 7-12, 2026",
+      "location": "Seattle, Washington, USA (Hyatt Regency Seattle)",
+      "why_relevant": "Focuses on enterprise-grade AI technologies with explicit investor networking opportunities. Matches user's interest in AI, major US hub, summit format, and investor access.",
+      "key_topics": [
+        "Enterprise AI",
+        "AI Leadership",
+        "Investor Networking",
+        "Workshops",
+        "Exhibits"
+      ],
+      "expected_attendees_speakers": "800-1200 attendees, industry leaders, investors, AI technologists",
+      "registration_link": "https://aiconusa.techwell.com/conference/84635/front",
+      "estimated_cost": "Mid-tier to premium pricing",
+      "relevance_score": 10
+    },
+    {
+      "event_name": "INBOUND by HubSpot 2026",
+      "tagline": "Global Marketing Conference with Investor Engagement",
+      "date_time": "September 16-18, 2026",
+      "location": "Boston, Massachusetts, USA",
+      "why_relevant": "Largest marketing gathering with focus on growth, technology, and networking including investors. Matches user interest in Marketing, major US hub, conference, and premium budget.",
+      "key_topics": [
+        "Growth Marketing",
+        "Marketing Technology",
+        "Investor Networking",
+        "Keynotes",
+        "Panels"
+      ],
+      "expected_attendees_speakers": "25,000+ attendees, marketing leaders, investors, tech innovators",
+      "registration_link": "https://www.inbound.com/",
+      "estimated_cost": "Premium pricing",
+      "relevance_score": 10
+    },
+    {
+      "event_name": "AI Summit London 2026",
+      "tagline": "Flagship Enterprise AI Event with Startups and Investors",
+      "date_time": "During London Tech Week 2026 (exact dates TBD)",
+      "location": "London, United Kingdom",
+      "why_relevant": "Focuses on practical AI deployment, startups, and investor meetups. Matches user interest in AI, major international hub, summit type, and premium budget.",
+      "key_topics": [
+        "Enterprise AI",
+        "Startups",
+        "Investor Networking",
+        "Case Studies",
+        "Panels"
+      ],
+      "expected_attendees_speakers": "1500+ attendees, AI business leaders, startup founders, investors",
+      "registration_link": "https://london.theaisummit.com/",
+      "estimated_cost": "Premium pricing",
+      "relevance_score": 10
+    },
+    {
+      "event_name": "World AI Show 2026",
+      "tagline": "Global AI Summit Series on Strategy and Investment",
+      "date_time": "Multiple events in 2026 (Dubai, Singapore, London)",
+      "location": "Major international hubs including Dubai, Singapore, London",
+      "why_relevant": "AI strategies, investment, and innovation focus with extensive investor networking. Matches user's global location preference and investor focus with mid to premium budget.",
+      "key_topics": [
+        "AI Strategy",
+        "Investment",
+        "Innovation",
+        "Keynotes",
+        "Networking"
+      ],
+      "expected_attendees_speakers": "1000+ attendees per location, industry leaders, investors",
+      "registration_link": "https://worldaishow.com/",
+      "estimated_cost": "Mid-tier to premium depending on location",
+      "relevance_score": 10
+    }
+  ],
+  "should_attend": [
+    {
+      "event_name": "Artificial Intelligence and Machine Learning Conference (AIM-2026)",
+      "tagline": "International conference showcasing latest AI technologies",
+      "date_time": "April 27-29, 2026",
+      "location": "San Francisco, California, USA",
+      "why_relevant": "Strong AI & ML focus with innovation showcases and networking, including emerging companies. Matches user's interests and location with mid to premium budget.",
+      "key_topics": [
+        "Artificial Intelligence",
+        "Machine Learning",
+        "Innovation",
+        "Workshops",
+        "Networking"
+      ],
+      "expected_attendees_speakers": "500-1000 attendees, AI innovators, startups",
+      "registration_link": "https://artificialintelligence.unitedscientificgroup.org/",
+      "estimated_cost": "Mid-tier to premium pricing",
+      "relevance_score": 9
+    },
+    {
+      "event_name": "International Conference on Machine Learning (ICML 2026)",
+      "tagline": "Premier global gathering for machine learning research",
+      "date_time": "To be announced (summer 2026)",
+      "location": "Seoul, South Korea",
+      "why_relevant": "Top-level ML research with large international attendance. Matches user's AI & ML interest, major global hub. May have less direct investor networking but strong research base.",
+      "key_topics": [
+        "Machine Learning",
+        "Research Breakthroughs",
+        "Applications",
+        "Workshops"
+      ],
+      "expected_attendees_speakers": "2000+ researchers and professionals",
+      "registration_link": "https://icml.cc/Conferences/2026",
+      "estimated_cost": "Premium pricing",
+      "relevance_score": 9
+    },
+    {
+      "event_name": "Portada Marketing Conferences 2026",
+      "tagline": "Marketing innovation and partnership series in US and Latin America",
+      "date_time": "Chicago - March 19, 2026; Mexico City - April 16, 2026; Los Angeles - June 4, 2026",
+      "location": "Chicago, Mexico City, Los Angeles",
+      "why_relevant": "Good marketing focus with investor engagement opportunities in major North American and Latin American markets, mid-tier budget.",
+      "key_topics": [
+        "Marketing Innovation",
+        "Partnerships",
+        "Investor Engagement"
+      ],
+      "expected_attendees_speakers": "300-700 attendees per event, marketing professionals, investors",
+      "registration_link": "https://www.portada-online.com/marketing-conferences/",
+      "estimated_cost": "Mid-tier pricing",
+      "relevance_score": 9
+    },
+    {
+      "event_name": "AAAI Conference 2026",
+      "tagline": "Advanced AI topics with workshops and networking",
+      "date_time": "January 20-27, 2026",
+      "location": "USA (varies, typically major city)",
+      "why_relevant": "Advanced AI research and networking, good size and mid to premium budget, matches user AI interest and major US locations.",
+      "key_topics": [
+        "Artificial Intelligence",
+        "Workshops",
+        "Tutorials",
+        "Networking"
+      ],
+      "expected_attendees_speakers": "1500-2000 attendees, AI researchers and professionals",
+      "registration_link": "https://aaai.org/Conferences/AAAI-26/",
+      "estimated_cost": "Mid-tier to premium pricing",
+      "relevance_score": 9
+    }
+  ],
+  "nice_to_attend": [
+    {
+      "event_name": "MLcon San Diego 2026",
+      "tagline": "Machine Learning and Generative AI with practical workshops",
+      "date_time": "Q2 or Q3 2026 (dates TBD)",
+      "location": "San Diego, California, USA",
+      "why_relevant": "Strong ML and generative AI focus with practical sessions; smaller audience, less explicit investor focus, mid-tier budget.",
+      "key_topics": [
+        "Machine Learning",
+        "Generative AI",
+        "Workshops",
+        "Keynotes"
+      ],
+      "expected_attendees_speakers": "400-600 attendees, AI engineers and professionals",
+      "registration_link": "https://mlconference.ai/san-diego/",
+      "estimated_cost": "Mid-tier pricing",
+      "relevance_score": 8
+    }
+  ]
+}

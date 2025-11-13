@@ -1,0 +1,157 @@
+{
+  "user_name": "Professional_user",
+  "generated_date": "2024-06-18",
+  "total_events_found": 9,
+  "must_attend": [
+    {
+      "event_name": "NXT AI 2025",
+      "tagline": "International AI conference featuring advancements in AI technologies with opportunities for investor engagements.",
+      "date_time": "November 3-5, 2025",
+      "location": "San Francisco, California, USA",
+      "relevance": "Highly relevant due to focus on AI advancements and strong investor networking potential.",
+      "key_topics": [
+        "AI advancements",
+        "Investor networking",
+        "Innovations in AI"
+      ],
+      "expected_attendees": "Industry leaders, innovators, investors",
+      "registration_link": "https://nxtai-conference.com/",
+      "estimated_cost": "Mid-tier pricing typical",
+      "relevance_score": 9.5,
+      "networking_score": 9,
+      "roi_score": 9
+    },
+    {
+      "event_name": "Reuters Events: Strategic Marketing 2025",
+      "tagline": "Premier gathering for senior marketing leaders with focused investor networking sessions.",
+      "date_time": "Late 2025 (exact date on website)",
+      "location": "New York City, USA",
+      "relevance": "Highly relevant marketing event with investor-focused networking for senior leaders.",
+      "key_topics": [
+        "Strategic marketing",
+        "Investor networking",
+        "Marketing leadership"
+      ],
+      "expected_attendees": "Senior marketing professionals, executives, investors",
+      "registration_link": "https://events.reutersevents.com/marketing/sm/register",
+      "estimated_cost": "Mid-tier professional conference pricing",
+      "relevance_score": 9.5,
+      "networking_score": 9,
+      "roi_score": 8.5
+    },
+    {
+      "event_name": "5th International Conference on Artificial Intelligence & Machine Learning AIML-2025",
+      "tagline": "Comprehensive AI & ML conference with opportunities for investor pitches and knowledge exchange.",
+      "date_time": "November 17-18, 2025",
+      "location": "London, UK",
+      "relevance": "Highly relevant to AI & ML interests and investor networking opportunities.",
+      "key_topics": [
+        "Artificial intelligence",
+        "Machine learning",
+        "Investor pitches",
+        "Research innovations"
+      ],
+      "expected_attendees": "Researchers, practitioners, investors",
+      "registration_link": "https://unitedresearchforum.com/ai-conference/registration.php",
+      "estimated_cost": "Mid-tier pricing expected",
+      "relevance_score": 9,
+      "networking_score": 8,
+      "roi_score": 8
+    },
+    {
+      "event_name": "Digital Marketing World Forum (DMWF) - North America",
+      "tagline": "Leading digital marketing conference with strategic content, workshops, and investor networking.",
+      "date_time": "November 25-26, 2025",
+      "location": "Amsterdam, Netherlands",
+      "relevance": "Top-tier marketing event with strong investor networking opportunities.",
+      "key_topics": [
+        "Digital marketing strategy",
+        "Workshops",
+        "Investor networking"
+      ],
+      "expected_attendees": "Marketers, agency leaders, investors",
+      "registration_link": "https://www.digitalmarketing-conference.com/northamerica/",
+      "estimated_cost": "Mid-tier pricing typical for series",
+      "relevance_score": 9,
+      "networking_score": 8.5,
+      "roi_score": 8
+    }
+  ],
+  "should_attend": [
+    {
+      "event_name": "AI, Machine Learning, Business Analytics Conference",
+      "tagline": "Conference focused on AI, machine learning, and business analytics with investor opportunities.",
+      "date_time": "December 5-6, 2025",
+      "location": "David Geffen Hall Columbia Business School, New York, NY, USA",
+      "relevance": "Relevant for AI & ML plus business analytics with investor presence.",
+      "key_topics": [
+        "AI",
+        "Machine learning",
+        "Business analytics",
+        "Investor networking"
+      ],
+      "expected_attendees": "Academic and professional mix, including investors",
+      "registration_link": "https://business.columbia.edu/faculty/divisions/marketing/conferences/2025-AI-ML",
+      "estimated_cost": "Mid-tier pricing typical",
+      "relevance_score": 8.5,
+      "networking_score": 7.5,
+      "roi_score": 7.5
+    },
+    {
+      "event_name": "Global Machine Learning Conference Berlin 2025",
+      "tagline": "Conference focusing on machine learning innovation and collaboration with investors.",
+      "date_time": "November 24-28, 2025",
+      "location": "Berlin, Germany",
+      "relevance": "Strong focus on machine learning and international collaboration including investors.",
+      "key_topics": [
+        "Machine learning innovation",
+        "Industry collaboration",
+        "Investor engagement"
+      ],
+      "expected_attendees": "Researchers, industry experts, investors",
+      "registration_link": "https://mlconference.ai/berlin/",
+      "estimated_cost": "Mid-tier expected",
+      "relevance_score": 8.5,
+      "networking_score": 8,
+      "roi_score": 8
+    },
+    {
+      "event_name": "B2B Marketing Expo",
+      "tagline": "Important marketing event focused on B2B trends and investor-friendly sessions.",
+      "date_time": "November 19-20, 2025",
+      "location": "London, UK",
+      "relevance": "Relevant marketing event with investor sessions for B2B marketing professionals.",
+      "key_topics": [
+        "B2B marketing trends",
+        "Investor networking",
+        "Marketing strategies"
+      ],
+      "expected_attendees": "Marketers, agency leaders, investors",
+      "registration_link": "https://www.marketing-expo.com/",
+      "estimated_cost": "Mid-tier expected",
+      "relevance_score": 8.5,
+      "networking_score": 8,
+      "roi_score": 7.5
+    }
+  ],
+  "nice_to_attend": [
+    {
+      "event_name": "Product Marketing Summit Boston",
+      "tagline": "Summit focusing on product marketing strategies with investor engagement opportunities.",
+      "date_time": "Late 2025 (specific dates TBD)",
+      "location": "Boston, USA",
+      "relevance": "Relevant to product marketing with moderate investor engagement.",
+      "key_topics": [
+        "Product marketing strategy",
+        "Investor engagement",
+        "Networking"
+      ],
+      "expected_attendees": "Professional marketers, investors",
+      "registration_link": "https://www.productmarketingsummit.com/",
+      "estimated_cost": "Mid-tier typical pricing",
+      "relevance_score": 8,
+      "networking_score": 7.5,
+      "roi_score": 7
+    }
+  ]
+}

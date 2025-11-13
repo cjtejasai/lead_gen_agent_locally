@@ -1,12 +1,13 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { ArrowRight, Sparkles, Users, TrendingUp, Zap } from 'lucide-react'
+import { Calendar, Sparkles, Users, TrendingUp, Zap, Mail, Brain, Target, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 dark:from-gray-950 dark:via-purple-950/20 dark:to-gray-950">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 dark:from-gray-950 dark:via-purple-950/20 dark:to-gray-950">
       {/* Hero Section */}
       <div className="container mx-auto px-4 py-20">
         <motion.div
@@ -23,13 +24,19 @@ export default function Home() {
               transition={{ duration: 0.5 }}
               className="relative"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full blur-2xl opacity-30"></div>
-              <Sparkles className="w-16 h-16 text-purple-600 relative" />
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-900 to-cyan-600 rounded-full blur-3xl opacity-30"></div>
+              <Image
+                src="/lyncsea-logo.png"
+                alt="Lyncsea"
+                width={100}
+                height={100}
+                className="relative rounded-2xl shadow-2xl"
+              />
             </motion.div>
           </div>
 
-          <h1 className="text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 animate-gradient">
-            Ayka
+          <h1 className="text-6xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-[#1e3a8a] via-[#0891b2] to-[#1e3a8a]">
+            Never Miss a Connection Again
           </h1>
 
           <p className="text-2xl text-gray-600 dark:text-gray-300 mb-4">
@@ -47,7 +54,7 @@ export default function Home() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full font-semibold flex items-center gap-2 shadow-lg hover:shadow-xl transition-shadow"
+                className="px-8 py-4 bg-gradient-to-r from-blue-900 to-cyan-600 text-white rounded-full font-semibold flex items-center gap-2 shadow-lg hover:shadow-xl transition-shadow"
               >
                 Get Started
                 <ArrowRight className="w-5 h-5" />
@@ -58,7 +65,7 @@ export default function Home() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-full font-semibold border-2 border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-700 transition-colors"
+                className="px-8 py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-full font-semibold border-2 border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700 transition-colors"
               >
                 Watch Demo
               </motion.button>
@@ -118,7 +125,7 @@ function FeatureCard({
       whileHover={{ y: -8 }}
       className="p-8 rounded-2xl glass-effect shadow-lg hover:shadow-xl transition-all"
     >
-      <div className="text-purple-600 mb-4">{icon}</div>
+      <div className="text-blue-600 mb-4">{icon}</div>
       <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">
         {title}
       </h3>

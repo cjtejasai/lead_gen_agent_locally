@@ -23,6 +23,14 @@ async def lifespan(app: FastAPI):
     # Startup
     logger.info("Starting Ayka Lead Generation Platform...")
 
+    # Initialize database
+    from app.core.database import init_db, check_db_connection
+    if check_db_connection():
+        logger.info("Database connection successful")
+        init_db()
+    else:
+        logger.error("Database connection failed!")
+
     # Initialize Sentry (optional)
     if SENTRY_AVAILABLE and settings.SENTRY_DSN:
         sentry_sdk.init(
@@ -33,9 +41,6 @@ async def lifespan(app: FastAPI):
         logger.info("Sentry error monitoring initialized")
     elif settings.SENTRY_DSN:
         logger.warning("Sentry DSN configured but sentry_sdk not installed")
-
-    # Test database connections
-    # TODO: Add DB connection tests
 
     logger.info("Application started successfully")
 
@@ -64,9 +69,12 @@ app.add_middleware(
 )
 
 # Include routers
+from app.api import recordings_v2, events
+
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
 app.include_router(users.router, prefix="/api/v1/users", tags=["Users"])
-app.include_router(recordings.router, prefix="/api/v1/recordings", tags=["Recordings"])
+app.include_router(recordings_v2.router, prefix="/api/v1/recordings", tags=["Recordings"])
+app.include_router(events.router, prefix="/api/v1/events", tags=["Events"])
 app.include_router(analysis.router, prefix="/api/v1/analysis", tags=["Analysis"])
 app.include_router(matches.router, prefix="/api/v1/matches", tags=["Matches"])
 

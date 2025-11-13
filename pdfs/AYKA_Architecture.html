@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>ARCHITECTURE</title>
+  <style>
+
+html {
+color: #1a1a1a;
+background-color: #fdfdfd;
+}
+body {
+margin: 0 auto;
+max-width: 36em;
+padding-left: 50px;
+padding-right: 50px;
+padding-top: 50px;
+padding-bottom: 50px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+font-kerning: normal;
+}
+@media (max-width: 600px) {
+body {
+font-size: 0.9em;
+padding: 12px;
+}
+h1 {
+font-size: 1.8em;
+}
+}
+@media print {
+html {
+background-color: white;
+}
+body {
+background-color: transparent;
+color: black;
+font-size: 12pt;
+}
+p, h2, h3 {
+orphans: 3;
+widows: 3;
+}
+h2, h3, h4 {
+page-break-after: avoid;
+}
+}
+p {
+margin: 1em 0;
+}
+a {
+color: #1a1a1a;
+}
+a:visited {
+color: #1a1a1a;
+}
+img {
+max-width: 100%;
+}
+svg {
+height: auto;
+max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+margin-top: 1.4em;
+}
+h5, h6 {
+font-size: 1em;
+font-style: italic;
+}
+h6 {
+font-weight: normal;
+}
+ol, ul {
+padding-left: 1.7em;
+margin-top: 1em;
+}
+li > ol, li > ul {
+margin-top: 0;
+}
+blockquote {
+margin: 1em 0 1em 1.7em;
+padding-left: 1em;
+border-left: 2px solid #e6e6e6;
+color: #606060;
+}
+code {
+font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+font-size: 85%;
+margin: 0;
+hyphens: manual;
+}
+pre {
+margin: 1em 0;
+overflow: auto;
+}
+pre code {
+padding: 0;
+overflow: visible;
+overflow-wrap: normal;
+}
+.sourceCode {
+background-color: transparent;
+overflow: visible;
+}
+hr {
+border: none;
+border-top: 1px solid #1a1a1a;
+height: 1px;
+margin: 1em 0;
+}
+table {
+margin: 1em 0;
+border-collapse: collapse;
+width: 100%;
+overflow-x: auto;
+display: block;
+font-variant-numeric: lining-nums tabular-nums;
+}
+table caption {
+margin-bottom: 0.75em;
+}
+tbody {
+margin-top: 0.5em;
+border-top: 1px solid #1a1a1a;
+border-bottom: 1px solid #1a1a1a;
+}
+th {
+border-top: 1px solid #1a1a1a;
+padding: 0.25em 0.5em 0.25em 0.5em;
+}
+td {
+padding: 0.125em 0.5em 0.25em 0.5em;
+}
+header {
+margin-bottom: 4em;
+text-align: center;
+}
+#TOC li {
+list-style: none;
+}
+#TOC ul {
+padding-left: 1.3em;
+}
+#TOC > ul {
+padding-left: 0;
+}
+#TOC a:not(:hover) {
+text-decoration: none;
+}
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+</head>
+<body>
+<h1 id="ayka-platform---complete-architecture-non-technical-friendly">AYKA
+Platform - Complete Architecture (Non-Technical Friendly)</h1>
+<h2 id="system-architecture-diagram">System Architecture Diagram</h2>
+<pre><code>┌─────────────────────────────────────────────────────────────────────────┐
+│                         👥 USERS (Mobile &amp; Web)                         │
+│                                                                         │
+│  📱 Mobile App (React Native)        💻 Web App (Next.js)              │
+│  - Click to record conversations     - Click to record conversations   │
+│  - See extracted leads                - See extracted leads             │
+│  - Browse events                      - Browse events                   │
+│  - Contact management                 - Contact management              │
+└────────────────────────────────┬────────────────────────────────────────┘
+                                 │
+                                 │ Internet (HTTPS - Secure)
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    🌐 AWS LOAD BALANCER                                 │
+│  Purpose: Distributes traffic across multiple servers                   │
+│  Why: Handles many users at once, prevents crashes                      │
+└────────────────────────────────┬────────────────────────────────────────┘
+                                 │
+                    ┌────────────┴────────────┐
+                    │                         │
+                    ▼                         ▼
+         ┌──────────────────┐      ┌──────────────────┐
+         │  🖥️ SERVER 1     │      │  🖥️ SERVER 2     │
+         │  (AWS EC2)       │      │  (AWS EC2)       │
+         │                  │      │                  │
+         │  FastAPI (Python)│      │  FastAPI (Python)│
+         │                  │      │                  │
+         │  What it does:   │      │  What it does:   │
+         │  ✓ User login    │      │  ✓ User login    │
+         │  ✓ Upload audio  │      │  ✓ Upload audio  │
+         │  ✓ Fetch leads   │      │  ✓ Fetch leads   │
+         │  ✓ Get events    │      │  ✓ Get events    │
+         └────────┬─────────┘      └────────┬─────────┘
+                  │                         │
+                  └────────────┬────────────┘
+                               │
+                               │ Talks to databases &amp; storage
+                               │
+        ┌──────────────────────┼──────────────────────┐
+        │                      │                      │
+        ▼                      ▼                      ▼
+┌────────────────┐   ┌────────────────┐   ┌────────────────┐
+│ 💾 DATABASE    │   │ ⚡ REDIS        │   │ 📦 S3 STORAGE  │
+│ (PostgreSQL)   │   │ (In-Memory)    │   │ (AWS S3)       │
+│                │   │                │   │                │
+│ Stores:        │   │ Stores:        │   │ Stores:        │
+│ ✓ Users        │   │ ✓ Who&#39;s logged │   │ ✓ Audio files  │
+│ ✓ Recordings   │   │   in (sessions)│   │ ✓ Exports      │
+│ ✓ Transcripts  │   │ ✓ Job queue    │   │                │
+│ ✓ Leads/Contacts│  │ ✓ Cache (fast  │   │ Why separate:  │
+│ ✓ Events       │   │   access)      │   │ Audio files    │
+│ ✓ User profiles│   │                │   │ are large,     │
+│                │   │ Why needed:    │   │ keep DB clean  │
+│ Why needed:    │   │ Speed! Temp    │   │                │
+│ Permanent data │   │ data, jobs     │   │                │
+│ storage        │   │                │   │                │
+└────────────────┘   └────────┬───────┘   └────────────────┘
+                              │
+                              │ Job Queue (tells GPU what to process)
+                              │
+                              ▼
+                   ┌────────────────────┐
+                   │  📋 CELERY WORKER  │
+                   │  (Task Manager)    │
+                   │                    │
+                   │  What it does:     │
+                   │  ✓ Manages jobs    │
+                   │  ✓ Sends to GPU    │
+                   │  ✓ Tracks progress │
+                   └──────────┬─────────┘
+                              │
+                              │ Sends audio processing jobs
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                     🎮 GPU SERVER (E2E Cloud)                           │
+│                     Why: Heavy AI processing needs powerful GPU          │
+│                                                                         │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │  1️⃣ WHISPER AI (Speech to Text)                                │   │
+│  │     - Converts audio → text                                     │   │
+│  │     - Processing time: 2-5 minutes for 30-min audio             │   │
+│  │     - Saves to: PostgreSQL (transcripts table)                  │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+│                                                                         │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │  2️⃣ PYANNOTE AI (Speaker Detection)                            │   │
+│  │     - Identifies who said what                                  │   │
+│  │     - Labels: Speaker 1, Speaker 2, etc.                        │   │
+│  │     - Saves to: PostgreSQL (speakers table)                     │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+│                                                                         │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │  3️⃣ LEAD GENERATION AGENT (CrewAI + GPT-4)                     │   │
+│  │     - Reads transcript                                          │   │
+│  │     - Finds people mentioned                                    │   │
+│  │     - Extracts: names, companies, roles, needs                  │   │
+│  │     - Searches LinkedIn for profiles                            │   │
+│  │     - Saves to: PostgreSQL (leads table)                        │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+│                                                                         │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │  4️⃣ EVENT DISCOVERY AGENT (CrewAI + GPT-4)                     │   │
+│  │     - Reads user profile (interests, location)                  │   │
+│  │     - Searches Google for events                                │   │
+│  │     - Filters by relevance                                      │   │
+│  │     - Ranks: must attend, should attend, nice to attend         │   │
+│  │     - Saves to: PostgreSQL (events table)                       │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+│                                                                         │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │  5️⃣ EMAIL AGENT (CrewAI + GPT-4)                               │   │
+│  │     - Creates beautiful HTML email                              │   │
+│  │     - Includes leads + events                                   │   │
+│  │     - Sends via Gmail SMTP                                      │   │
+│  │     - Saves log to: PostgreSQL (email_logs table)               │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+│                                                                         │
+│  Total Processing Time: 3-8 minutes per recording                       │
+└─────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr />
+<h2 id="why-each-component-simple-explanations">Why Each Component?
+(Simple Explanations)</h2>
+<h3 id="why-2-servers-fastapi-on-ec2">1. <strong>Why 2 Servers (FastAPI
+on EC2)?</strong></h3>
+<ul>
+<li><strong>Reason</strong>: If one server crashes, the other keeps
+working</li>
+<li><strong>Benefit</strong>: Website stays online 24/7</li>
+<li><strong>Analogy</strong>: Like having 2 cashiers at a store - if one
+is busy, the other serves customers</li>
+</ul>
+<h3 id="why-postgresql-database">2. <strong>Why PostgreSQL
+Database?</strong></h3>
+<ul>
+<li><strong>Reason</strong>: Store all user data permanently</li>
+<li><strong>What’s stored</strong>: Users, recordings, leads, events,
+everything</li>
+<li><strong>Analogy</strong>: Like a filing cabinet that never loses
+data</li>
+</ul>
+<h3 id="why-redis">3. <strong>Why Redis?</strong></h3>
+<ul>
+<li><strong>Reason 1</strong>: Super fast temporary storage (100x faster
+than PostgreSQL)</li>
+<li><strong>Reason 2</strong>: Manages job queue (who’s next in line for
+processing)</li>
+<li><strong>Reason 3</strong>: Remembers who’s logged in</li>
+<li><strong>Analogy</strong>: Like sticky notes for quick reminders
+vs. filing cabinet for permanent records</li>
+</ul>
+<h3 id="why-s3-storage">4. <strong>Why S3 Storage?</strong></h3>
+<ul>
+<li><strong>Reason</strong>: Audio files are HUGE (30-min recording =
+50-100MB)</li>
+<li><strong>Benefit</strong>: Don’t clog the database with large
+files</li>
+<li><strong>Analogy</strong>: Like a warehouse for bulky items
+vs. office desk for documents</li>
+</ul>
+<h3 id="why-separate-gpu-server">5. <strong>Why Separate GPU
+Server?</strong></h3>
+<ul>
+<li><strong>Reason</strong>: AI processing needs powerful hardware
+(expensive)</li>
+<li><strong>Benefit</strong>: Only pay for GPU when processing, not
+24/7</li>
+<li><strong>Cost</strong>: GPU = $200/month, Regular server =
+$30/month</li>
+<li><strong>Analogy</strong>: Like renting a bulldozer only when you
+need it vs. owning a car</li>
+</ul>
+<h3 id="why-load-balancer">6. <strong>Why Load Balancer?</strong></h3>
+<ul>
+<li><strong>Reason</strong>: Distributes users across servers
+evenly</li>
+<li><strong>Benefit</strong>: No single server gets overloaded</li>
+<li><strong>Analogy</strong>: Like a traffic cop directing cars to less
+busy lanes</li>
+</ul>
+<hr />
+<h2 id="complete-data-flow-step-by-step">Complete Data Flow (Step by
+Step)</h2>
+<pre><code>1. 👤 User opens app/website
+   ↓
+2. 🔐 User logs in
+   → Server checks PostgreSQL (users table)
+   → Redis stores session (you&#39;re logged in)
+   ↓
+3. 🎙️ User clicks &quot;Record&quot; → Audio captured
+   ↓
+4. 📤 Audio uploaded
+   → Sent to S3 (audio storage)
+   → Metadata saved in PostgreSQL (recordings table)
+   → Job created in Redis queue
+   ↓
+5. 🎮 GPU server picks up job
+   ↓
+6. 🗣️ Whisper converts speech → text
+   → Saved to PostgreSQL (transcripts table)
+   ↓
+7. 👥 Pyannote identifies speakers
+   → Saved to PostgreSQL (speakers table)
+   ↓
+8. 🤖 Lead Agent analyzes transcript
+   → Finds people, companies, opportunities
+   → Searches LinkedIn
+   → Saved to PostgreSQL (leads table)
+   ↓
+9. 📅 Event Agent searches for events
+   → Finds relevant conferences/meetups
+   → Ranks by relevance
+   → Saved to PostgreSQL (events table)
+   ↓
+10. 📧 Email Agent sends summary
+    → HTML email with leads + events
+    → Saved to PostgreSQL (email_logs table)
+    ↓
+11. ✅ User sees results
+    → API fetches from PostgreSQL
+    → Redis caches for fast access
+    → Displayed on app/website</code></pre>
+<hr />
+<h2 id="optional-graph-database-phase-2">Optional: Graph Database (Phase
+2)</h2>
+<h3 id="neo4j---why-later">Neo4j - Why Later?</h3>
+<p><strong>What it does</strong>: Connects people by shared
+interests</p>
+<p><strong>Example</strong>: - You like: AI, Crypto, Startups - John
+likes: AI, Crypto - Sarah likes: AI, Startups - <strong>Neo4j
+finds</strong>: “You should meet John and Sarah - you have common
+interests!”</p>
+<p><strong>Why not now</strong>: Adds complexity, not needed for MVP</p>
+<p><strong>When to add</strong>: When you have 1000+ users and want
+smart matching</p>
+<hr />
+<h2 id="technology-choices---why-these">Technology Choices - Why
+These?</h2>
+<h3 id="backend-fastapi-python">Backend: FastAPI (Python)</h3>
+<ul>
+<li><strong>Why</strong>: Fast, modern, easy to add AI</li>
+<li><strong>Alternative</strong>: Node.js/Express (slower for AI
+tasks)</li>
+</ul>
+<h3 id="frontend-next.js">Frontend: Next.js</h3>
+<ul>
+<li><strong>Why</strong>: Works on all devices, SEO-friendly</li>
+<li><strong>Alternative</strong>: Plain React (no SEO)</li>
+</ul>
+<h3 id="mobile-react-native">Mobile: React Native</h3>
+<ul>
+<li><strong>Why</strong>: Write once, works on iOS + Android</li>
+<li><strong>Alternative</strong>: Native apps (need 2 codebases)</li>
+</ul>
+<h3 id="database-postgresql">Database: PostgreSQL</h3>
+<ul>
+<li><strong>Why</strong>: Reliable, handles millions of records,
+free</li>
+<li><strong>Alternative</strong>: MongoDB (less structure, not ideal for
+our use case)</li>
+</ul>
+<h3 id="gpu-e2e-cloud">GPU: E2E Cloud</h3>
+<ul>
+<li><strong>Why</strong>: Cheaper than AWS GPU (50% less)</li>
+<li><strong>Alternative</strong>: AWS GPU (2x cost)</li>
+</ul>
+<hr />
+<h2 id="cost-breakdown-monthly">Cost Breakdown (Monthly)</h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Why Needed</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2× API Servers (EC2)</td>
+<td>Handle user requests, always online</td>
+<td>$60</td>
+</tr>
+<tr>
+<td>PostgreSQL Database</td>
+<td>Store all data permanently</td>
+<td>$20</td>
+</tr>
+<tr>
+<td>Redis Cache</td>
+<td>Fast access, job queue</td>
+<td>$15</td>
+</tr>
+<tr>
+<td>S3 Storage</td>
+<td>Store audio files</td>
+<td>$10</td>
+</tr>
+<tr>
+<td>GPU Server (E2E)</td>
+<td>AI processing (Whisper, Agents)</td>
+<td>$200</td>
+</tr>
+<tr>
+<td>Load Balancer</td>
+<td>Distribute traffic</td>
+<td>$20</td>
+</tr>
+<tr>
+<td><strong>TOTAL</strong></td>
+<td></td>
+<td><strong>$325/month</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>For comparison</strong>: - Hiring 1 person to manually
+process recordings: $3000+/month - Our AI does it automatically:
+$325/month</p>
+<hr />
+<h2 id="scalability---what-happens-when-you-grow">Scalability - What
+Happens When You Grow?</h2>
+<h3 id="users">10 Users</h3>
+<ul>
+<li>1 API server</li>
+<li>Small database</li>
+<li><strong>Cost</strong>: $150/month</li>
+</ul>
+<h3 id="users-1">100 Users</h3>
+<ul>
+<li>2 API servers</li>
+<li>Medium database</li>
+<li><strong>Cost</strong>: $325/month (current plan)</li>
+</ul>
+<h3 id="users-2">1,000 Users</h3>
+<ul>
+<li>5 API servers (auto-scaling)</li>
+<li>2 GPU servers</li>
+<li>Larger database</li>
+<li><strong>Cost</strong>: $800/month</li>
+</ul>
+<h3 id="users-3">10,000 Users</h3>
+<ul>
+<li>20+ API servers</li>
+<li>5+ GPU servers</li>
+<li>Database replicas</li>
+<li><strong>Cost</strong>: $3,000-5,000/month</li>
+<li><strong>Revenue needed</strong>: $10,000+/month (break even at
+$10/user)</li>
+</ul>
+<hr />
+<h2 id="security-privacy">Security &amp; Privacy</h2>
+<h3 id="how-data-is-protected">How Data is Protected</h3>
+<ol type="1">
+<li><strong>Encryption in Transit</strong>: All data encrypted during
+transfer (HTTPS)</li>
+<li><strong>Encryption at Rest</strong>: Database encrypted on disk</li>
+<li><strong>Access Control</strong>: Only you see your data</li>
+<li><strong>Backups</strong>: Daily automatic backups (7 days)</li>
+<li><strong>Audio Storage</strong>: Can be auto-deleted after processing
+(GDPR compliant)</li>
+</ol>
+<h3 id="who-can-access-what">Who Can Access What?</h3>
+<ul>
+<li><strong>Users</strong>: Only their own data</li>
+<li><strong>Admins</strong>: Only with permission (audit logged)</li>
+<li><strong>AI Agents</strong>: No permanent storage, process and
+delete</li>
+</ul>
+<hr />
+<h2 id="summary---why-this-architecture">Summary - Why This
+Architecture?</h2>
+<p>✅ <strong>Reliable</strong>: If one server fails, others keep
+working ✅ <strong>Fast</strong>: Redis caching, optimized queries ✅
+<strong>Scalable</strong>: Add more servers as users grow ✅
+<strong>Cost-effective</strong>: Only pay for GPU when processing ✅
+<strong>Secure</strong>: Industry-standard encryption and access control
+✅ <strong>Maintainable</strong>: Modular design, easy to update</p>
+<p><strong>Bottom Line</strong>: Professional, production-ready system
+that can handle growth from 10 to 10,000 users.</p>
+</body>
+</html>

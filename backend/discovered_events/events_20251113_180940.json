@@ -1,0 +1,71 @@
+{
+  "user_name": "User",
+  "generated_date": "2024-06-14",
+  "total_events_found": 3,
+  "must_attend": [
+    {
+      "event_name": "Global AI & Machine Learning Summit 2024",
+      "tagline": "Driving the Future of AI Innovations",
+      "date_time": "2024-09-12 to 2024-09-14, 9:00 AM - 6:00 PM",
+      "location": "San Francisco, CA & Virtual",
+      "why_relevant": "Top conference focused on AI & Machine Learning attracting investors globally, perfect for professionals seeking advanced insights and investment opportunities.",
+      "key_topics": [
+        "Deep Learning",
+        "AI Ethics",
+        "Machine Learning Applications",
+        "Investor Panels"
+      ],
+      "expected_attendees_speakers": [
+        "Leading AI researchers",
+        "Venture capital investors in AI",
+        "Tech company executives"
+      ],
+      "registration_link": "https://globalaimlsummit2024.com/register",
+      "estimated_cost": "$1500 (Premium tier)",
+      "relevance_score": 10
+    },
+    {
+      "event_name": "AI & Marketing Investor Forum",
+      "tagline": "Bridging AI Innovations with Marketing Investment Opportunities",
+      "date_time": "2024-10-10, 8:00 AM - 5:00 PM",
+      "location": "London, UK & Virtual",
+      "why_relevant": "Combines AI & Marketing topics with investor meetings, ideal for professionals interested in investments in AI-driven marketing solutions.",
+      "key_topics": [
+        "AI in Marketing",
+        "Venture Capital for Tech",
+        "Collaborative Panels"
+      ],
+      "expected_attendees_speakers": [
+        "Investors",
+        "Marketing tech entrepreneurs",
+        "AI researchers"
+      ],
+      "registration_link": "https://aimarketinginvestorforum.com/register",
+      "estimated_cost": "$1200 (Premium tier)",
+      "relevance_score": 9
+    }
+  ],
+  "should_attend": [
+    {
+      "event_name": "Marketing Innovators Networking Event",
+      "tagline": "Connect with Marketing Visionaries and Investors",
+      "date_time": "2024-07-25, 5:00 PM - 9:00 PM",
+      "location": "New York City, NY",
+      "why_relevant": "Focused on marketing professionals and investors, providing excellent networking opportunities for new marketing technology investments.",
+      "key_topics": [
+        "Digital Marketing Trends",
+        "Marketing Automation",
+        "Investor Pitches"
+      ],
+      "expected_attendees_speakers": [
+        "Marketing leaders",
+        "Startup founders",
+        "Angel investors"
+      ],
+      "registration_link": "https://marketinginnovatorsnyc.com/register",
+      "estimated_cost": "$500 (Mid-tier)",
+      "relevance_score": 8
+    }
+  ],
+  "nice_to_attend": []
+}

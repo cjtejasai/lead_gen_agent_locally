@@ -1,0 +1,229 @@
+{
+  "user_name": "User",
+  "generated_date": "2024-06-07",
+  "total_events_found": 14,
+  "must_attend": [
+    {
+      "event_name": "The AI Summit New York 2025",
+      "tagline": "Commercial AI solutions with enterprise focus",
+      "date_time": "December 10-11, 2025",
+      "location": "Javits Center, New York, USA",
+      "why_relevant": "High relevance with AI & Machine Learning commercial applications, large attendance including investors and business leaders, premium pricing matching budget.",
+      "key_topics": [
+        "Enterprise AI Applications",
+        "Workshops",
+        "Demos",
+        "Networking"
+      ],
+      "expected_attendees_speakers": "3000+ business leaders, innovators, and investors",
+      "registration_link": "https://newyork.theaisummit.com/",
+      "estimated_cost": "Premium pricing",
+      "relevance_score": 10,
+      "networking_potential": 10,
+      "roi_potential": 10
+    },
+    {
+      "event_name": "AI4 Startup Expo and VC Meeting (part of AI4 Conference 2026)",
+      "tagline": "Startup pitch and investor meeting exclusive track",
+      "date_time": "TBD 2026",
+      "location": "USA",
+      "why_relevant": "Direct investor pitch opportunities within AI-focused summit, ideal for startup funding and networking with VCs and angel investors, mid-tier to premium budget.",
+      "key_topics": [
+        "Startup Pitches",
+        "VC Meetings",
+        "AI Industry Trends"
+      ],
+      "expected_attendees_speakers": "Startups, VCs, angel investors, industry leaders",
+      "registration_link": "https://ai4.io/",
+      "estimated_cost": "Premium/invitation",
+      "relevance_score": 10,
+      "networking_potential": 10,
+      "roi_potential": 10
+    },
+    {
+      "event_name": "INBOUND - HubSpot's Marketing & Sales Conference",
+      "tagline": "Marketing and sales professionals conference with networking",
+      "date_time": "September 3-5, 2025",
+      "location": "San Francisco, California, USA",
+      "why_relevant": "Highly relevant marketing conference with huge audience and VIP investor meetups, aligns with marketing and investor networking interests, mid-tier premium ticket price.",
+      "key_topics": [
+        "Marketing",
+        "Sales",
+        "Networking Events",
+        "Workshops",
+        "Keynotes"
+      ],
+      "expected_attendees_speakers": "25000+ marketing and sales professionals, investors",
+      "registration_link": "https://www.inbound.com/",
+      "estimated_cost": "Mid-tier premium",
+      "relevance_score": 9,
+      "networking_potential": 10,
+      "roi_potential": 9
+    }
+  ],
+  "should_attend": [
+    {
+      "event_name": "Artificial Intelligence & Machine Learning Conference (AIM-2026)",
+      "tagline": "International Conference on AI & ML innovations and business apps",
+      "date_time": "April 27-29, 2026",
+      "location": "San Francisco, California, USA",
+      "why_relevant": "Strong AI & ML focus with industry experts and investors, mid-tier to premium price, good for business networking.",
+      "key_topics": [
+        "AI & ML Innovations",
+        "Business Applications",
+        "Scientific Advancement"
+      ],
+      "expected_attendees_speakers": "500+ industry experts, researchers, startups, investors",
+      "registration_link": "https://artificialintelligence.unitedscientificgroup.org/",
+      "estimated_cost": "Mid-tier to premium",
+      "relevance_score": 9,
+      "networking_potential": 8,
+      "roi_potential": 8
+    },
+    {
+      "event_name": "Digital Summit North America 2025",
+      "tagline": "Focus on digital and social marketing trends and AI marketing automation",
+      "date_time": "November 25-26, 2025",
+      "location": "Hybrid (Online & physical venue TBD)",
+      "why_relevant": "Marketing event with AI automation tracks and good networking with digital leaders, mid-tier cost.",
+      "key_topics": [
+        "Digital Marketing",
+        "Social Marketing",
+        "AI Marketing Automation"
+      ],
+      "expected_attendees_speakers": "1500+ online and offline attendees",
+      "registration_link": "https://www.digitalmarketing-conference.com/northamerica/",
+      "estimated_cost": "Mid-tier",
+      "relevance_score": 8,
+      "networking_potential": 7,
+      "roi_potential": 7
+    },
+    {
+      "event_name": "AI Networking Summit Fall 2025",
+      "tagline": "Focus on AI networking technologies and innovation",
+      "date_time": "October 22-23, 2025",
+      "location": "New York City, USA",
+      "why_relevant": "Niche event focused on AI networking tech, good for connecting with tech leaders and investors, mid-tier pricing.",
+      "key_topics": [
+        "AI Networking Technologies",
+        "Enterprise Innovation"
+      ],
+      "expected_attendees_speakers": "500+ networking professionals and tech leaders",
+      "registration_link": "https://onug.net/ai-networking-summit-nyc-fall-2025/",
+      "estimated_cost": "Mid-tier",
+      "relevance_score": 8,
+      "networking_potential": 8,
+      "roi_potential": 7
+    },
+    {
+      "event_name": "2025 ANA Masters of Marketing Conference",
+      "tagline": "Conference for marketing leaders on strategies and innovation",
+      "date_time": "October 2025 (exact date TBD)",
+      "location": "USA",
+      "why_relevant": "Relevant for marketing strategies and brand growth with premium pricing, good leadership attendance.",
+      "key_topics": [
+        "Marketing Strategies",
+        "Brand Growth",
+        "Innovation"
+      ],
+      "expected_attendees_speakers": "1000+ marketing leaders",
+      "registration_link": "https://www.ana.net/content/show/id/ms-anc-oct25-agenda",
+      "estimated_cost": "Premium pricing",
+      "relevance_score": 8,
+      "networking_potential": 7,
+      "roi_potential": 7
+    }
+  ],
+  "nice_to_attend": [
+    {
+      "event_name": "International Conference on Machine Learning (ICML) 2025",
+      "tagline": "Premier international machine learning conference",
+      "date_time": "July 13-19, 2025",
+      "location": "Vancouver Convention Center, Vancouver, Canada",
+      "why_relevant": "Top academic AI & ML conference, mostly research focused, less direct investor presence, mid-tier to premium.",
+      "key_topics": [
+        "ML algorithms",
+        "Models",
+        "Applications"
+      ],
+      "expected_attendees_speakers": "2000+ researchers, professionals, academics",
+      "registration_link": "https://icml.cc/",
+      "estimated_cost": "Mid-tier to premium",
+      "relevance_score": 7,
+      "networking_potential": 6,
+      "roi_potential": 6
+    },
+    {
+      "event_name": "Caltech and University of Chicago AI+Science 2025 Conference",
+      "tagline": "Conference bridging AI and scientific discovery",
+      "date_time": "November 10-11, 2025",
+      "location": "Chen 100, Caltech, Pasadena, California, USA",
+      "why_relevant": "Interdisciplinary AI and science research focus, smaller audience, niche relevance.",
+      "key_topics": [
+        "AI",
+        "Scientific Discovery",
+        "Innovation"
+      ],
+      "expected_attendees_speakers": "300+ academic and industry researchers",
+      "registration_link": "https://aiscienceconference.caltech.edu/",
+      "estimated_cost": "Likely mid-tier",
+      "relevance_score": 7,
+      "networking_potential": 5,
+      "roi_potential": 5
+    },
+    {
+      "event_name": "World Social Marketing Conference 2025",
+      "tagline": "Focus on behavior change marketing and social impact",
+      "date_time": "TBD 2025",
+      "location": "Global",
+      "why_relevant": "Relevant niche marketing conference with social impact emphasis, mid-tier pricing.",
+      "key_topics": [
+        "Behavior Change",
+        "Social Impact",
+        "Marketing"
+      ],
+      "expected_attendees_speakers": "700+ attendees",
+      "registration_link": "https://wsmconference.com/",
+      "estimated_cost": "Mid-tier",
+      "relevance_score": 6,
+      "networking_potential": 6,
+      "roi_potential": 6
+    },
+    {
+      "event_name": "AI4 Conference 2026",
+      "tagline": "AI-focused summit with startup expos and VC sessions",
+      "date_time": "TBD 2026",
+      "location": "USA",
+      "why_relevant": "Good AI event with VC sessions; less clarity on networking or investor invitation exclusivity compared to AI4 Startup Expo.",
+      "key_topics": [
+        "AI Industry",
+        "Startup Expos",
+        "VC Sessions"
+      ],
+      "expected_attendees_speakers": "2000+",
+      "registration_link": "https://ai4.io/",
+      "estimated_cost": "Mid-tier to premium",
+      "relevance_score": 7,
+      "networking_potential": 7,
+      "roi_potential": 7
+    },
+    {
+      "event_name": "INBOUND Networking Events",
+      "tagline": "Multiple networking events with VIP investor meetups",
+      "date_time": "Concurrent with INBOUND conference (September 3-5, 2025)",
+      "location": "San Francisco, CA",
+      "why_relevant": "Investor and startup focused networking aligned with larger INBOUND conference.",
+      "key_topics": [
+        "Networking",
+        "Investor Meetups",
+        "Pitch Sessions"
+      ],
+      "expected_attendees_speakers": "Marketing pros, investors, startup founders",
+      "registration_link": "https://www.inbound.com/",
+      "estimated_cost": "Premium (special access)",
+      "relevance_score": 7,
+      "networking_potential": 8,
+      "roi_potential": 7
+    }
+  ]
+}

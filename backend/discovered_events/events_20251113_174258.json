@@ -1,0 +1,177 @@
+{
+  "user_name": "User",
+  "generated_date": "2024-06-10",
+  "total_events_found": 9,
+  "must_attend": [
+    {
+      "event_name": "5th International Conference on Artificial Intelligence & Machine Learning (AIML-2025)",
+      "tagline": "A forum for AI/ML research, innovation, and investor networking",
+      "date_time": "November 17-18, 2025",
+      "location": "London, United Kingdom",
+      "why_relevant": "High relevance for AI & Machine Learning professionals seeking investors and premium networking.",
+      "key_topics": [
+        "AI research",
+        "Machine Learning",
+        "Investor networking",
+        "Industry innovation"
+      ],
+      "expected_attendees_speakers": "300-500 international AI professionals, investors, academics",
+      "registration_link": "https://unitedresearchforum.com/ai-conference/",
+      "estimated_cost": "Mid to premium tier",
+      "relevance_score": 9,
+      "networking_potential": 9,
+      "roi_potential": 8
+    },
+    {
+      "event_name": "Digital Marketing World Forum (DMWF) Europe",
+      "tagline": "Premier digital marketing strategies and technology forum with investor networking",
+      "date_time": "November 25-26, 2025",
+      "location": "Amsterdam, Netherlands",
+      "why_relevant": "Top marketing event catering to strategy, tech, and investor networking for marketing professionals.",
+      "key_topics": [
+        "Digital Marketing",
+        "Marketing Technology",
+        "Investor networking",
+        "Industry innovation"
+      ],
+      "expected_attendees_speakers": "Large-scale marketing leaders and investors",
+      "registration_link": "https://www.digitalmarketing-conference.com/",
+      "estimated_cost": "Mid to premium tier",
+      "relevance_score": 9,
+      "networking_potential": 9,
+      "roi_potential": 9
+    },
+    {
+      "event_name": "DigiMarCon Silicon Valley",
+      "tagline": "Silicon Valley\u2019s largest digital marketing conference with rich investor networking",
+      "date_time": "November 13-14, 2025",
+      "location": "Silicon Valley, California, USA",
+      "why_relevant": "High-profile marketing event with strong investor presence, ideal for mid to premium budgets.",
+      "key_topics": [
+        "Digital Marketing",
+        "Marketing Leadership",
+        "Investor networking",
+        "Technology trends"
+      ],
+      "expected_attendees_speakers": "Thousands including investors and marketers",
+      "registration_link": "https://digimarcon.com/silicon-valley/",
+      "estimated_cost": "Mid to premium tiers",
+      "relevance_score": 9,
+      "networking_potential": 10,
+      "roi_potential": 9
+    }
+  ],
+  "should_attend": [
+    {
+      "event_name": "Global ML Conferences 2025 Series",
+      "tagline": "Industry-led summits focused on machine learning innovations and investor networking",
+      "date_time": "Various dates late 2025",
+      "location": "Munich, NY, Berlin",
+      "why_relevant": "Strong on AI/ML and investment networking opportunities across multiple key global hubs.",
+      "key_topics": [
+        "Machine Learning",
+        "AI Innovations",
+        "Investor Networking",
+        "Industry Leaders"
+      ],
+      "expected_attendees_speakers": "500+ per event including investors and industry experts",
+      "registration_link": "https://mlconference.ai/",
+      "estimated_cost": "Mid to premium tier",
+      "relevance_score": 8,
+      "networking_potential": 8,
+      "roi_potential": 8
+    },
+    {
+      "event_name": "Machine Learning Conference 2025",
+      "tagline": "International AI and reinforcement learning advances with investment networking",
+      "date_time": "November 13-14, 2025",
+      "location": "Virtual / Multiple locations",
+      "why_relevant": "Good for AI/ML professionals and investors, flexible virtual access.",
+      "key_topics": [
+        "AI",
+        "Reinforcement Learning",
+        "Investment Networking"
+      ],
+      "expected_attendees_speakers": "Mixed AI professionals, investors",
+      "registration_link": "https://aiml.events/",
+      "estimated_cost": "Not listed",
+      "relevance_score": 8,
+      "networking_potential": 7,
+      "roi_potential": 7
+    },
+    {
+      "event_name": "The MarTech Summit London",
+      "tagline": "Marketing technology innovation with investor presence",
+      "date_time": "November 12-13, 2025",
+      "location": "London, UK",
+      "why_relevant": "Focus on marketing tech innovation, networking with investors, mid-tier budget.",
+      "key_topics": [
+        "Marketing Technology",
+        "Innovation",
+        "Investor Networking"
+      ],
+      "expected_attendees_speakers": "Marketing and tech professionals",
+      "registration_link": "https://www.marketingterms.com/conferences/",
+      "estimated_cost": "Mid-tier",
+      "relevance_score": 7,
+      "networking_potential": 7,
+      "roi_potential": 7
+    },
+    {
+      "event_name": "B2B Marketing Expo London",
+      "tagline": "Expo and conference showcasing latest B2B marketing trends and networking",
+      "date_time": "November 19-20, 2025",
+      "location": "London, UK",
+      "why_relevant": "Excellent for B2B marketers and investors, free entry with premium options.",
+      "key_topics": [
+        "B2B Marketing",
+        "Trends",
+        "Investor Networking"
+      ],
+      "expected_attendees_speakers": "1000+ marketers and investors",
+      "registration_link": "https://www.marketingexpouk.com/",
+      "estimated_cost": "Free general entry, premium options",
+      "relevance_score": 7,
+      "networking_potential": 7,
+      "roi_potential": 7
+    }
+  ],
+  "nice_to_attend": [
+    {
+      "event_name": "AI+Science 2025 Conference",
+      "tagline": "AI applications in scientific research with academia-industry collaboration",
+      "date_time": "November 10-11, 2025",
+      "location": "Pasadena, California, USA",
+      "why_relevant": "Niche focus on AI for scientific research, less investor focus, mostly researchers.",
+      "key_topics": [
+        "AI Applications",
+        "Scientific Research",
+        "Academia-Industry collaboration"
+      ],
+      "expected_attendees_speakers": "Researchers and corporate R&D leaders",
+      "registration_link": "https://aiscienceconference.caltech.edu/",
+      "estimated_cost": "Not specified",
+      "relevance_score": 6,
+      "networking_potential": 5,
+      "roi_potential": 5
+    },
+    {
+      "event_name": "GURU 2025 Online Email Marketing Conference",
+      "tagline": "Advanced email marketing trends and tools for marketing professionals",
+      "date_time": "TBD in 2025",
+      "location": "Virtual/Hybrid",
+      "why_relevant": "Specialized niche in email marketing, useful for marketers but less broad impact.",
+      "key_topics": [
+        "Email Marketing",
+        "Digital Trends",
+        "Marketing Technology"
+      ],
+      "expected_attendees_speakers": "Marketing professionals and tech investors",
+      "registration_link": "https://www.guruconference.com/",
+      "estimated_cost": "Mid-tier",
+      "relevance_score": 6,
+      "networking_potential": 6,
+      "roi_potential": 6
+    }
+  ]
+}
