@@ -198,16 +198,26 @@ export default function DhwaniPage() {
       if (!response.ok) throw new Error('Upload failed')
 
       const data = await response.json()
+      const recordingId = data.recording_id
 
-      // Simulate processing stages
+      // Start actual processing
       setStatus('diarizing')
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      await new Promise(resolve => setTimeout(resolve, 1000))
 
       setStatus('transcribing')
-      await new Promise(resolve => setTimeout(resolve, 2000))
+
+      // Call the real /process endpoint
+      const processResponse = await fetch(`http://localhost:8000/api/v1/recordings/${recordingId}/process`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+
+      if (!processResponse.ok) {
+        throw new Error('Processing failed')
+      }
 
       setStatus('generating_leads')
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      await new Promise(resolve => setTimeout(resolve, 1500))
 
       setStatus('complete')
       fetchRecordings()
@@ -498,12 +508,22 @@ export default function DhwaniPage() {
                           {recording.status}
                         </span>
                       </div>
-                      <div className="flex items-center gap-4 text-sm text-gray-600">
-                        <span className="flex items-center gap-1">
-                          <Clock className="w-4 h-4" />
-                          {formatDuration(recording.duration)}
-                        </span>
-                        <span>{new Date(recording.created_at).toLocaleDateString()}</span>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4 text-sm text-gray-600">
+                          <span className="flex items-center gap-1">
+                            <Clock className="w-4 h-4" />
+                            {formatDuration(recording.duration)}
+                          </span>
+                          <span>{new Date(recording.created_at).toLocaleDateString()}</span>
+                        </div>
+                        {recording.status === 'completed' && (
+                          <Link href={`/transcript/${recording.id}`}>
+                            <button className="px-3 py-1 text-xs bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors flex items-center gap-1">
+                              <FileText className="w-3 h-3" />
+                              View Transcript
+                            </button>
+                          </Link>
+                        )}
                       </div>
                     </div>
                   ))
