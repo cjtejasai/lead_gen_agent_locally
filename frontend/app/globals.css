@@ -71,6 +71,6 @@
   }
 
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#1e3a8a] via-[#0891b2] to-[#1e3a8a];
   }
 }
