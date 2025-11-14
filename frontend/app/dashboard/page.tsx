@@ -15,6 +15,7 @@ import {
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import { apiClient } from '@/lib/api'
 
 export default function Dashboard() {
   const router = useRouter()
@@ -31,18 +32,12 @@ export default function Dashboard() {
           return
         }
 
-        const response = await fetch('http://localhost:8000/api/v1/auth/me', {
+        const userData = await apiClient.get('/api/v1/auth/me', {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         })
-
-        if (response.ok) {
-          const userData = await response.json()
-          setUser(userData)
-        } else {
-          router.push('/login')
-        }
+        setUser(userData)
       } catch (error) {
         console.error('Error fetching user:', error)
         router.push('/login')
@@ -315,16 +310,12 @@ function RecentRecordings() {
         const token = localStorage.getItem('token')
         if (!token) return
 
-        const response = await fetch('http://localhost:8000/api/v1/recordings/', {
+        const data = await apiClient.get('/api/v1/recordings/', {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         })
-
-        if (response.ok) {
-          const data = await response.json()
-          setRecordings(data.slice(0, 3)) // Only show 3 most recent
-        }
+        setRecordings(data.slice(0, 3)) // Only show 3 most recent
       } catch (error) {
         console.error('Error fetching recordings:', error)
       } finally {
