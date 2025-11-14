@@ -10,6 +10,10 @@ from loguru import logger
 import os
 import subprocess
 import tempfile
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 
 class TranscriptionService:
@@ -57,7 +61,7 @@ class TranscriptionService:
             logger.info("Loading pyannote speaker diarization model...")
             self.diarization_pipeline = Pipeline.from_pretrained(
                 "pyannote/speaker-diarization-3.1",
-                use_auth_token=hf_token
+                token=hf_token  # Changed from use_auth_token to token (new API)
             )
 
             if self.device == "cuda":
@@ -142,19 +146,37 @@ class TranscriptionService:
 
         try:
             # Transcribe with Whisper
+            logger.info(f"Starting Whisper transcription on: {audio_file_to_use}")
+            logger.info(f"File size: {audio_file_to_use.stat().st_size} bytes")
+
             result = self.model.transcribe(
                 str(audio_file_to_use),
                 language="en",
                 task="transcribe",
-                fp16=False
+                fp16=False,
+                verbose=True  # Enable Whisper's own logging
             )
+
+            logger.info(f"Whisper raw result - segments count: {len(result.get('segments', []))}")
+            logger.info(f"Whisper raw result - text length: {len(result.get('text', ''))}")
+            logger.info(f"Whisper raw result - first 200 chars: {result.get('text', '')[:200]}")
 
             # Get speaker diarization if enabled
             speaker_segments = {}
             if self.enable_diarization and self.diarization_pipeline:
                 try:
                     logger.info("Running speaker diarization...")
-                    diarization = self.diarization_pipeline(str(audio_file_to_use))
+
+                    # Load audio with torchaudio (workaround for torchcodec issue)
+                    import torchaudio
+                    waveform, sample_rate = torchaudio.load(str(audio_file_to_use))
+
+                    # Pass as dict to pyannote
+                    audio_dict = {
+                        "waveform": waveform,
+                        "sample_rate": sample_rate
+                    }
+                    diarization = self.diarization_pipeline(audio_dict)
 
                     # Map time ranges to speakers
                     for segment, _, speaker in diarization.itertracks(yield_label=True):
@@ -167,6 +189,17 @@ class TranscriptionService:
             # Extract segments with timestamps and speakers
             segments = []
             for seg in result.get("segments", []):
+                text = seg["text"].strip()
+
+                # Filter out garbage segments (single words during silence, Whisper hallucinations)
+                word_count = len(text.split())
+                no_speech_prob = seg.get("no_speech_prob", 0.0)
+
+                # Skip if: single word segments (like "you", "a") OR very high probability of no speech
+                if word_count <= 1 or no_speech_prob > 0.8 or not text:
+                    logger.debug(f"Filtering out low-quality segment: '{text}' (words={word_count}, no_speech={no_speech_prob:.2f})")
+                    continue
+
                 # Find speaker for this segment
                 speaker = "SPEAKER_00"  # Default
                 if speaker_segments:
@@ -182,9 +215,9 @@ class TranscriptionService:
                 segments.append({
                     "start": seg["start"],
                     "end": seg["end"],
-                    "text": seg["text"].strip(),
+                    "text": text,
                     "speaker": speaker,
-                    "confidence": seg.get("no_speech_prob", 0.0)
+                    "confidence": 1.0 - no_speech_prob  # Fixed: was using no_speech_prob directly
                 })
 
             # Count unique speakers
