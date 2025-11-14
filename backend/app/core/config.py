@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
     # Database - PostgreSQL
-    DATABASE_URL: str = "postgresql://ayka:ayka123@localhost:5433/ayka"
+    DATABASE_URL: str = "postgresql://ayka:ayka_secure_password_123@localhost:5432/ayka"
 
     # Neo4j
     NEO4J_URI: str = "bolt://localhost:7687"

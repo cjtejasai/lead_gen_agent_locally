@@ -2,7 +2,11 @@
 """Initialize database tables"""
 
 import sys
-sys.path.insert(0, '/Users/cjtejasai/PycharmProjects/ayka_lead_gen/backend')
+import os
+
+# Add backend directory to path (works anywhere)
+backend_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, backend_dir)
 
 from app.core.database import init_db
 
