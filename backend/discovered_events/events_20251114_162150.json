@@ -1,0 +1,138 @@
+{
+  "user_name": "Professional User",
+  "generated_date": "2024-06-15",
+  "total_events_found": 7,
+  "must_attend": [
+    {
+      "event_name": "World Summit AI 2025",
+      "tagline": "Leading global AI summit focusing on AI innovation, startups, investments, and partnerships.",
+      "date_time": "Typical date in 2025, exact date TBD",
+      "location": "Amsterdam, Netherlands",
+      "relevance_reason": "Top global AI innovation event, ideal for partnerships, investments and networking with AI industry leaders.",
+      "key_topics": [
+        "AI innovation ecosystem",
+        "Startups",
+        "Investments",
+        "Partnerships"
+      ],
+      "expected_attendees": "Large global leaders in AI industry and investment",
+      "registration_link": "https://aiconferences.ai/#15-world-summit-ai-2025",
+      "estimated_cost": "Premium",
+      "relevance_score": 10,
+      "networking_potential": 10,
+      "roi_potential": 10
+    },
+    {
+      "event_name": "The 40th Annual AAAI Conference on Artificial Intelligence (AAAI-26)",
+      "tagline": "Major global AI conference with diverse AI topics and broad academic and industry participation.",
+      "date_time": "January 20 to January 27, 2026",
+      "location": "Singapore EXPO, Singapore",
+      "relevance_reason": "Comprehensive AI conference supporting knowledge sharing and networking globally.",
+      "key_topics": [
+        "Artificial Intelligence",
+        "AI research",
+        "Industry applications"
+      ],
+      "expected_attendees": "Global researchers, practitioners in AI",
+      "registration_link": "https://aaai.org/conference/aaai/aaai-26/",
+      "estimated_cost": "Mid-tier to Premium",
+      "relevance_score": 10,
+      "networking_potential": 9,
+      "roi_potential": 8
+    },
+    {
+      "event_name": "NXT AI 2025",
+      "tagline": "International AI conference highlighting advancements in AI and applied machine learning.",
+      "date_time": "November 3-5, 2025",
+      "location": "San Francisco, California, USA",
+      "relevance_reason": "Strong AI and ML focus with opportunities for partnerships and investments.",
+      "key_topics": [
+        "Artificial Intelligence",
+        "Machine Learning",
+        "Applied ML",
+        "Startups"
+      ],
+      "expected_attendees": "AI professionals, startups, investors",
+      "registration_link": "https://nxtai-conference.com/",
+      "estimated_cost": "Mid-tier",
+      "relevance_score": 9,
+      "networking_potential": 9,
+      "roi_potential": 8
+    }
+  ],
+  "should_attend": [
+    {
+      "event_name": "MLcon 2025 Berlin - Global Machine Learning Conference",
+      "tagline": "Leading conference focusing on cutting-edge machine learning innovations and research.",
+      "date_time": "November 24 - 28, 2025",
+      "location": "Berlin, Germany",
+      "relevance_reason": "Focused on machine learning innovations, excellent for knowledge sharing and networking.",
+      "key_topics": [
+        "Machine Learning",
+        "Innovations",
+        "Research"
+      ],
+      "expected_attendees": "ML professionals and researchers",
+      "registration_link": "https://mlconference.ai/berlin/tickets-berlin/",
+      "estimated_cost": "Mid-tier to Premium",
+      "relevance_score": 9,
+      "networking_potential": 8,
+      "roi_potential": 7
+    },
+    {
+      "event_name": "IEEE FMLDS2025 - International Conference on Future Machine Learning and Data Science",
+      "tagline": "Conference with keynote addresses on ML trends and data science.",
+      "date_time": "November 2-5, 2025",
+      "location": "Los Angeles, USA",
+      "relevance_reason": "Focus on future ML trends aligns with investment and knowledge interests.",
+      "key_topics": [
+        "Machine Learning",
+        "Data Science",
+        "ML Trends"
+      ],
+      "expected_attendees": "Global researchers and professionals",
+      "registration_link": "https://www.fmlds.org/Registration.php",
+      "estimated_cost": "Mid-tier to Premium",
+      "relevance_score": 8,
+      "networking_potential": 8,
+      "roi_potential": 7
+    },
+    {
+      "event_name": "5th International Conference on Artificial Intelligence & Machine Learning (AIML-2025)",
+      "tagline": "Conference covering AI and ML research with paper presentations and networking.",
+      "date_time": "November 17-18, 2025",
+      "location": "London, UK",
+      "relevance_reason": "Solid AI and ML research focus suitable for knowledge sharing and networking.",
+      "key_topics": [
+        "Artificial Intelligence",
+        "Machine Learning",
+        "Research"
+      ],
+      "expected_attendees": "Academic and industry researchers and professionals",
+      "registration_link": "https://unitedresearchforum.com/ai-conference/",
+      "estimated_cost": "Mid-tier",
+      "relevance_score": 8,
+      "networking_potential": 7,
+      "roi_potential": 7
+    },
+    {
+      "event_name": "Artificial Intelligence & Machine Learning Conference 2025",
+      "tagline": "Conference covering AI, reinforcement learning, and ML with networking and knowledge sharing.",
+      "date_time": "November 13-14, 2025",
+      "location": "Assago, Italy",
+      "relevance_reason": "Focus on reinforcement learning and ML topics for knowledge sharing.",
+      "key_topics": [
+        "Artificial Intelligence",
+        "Reinforcement Learning",
+        "Machine Learning"
+      ],
+      "expected_attendees": "International AI/ML professionals",
+      "registration_link": "https://aiml.events/",
+      "estimated_cost": "Not specified",
+      "relevance_score": 8,
+      "networking_potential": 7,
+      "roi_potential": 7
+    }
+  ],
+  "nice_to_attend": []
+}

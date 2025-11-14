@@ -40,6 +40,12 @@ class Settings(BaseSettings):
     # AssemblyAI
     ASSEMBLYAI_API_KEY: str = ""
 
+    # Speech-to-Text Provider
+    # Options: "local_whisper" (uses local Whisper+Pyannote) or "assemblyai" (cloud API)
+    STT_PROVIDER: str = "local_whisper"  # Default to local for dev
+    WHISPER_MODEL_SIZE: str = "base"  # tiny, base, small, medium, large
+    ENABLE_DIARIZATION: bool = True  # Speaker diarization
+
     # AWS S3
     AWS_ACCESS_KEY_ID: str = ""
     AWS_SECRET_ACCESS_KEY: str = ""

@@ -11,6 +11,7 @@ import logging
 import os
 
 from app.core.database import get_db
+from app.core.config import settings
 from app.models.database import Recording, User, ProcessingStatus
 from app.services.storage import get_storage_service
 from app.models.schemas import RecordingResponse, RecordingUploadResponse
@@ -177,34 +178,65 @@ async def process_recording(recording_id: int, db: Session = Depends(get_db)):
         db.commit()
 
         logger.info(f"Starting transcription for recording {recording_id}")
+        logger.info(f"Using STT provider: {settings.STT_PROVIDER}")
 
         # Get audio file path
         audio_path = storage.get_full_path(recording.file_path)
 
-        # Transcribe with Whisper + pyannote diarization
-        transcription_service = get_transcription_service(model_size="base", enable_diarization=True)
-        result = transcription_service.transcribe(audio_path)
+        # Transcribe based on configured provider
+        if settings.STT_PROVIDER == "local_whisper":
+            # Use local Whisper + pyannote diarization
+            transcription_service = get_transcription_service(
+                model_size=settings.WHISPER_MODEL_SIZE,
+                enable_diarization=settings.ENABLE_DIARIZATION
+            )
+            result = transcription_service.transcribe(audio_path)
+
+            # Normalize result format from local Whisper
+            normalized_result = {
+                "full_transcript": result.get("text", ""),
+                "segments": result.get("segments", []),
+                "language": result.get("language", "en"),
+                "confidence": 0.95,
+                "duration_seconds": result.get("duration", 0),
+                "num_speakers": len(set(seg.get("speaker", "SPEAKER_00") for seg in result.get("segments", [])))
+            }
+        else:
+            # Use cloud API (AssemblyAI or OpenAI Whisper)
+            from app.services.speech_to_text import SpeechToTextService
+            transcription_service = SpeechToTextService(provider=settings.STT_PROVIDER)
+            normalized_result = transcription_service.transcribe(
+                audio_file_path=str(audio_path),
+                speaker_diarization=settings.ENABLE_DIARIZATION
+            )
 
         # Save transcript to database
         transcript = Transcript(
             recording_id=recording_id,
-            full_text=result["text"],
-            language=result["language"],
-            confidence_score=0.95,
-            word_count=len(result["text"].split())
+            full_text=normalized_result["full_transcript"],
+            language=normalized_result["language"],
+            confidence_score=normalized_result.get("confidence", 0.95),
+            word_count=len(normalized_result["full_transcript"].split())
         )
         db.add(transcript)
         db.flush()  # Get transcript ID
 
         # Save segments with speaker info
-        for idx, seg in enumerate(result["segments"]):
+        for idx, seg in enumerate(normalized_result["segments"]):
+            # Handle both local Whisper and cloud API segment formats
+            speaker_id = seg.get("speaker_id") or seg.get("speaker", "SPEAKER_00")
+            text = seg.get("text", "")
+            start = seg.get("start_time") or seg.get("start", 0)
+            end = seg.get("end_time") or seg.get("end", 0)
+            conf = seg.get("confidence", 0.95)
+
             segment = TranscriptSegment(
                 transcript_id=transcript.id,
-                speaker_id=seg.get("speaker", "SPEAKER_00"),  # Use diarization result
-                text=seg["text"],
-                start_time=seg["start"],
-                end_time=seg["end"],
-                confidence=1.0 - seg.get("confidence", 0.0),
+                speaker_id=speaker_id,
+                text=text,
+                start_time=start,
+                end_time=end,
+                confidence=conf,
                 sequence_number=idx
             )
             db.add(segment)
@@ -212,7 +244,7 @@ async def process_recording(recording_id: int, db: Session = Depends(get_db)):
         # Update recording
         recording.status = ProcessingStatus.COMPLETED
         recording.processing_completed_at = datetime.utcnow()
-        recording.duration_seconds = int(result["duration"])
+        recording.duration_seconds = int(normalized_result.get("duration_seconds", 0))
 
         db.commit()
 
@@ -222,10 +254,10 @@ async def process_recording(recording_id: int, db: Session = Depends(get_db)):
             "message": "Processing completed successfully",
             "recording_id": recording_id,
             "status": "completed",
-            "transcript_length": len(result["text"]),
-            "num_segments": len(result["segments"]),
-            "num_speakers": result.get("num_speakers", 1),
-            "duration": result["duration"]
+            "transcript_length": len(normalized_result["full_transcript"]),
+            "num_segments": len(normalized_result["segments"]),
+            "num_speakers": normalized_result.get("num_speakers", 1),
+            "duration": normalized_result.get("duration_seconds", 0)
         }
 
     except Exception as e:

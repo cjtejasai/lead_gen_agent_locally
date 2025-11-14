@@ -55,16 +55,27 @@ export default function Dashboard() {
   const handleLogout = () => {
     localStorage.removeItem('token')
     localStorage.removeItem('user')
-    router.push('/login')
+    router.replace('/login')
   }
 
   const getInitials = (name: string) => {
-    if (!name) return 'U'
-    const parts = name.split(' ')
+    if (!name || typeof name !== 'string') return 'U'
+
+    // Trim and filter out empty parts
+    const parts = name.trim().split(' ').filter(part => part.length > 0)
+
     if (parts.length >= 2) {
-      return (parts[0][0] + parts[1][0]).toUpperCase()
+      // First letter of first name + first letter of last name
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+    } else if (parts.length === 1 && parts[0].length >= 2) {
+      // First two letters of single name
+      return parts[0].substring(0, 2).toUpperCase()
+    } else if (parts.length === 1 && parts[0].length === 1) {
+      // Single letter name
+      return parts[0][0].toUpperCase()
     }
-    return name.substring(0, 2).toUpperCase()
+
+    return 'U'
   }
 
   return (
@@ -74,7 +85,7 @@ export default function Dashboard() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-3">
+            <Link href="/dashboard" className="flex items-center gap-3">
               <Image
                 src="/lyncsea-logo.png"
                 alt="Lyncsea"
@@ -195,47 +206,57 @@ export default function Dashboard() {
           />
         </div>
 
+        {/* Agent Cards Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8"
+        >
+          <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
+            🤖 Your AI Agent Team
+          </h2>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            <AgentCard
+              name="Arya"
+              icon="🎯"
+              role="Event Scout"
+              description="Discover networking events matching your interests"
+              href="/arya"
+              gradient="from-blue-500 to-cyan-500"
+              stat="12 events found"
+            />
+            <AgentCard
+              name="Dhwani"
+              icon="🎙️"
+              role="Voice Intelligence"
+              description="Record and transcribe conversations with AI"
+              href="/dhwani"
+              gradient="from-purple-500 to-pink-500"
+              stat="5 recordings"
+            />
+            <AgentCard
+              name="Lakshya"
+              icon="💼"
+              role="Lead Generator"
+              description="Extract leads and opportunities automatically"
+              href="/lakshya"
+              gradient="from-orange-500 to-red-500"
+              stat="24 leads generated"
+            />
+          </div>
+        </motion.div>
+
         {/* Main Grid */}
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Left Column - Recent Activity & Upload */}
+          {/* Left Column - Recent Recordings */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Upload Section */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="glass-effect rounded-2xl p-8 shadow-lg"
-            >
-              <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
-                Upload Recording
-              </h2>
-
-              <div className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl p-12 text-center hover:border-blue-400 dark:hover:border-blue-600 transition-colors cursor-pointer group">
-                <Upload className="w-16 h-16 mx-auto mb-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
-                <p className="text-lg font-medium mb-2 text-gray-900 dark:text-white">
-                  Drop your recording here or click to browse
-                </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Supports MP3, WAV, M4A, MP4 (Max 500MB)
-                </p>
-              </div>
-
-              <div className="mt-4 flex items-center gap-4">
-                <button className="flex-1 py-3 px-6 bg-gradient-to-r from-blue-900 to-cyan-600 text-white rounded-full font-semibold hover:shadow-lg transition-shadow">
-                  Start Processing
-                </button>
-                <button className="px-6 py-3 border border-gray-200 dark:border-gray-700 rounded-full font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                  Cancel
-                </button>
-              </div>
-            </motion.div>
-
-            {/* Recent Recordings */}
             <RecentRecordings />
           </div>
 
-          {/* Right Column - Matches Feed */}
+          {/* Right Column - Recent Activity */}
           <div className="space-y-6">
-            <MatchesFeed />
+            <RecentActivity />
           </div>
         </div>
       </div>
@@ -388,34 +409,93 @@ function RecentRecordings() {
   )
 }
 
-function MatchesFeed() {
-  const matches = [
+function AgentCard({
+  name,
+  icon,
+  role,
+  description,
+  href,
+  gradient,
+  stat,
+}: {
+  name: string
+  icon: string
+  role: string
+  description: string
+  href: string
+  gradient: string
+  stat: string
+}) {
+  return (
+    <Link href={href}>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        whileHover={{ y: -4, scale: 1.02 }}
+        className="glass-effect rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all cursor-pointer border-2 border-transparent hover:border-blue-200 dark:hover:border-blue-800"
+      >
+        <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br ${gradient} text-white mb-4 shadow-lg text-3xl`}>
+          {icon}
+        </div>
+        <h3 className="text-xl font-bold mb-1 text-gray-900 dark:text-white">
+          {name}
+        </h3>
+        <p className={`text-sm font-semibold mb-3 bg-gradient-to-r ${gradient} bg-clip-text text-transparent`}>
+          {role}
+        </p>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">
+          {description}
+        </p>
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+            {stat}
+          </span>
+          <span className="text-blue-600 dark:text-blue-400 text-sm font-medium">
+            Open →
+          </span>
+        </div>
+      </motion.div>
+    </Link>
+  )
+}
+
+function RecentActivity() {
+  const activities = [
     {
       id: 1,
-      name: 'Sarah Chen',
-      role: 'Investor',
-      company: 'Venture Capital Inc',
-      score: 92,
-      interests: ['AI', 'SaaS', 'Fintech'],
-      reason: 'Looking for AI startups in fintech space',
+      agent: 'Dhwani',
+      icon: '🎙️',
+      action: 'Processed recording',
+      target: 'Tech Conference 2024',
+      time: '2 hours ago',
+      color: 'text-purple-600',
     },
     {
       id: 2,
-      name: 'Michael Roberts',
-      role: 'Founder',
-      company: 'TechStart',
-      score: 88,
-      interests: ['Marketing', 'Growth', 'SaaS'],
-      reason: 'Seeking growth partnerships',
+      agent: 'Lakshya',
+      icon: '💼',
+      action: 'Found 3 new leads',
+      target: 'from latest recording',
+      time: '3 hours ago',
+      color: 'text-orange-600',
     },
     {
       id: 3,
-      name: 'Emily Thompson',
-      role: 'Student',
-      company: 'MIT',
-      score: 85,
-      interests: ['ML', 'Research', 'Internship'],
-      reason: 'Looking for research collaboration',
+      agent: 'Arya',
+      icon: '🎯',
+      action: 'Discovered 2 events',
+      target: 'matching your interests',
+      time: '5 hours ago',
+      color: 'text-blue-600',
+    },
+    {
+      id: 4,
+      agent: 'Dhwani',
+      icon: '🎙️',
+      action: 'Completed transcription',
+      target: 'Investor Meeting',
+      time: '1 day ago',
+      color: 'text-purple-600',
     },
   ]
 
@@ -427,59 +507,29 @@ function MatchesFeed() {
       className="glass-effect rounded-2xl p-6 shadow-lg"
     >
       <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
-        Top Matches
+        Recent Activity
       </h3>
       <div className="space-y-4">
-        {matches.map((match) => (
+        {activities.map((activity) => (
           <div
-            key={match.id}
-            className="p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700 transition-colors cursor-pointer"
+            key={activity.id}
+            className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
           >
-            <div className="flex items-start justify-between mb-2">
-              <div>
-                <h4 className="font-semibold text-gray-900 dark:text-white">
-                  {match.name}
-                </h4>
-                <p className="text-sm text-gray-500">
-                  {match.role} at {match.company}
-                </p>
-              </div>
-              <div className="text-right">
-                <div className="text-lg font-bold text-blue-600">
-                  {match.score}%
-                </div>
-                <div className="text-xs text-gray-500">match</div>
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-2 mb-2">
-              {match.interests.map((interest) => (
-                <span
-                  key={interest}
-                  className="px-2 py-1 text-xs rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300"
-                >
-                  {interest}
-                </span>
-              ))}
-            </div>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              {match.reason}
-            </p>
-            <div className="mt-3 flex gap-2">
-              <button className="flex-1 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
-                Connect
-              </button>
-              <button className="px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                View
-              </button>
+            <div className="text-2xl flex-shrink-0">{activity.icon}</div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-gray-900 dark:text-white">
+                <span className={activity.color}>{activity.agent}</span> {activity.action}
+              </p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
+                {activity.target}
+              </p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                {activity.time}
+              </p>
             </div>
           </div>
         ))}
       </div>
-      <Link href="/matches">
-        <button className="mt-4 w-full py-3 border border-gray-200 dark:border-gray-700 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-          View All Matches
-        </button>
-      </Link>
     </motion.div>
   )
 }

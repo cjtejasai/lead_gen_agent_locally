@@ -1,11 +1,24 @@
 'use client'
 
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Calendar, Sparkles, Users, TrendingUp, Zap, Mail, Brain, Target, ArrowRight, Mic } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 
 export default function Home() {
+  const router = useRouter()
+
+  // Session persistence - redirect logged-in users to dashboard
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (token) {
+      // Use replace() to avoid back button trap
+      router.replace('/dashboard')
+    }
+  }, [router])
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 dark:from-gray-950 dark:via-purple-950/20 dark:to-gray-950">
       {/* Navigation Header */}
