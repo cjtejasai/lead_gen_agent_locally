@@ -39,3 +39,23 @@ build/
 # Logs
 *.log
 logs/
+
+# Data files - should not be committed
+discovered_events/
+leads_data/
+storage/
+*.bak
+user_profile_example.json
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Security - NEVER commit these
+*.pem
+*.key
+*.cert
+*secret*
+*password*
+*credentials*
