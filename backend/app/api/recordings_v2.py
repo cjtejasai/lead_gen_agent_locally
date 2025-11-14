@@ -2,7 +2,7 @@
 Recording API endpoints - Clean, modular implementation
 """
 
-from fastapi import APIRouter, UploadFile, File, Depends, HTTPException, status
+from fastapi import APIRouter, UploadFile, File, Form, Depends, HTTPException, status
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from typing import List
@@ -27,18 +27,21 @@ storage = get_storage_service("local")
 @router.post("/upload", response_model=RecordingUploadResponse)
 async def upload_recording(
     file: UploadFile = File(...),
-    title: str = None,
+    title: str = Form(None),
+    event_date: str = Form(None),
+    event_location: str = Form(None),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """
     Upload audio recording
     1. Validate file
-    2. Save to storage
+    2. Save to storage with event_date_timestamp naming
     3. Create database record
     4. Return recording ID
     """
     logger.info(f"Upload request from user {current_user.id}: {file.filename}, size: {file.size}")
+    logger.info(f"Event details - title: {title}, date: {event_date}, location: {event_location}")
 
     # Validate file type
     if not file.filename:
@@ -53,9 +56,29 @@ async def upload_recording(
         )
 
     try:
-        # Save file
+        # Create filename with event name, event date and timestamp
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"recording_{timestamp}{ext}"
+
+        # Sanitize event name for filename (remove special characters, replace spaces with underscore)
+        if title:
+            safe_title = "".join(c if c.isalnum() or c in ('-', '_') else '_' for c in title)
+            safe_title = safe_title[:50]  # Limit length
+        else:
+            safe_title = "recording"
+
+        # Use event_date if provided (format: YYYY-MM-DD -> YYYYMMDD)
+        if event_date:
+            try:
+                # Parse and format event date
+                event_date_formatted = event_date.replace("-", "")
+                filename = f"{safe_title}_{event_date_formatted}_{timestamp}{ext}"
+            except:
+                # Fallback to title_timestamp if date parsing fails
+                filename = f"{safe_title}_{timestamp}{ext}"
+        else:
+            filename = f"{safe_title}_{timestamp}{ext}"
+
+        logger.info(f"Generated filename: {filename}")
         file_path = storage.save_file(file.file, filename)
 
         # Create database record with authenticated user
@@ -87,14 +110,14 @@ async def upload_recording(
 @router.get("/", response_model=List[RecordingResponse])
 async def list_recordings(
     skip: int = 0,
-    limit: int = 20,
+    limit: int = 100,  # Increased limit to show more recordings
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """List recordings for the current authenticated user"""
     recordings = db.query(Recording).filter(
         Recording.user_id == current_user.id
-    ).offset(skip).limit(limit).all()
+    ).order_by(Recording.created_at.desc()).offset(skip).limit(limit).all()  # Order by most recent first
 
     return [
         RecordingResponse(
@@ -102,6 +125,7 @@ async def list_recordings(
             user_id=r.user_id,
             title=r.title,
             file_url=storage.get_file_url(r.file_path),
+            filename=os.path.basename(r.file_path) if r.file_path else "unknown",
             file_size=r.file_size_bytes or 0,
             status=r.status,
             created_at=r.created_at,
@@ -126,6 +150,7 @@ async def get_recording(recording_id: int, db: Session = Depends(get_db)):
         user_id=recording.user_id,
         title=recording.title,
         file_url=storage.get_file_url(recording.file_path),
+        filename=os.path.basename(recording.file_path) if recording.file_path else "unknown",
         file_size=recording.file_size_bytes or 0,
         status=recording.status,
         created_at=recording.created_at,

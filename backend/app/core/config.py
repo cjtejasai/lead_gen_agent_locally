@@ -38,11 +38,11 @@ class Settings(BaseSettings):
     ANTHROPIC_API_KEY: str = ""
 
     # AssemblyAI
-    ASSEMBLYAI_API_KEY: str = ""
+    ASSEMBLYAI_API_KEY: str = "f26801f0f12c40fd8e1548ceb8babb79"
 
     # Speech-to-Text Provider
     # Options: "local_whisper" (uses local Whisper+Pyannote) or "assemblyai" (cloud API)
-    STT_PROVIDER: str = "local_whisper"  # Default to local for dev
+    STT_PROVIDER: str = "assemblyai"  # Default to local for dev
     WHISPER_MODEL_SIZE: str = "base"  # tiny, base, small, medium, large
     ENABLE_DIARIZATION: bool = True  # Speaker diarization
 
@@ -55,7 +55,7 @@ class Settings(BaseSettings):
     # Google Calendar API
     GOOGLE_CLIENT_ID: str = ""
     GOOGLE_CLIENT_SECRET: str = ""
-    GOOGLE_REDIRECT_URI: str = ""
+    GOOGLE_REDIRECT_URI: str = "1233"
 
     # Sentry
     SENTRY_DSN: str = ""

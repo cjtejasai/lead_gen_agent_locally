@@ -74,6 +74,7 @@ class RecordingResponse(RecordingBase):
     id: int
     user_id: int
     file_url: str
+    filename: str  # Add filename to show in UI
     file_size: int
     status: ProcessingStatus
     created_at: datetime

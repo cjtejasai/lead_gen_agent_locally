@@ -6,6 +6,7 @@ import { Sparkles, ArrowRight, Mail, Lock, User, MapPin, Eye, EyeOff } from 'luc
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import { apiClient } from '@/lib/api'
 
 export default function SignupPage() {
   const router = useRouter()
@@ -88,27 +89,14 @@ export default function SignupPage() {
     setError('')
 
     try {
-      const response = await fetch('http://localhost:8000/api/v1/auth/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-          full_name: formData.fullName,
-          location: formData.location,
-          interests: formData.interests,
-          looking_for: formData.lookingFor
-        })
+      const data = await apiClient.post('/api/v1/auth/signup', {
+        email: formData.email,
+        password: formData.password,
+        full_name: formData.fullName,
+        location: formData.location,
+        interests: formData.interests,
+        looking_for: formData.lookingFor
       })
-
-      if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.detail || 'Signup failed')
-      }
-
-      const data = await response.json()
 
       // Store token
       localStorage.setItem('token', data.access_token)

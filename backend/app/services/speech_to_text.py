@@ -81,12 +81,17 @@ class SpeechToTextService:
         transcriber = aai.Transcriber()
         transcript = transcriber.transcribe(audio_file_path, config=config)
 
+        logger.info(f"AssemblyAI transcription status: {transcript.status}")
+        logger.info(f"AssemblyAI transcript text: '{transcript.text}'")
+        logger.info(f"AssemblyAI transcript ID: {transcript.id}")
+
         if transcript.status == aai.TranscriptStatus.error:
             logger.error(f"Transcription failed: {transcript.error}")
             raise Exception(f"Transcription failed: {transcript.error}")
 
         # Process results
         full_transcript = transcript.text
+        logger.info(f"Full transcript length: {len(full_transcript)}")
         segments = []
 
         if speaker_diarization and transcript.utterances:
@@ -104,11 +109,14 @@ class SpeechToTextService:
         # Count unique speakers
         num_speakers = len(set(s["speaker_id"] for s in segments)) if segments else 1
 
+        # Get language code from json_response (AssemblyAI detected language)
+        detected_language = transcript.json_response.get("language_code", language or "en")
+
         return {
             "full_transcript": full_transcript,
             "segments": segments,
             "num_speakers": num_speakers,
-            "language": transcript.language_code or "en",
+            "language": detected_language,
             "confidence": transcript.confidence or 0.0,
             "duration_seconds": transcript.audio_duration or 0,
         }

@@ -6,6 +6,7 @@ import { Sparkles, Mail, Lock, Eye, EyeOff } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import { apiClient } from '@/lib/api'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -24,23 +25,10 @@ export default function LoginPage() {
     setError('')
 
     try {
-      const response = await fetch('http://localhost:8000/api/v1/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password
-        })
+      const data = await apiClient.post('/api/v1/auth/login', {
+        email: formData.email,
+        password: formData.password
       })
-
-      if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.detail || 'Login failed')
-      }
-
-      const data = await response.json()
 
       // Store token and user data
       localStorage.setItem('token', data.access_token)
