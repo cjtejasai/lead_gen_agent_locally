@@ -9,6 +9,7 @@ import {
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import { apiClient, API_URL } from '@/lib/api'
 
 type RecordingStatus = 'idle' | 'recording' | 'paused' | 'stopped' | 'uploading' | 'diarizing' | 'transcribing' | 'generating_leads' | 'complete'
 type ActiveTab = 'record' | 'upload'
@@ -92,13 +93,10 @@ export default function DhwaniPage() {
   const fetchRecordings = async () => {
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch('http://localhost:8000/api/v1/recordings/', {
+      const data = await apiClient.get('/api/v1/recordings/', {
         headers: { 'Authorization': `Bearer ${token}` }
       })
-      if (response.ok) {
-        const data = await response.json()
-        setRecordings(data)
-      }
+      setRecordings(data)
     } catch (error) {
       console.error('Error fetching recordings:', error)
     }
@@ -225,7 +223,7 @@ export default function DhwaniPage() {
         formData.append(`visiting_card_${index}`, card)
       })
 
-      const response = await fetch('http://localhost:8000/api/v1/recordings/upload', {
+      const response = await fetch(`${API_URL}/api/v1/recordings/upload`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
         body: formData,
@@ -243,7 +241,7 @@ export default function DhwaniPage() {
       setStatus('transcribing')
 
       // Call the real /process endpoint
-      const processResponse = await fetch(`http://localhost:8000/api/v1/recordings/${recordingId}/process`, {
+      const processResponse = await fetch(`${API_URL}/api/v1/recordings/${recordingId}/process`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` }
       })
@@ -293,16 +291,10 @@ export default function DhwaniPage() {
 
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch(`http://localhost:8000/api/v1/recordings/${id}`, {
-        method: 'DELETE',
+      await apiClient.delete(`/api/v1/recordings/${id}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
-
-      if (response.ok) {
-        fetchRecordings() // Refresh the list
-      } else {
-        alert('Failed to delete recording')
-      }
+      fetchRecordings() // Refresh the list
     } catch (error) {
       console.error('Error deleting recording:', error)
       alert('Failed to delete recording')
