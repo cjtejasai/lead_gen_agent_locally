@@ -4,7 +4,7 @@ Events API endpoints
 
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Dict, Any
 from datetime import datetime
 
 from app.core.database import get_db
@@ -29,6 +29,7 @@ class EventResponse(BaseModel):
     relevance_reason: str | None
     source: str | None
     matched_interests: List[str] | None
+    exhibitors: Dict[str, Any] | None
     is_saved: bool
     is_attending: bool
     created_at: datetime

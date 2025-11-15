@@ -1,5 +1,5 @@
 """
-SQLAlchemy database models for AYKA platform
+SQLAlchemy database models for Lyncsea platform
 Clean, modular design with proper relationships
 """
 
@@ -165,6 +165,7 @@ class Event(Base):
     relevance_reason = Column(Text)  # Why this event matches the user
     source = Column(String(255))  # Where the event was found
     matched_interests = Column(JSON)  # Array of user interests that matched
+    exhibitors = Column(JSON)  # List of companies exhibiting at the event
     is_saved = Column(Boolean, default=False)
     is_attending = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.utcnow, index=True)
@@ -189,3 +190,45 @@ class EventDiscoveryJob(Base):
 
     # Relationships
     user = relationship("User")
+
+
+class Lead(Base):
+    """Lead generated from conversation transcript"""
+    __tablename__ = "leads"
+
+    id = Column(Integer, primary_key=True, index=True)
+    recording_id = Column(Integer, ForeignKey("recordings.id"), nullable=False)
+    name = Column(String(255), nullable=False)
+    company = Column(String(255))
+    role = Column(String(255))
+    opportunity_type = Column(String(100))  # investment, partnership, hiring, etc.
+    opportunity_description = Column(Text)
+    priority = Column(String(50))  # high, medium, low
+    linkedin_url = Column(String(500))
+    email = Column(String(255))
+    company_website = Column(String(500))
+    notes = Column(Text)
+    status = Column(String(50), default="new")  # new, contacted, in_progress, closed
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relationships
+    recording = relationship("Recording")
+
+
+class LeadGenerationJob(Base):
+    """Track lead generation agent runs"""
+    __tablename__ = "lead_generation_jobs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    recording_id = Column(Integer, ForeignKey("recordings.id"), nullable=False)
+    status = Column(String(50), default="pending")  # pending, running, completed, failed
+    leads_found = Column(Integer, default=0)
+    error_message = Column(Text)
+    email_sent = Column(Boolean, default=False)
+    started_at = Column(DateTime)
+    completed_at = Column(DateTime)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    # Relationships
+    recording = relationship("Recording")

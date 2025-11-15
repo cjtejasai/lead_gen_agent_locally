@@ -32,7 +32,11 @@ class StorageService:
 class LocalStorage(StorageService):
     """Local filesystem storage"""
 
-    def __init__(self, base_path: str = "storage/recordings"):
+    def __init__(self, base_path: str = None):
+        # Default to data/recordings at project root
+        if base_path is None:
+            project_root = Path(__file__).parent.parent.parent.parent
+            base_path = project_root / "data" / "recordings"
         self.base_path = Path(base_path)
         self.base_path.mkdir(parents=True, exist_ok=True)
         logger.info(f"Local storage initialized at: {self.base_path.absolute()}")

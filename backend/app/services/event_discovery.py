@@ -160,6 +160,16 @@ class EventDiscoveryService:
 
             for event_obj in events_list:
                 try:
+                    # Extract exhibitor data
+                    exhibitors_data = event_obj.get('exhibitors')
+                    # If exhibitors is a string (like "not yet published"), convert to proper format
+                    if isinstance(exhibitors_data, str):
+                        exhibitors_json = {"status": exhibitors_data, "list": []}
+                    elif isinstance(exhibitors_data, list):
+                        exhibitors_json = {"status": "available", "list": exhibitors_data}
+                    else:
+                        exhibitors_json = {"status": "unknown", "list": []}
+
                     # Extract event details
                     event = Event(
                         user_id=user_id,
@@ -172,7 +182,8 @@ class EventDiscoveryService:
                         relevance_score=event_obj.get('relevance_score', priority_map[priority_level]),
                         relevance_reason=event_obj.get('why_relevant', event_obj.get('reason', '')),
                         source="AI Discovery Agent",
-                        matched_interests=event_obj.get('topics', event_obj.get('key_topics', []))
+                        matched_interests=event_obj.get('topics', event_obj.get('key_topics', [])),
+                        exhibitors=exhibitors_json
                     )
 
                     self.db.add(event)

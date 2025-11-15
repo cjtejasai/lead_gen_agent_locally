@@ -1,6 +1,9 @@
 from pydantic_settings import BaseSettings
 from typing import List, Optional
 import os
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class Settings(BaseSettings):
@@ -9,7 +12,7 @@ class Settings(BaseSettings):
     """
 
     # Application
-    APP_NAME: str = "Ayka Lead Generation"
+    APP_NAME: str = "Lyncsea"
     APP_ENV: str = "development"
     DEBUG: bool = True
     API_HOST: str = "0.0.0.0"
@@ -85,6 +88,6 @@ try:
     settings = Settings()
 except Exception as e:
     # If .env is missing or has issues, use defaults
-    print(f"Warning: Could not load .env file: {e}")
-    print("Using default configuration. Please create backend/.env file for production.")
+    logger.warning(f"Could not load .env file: {e}")
+    logger.warning("Using default configuration. Please create backend/.env file for production.")
     settings = Settings(_env_file=None)

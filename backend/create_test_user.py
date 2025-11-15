@@ -17,7 +17,7 @@ def create_test_user():
 
     try:
         # Check if user already exists
-        existing_user = db.query(User).filter(User.email == "test@ayka.com").first()
+        existing_user = db.query(User).filter(User.email == "test@lyncsea.com").first()
 
         if existing_user:
             logger.info(f"Test user already exists (ID: {existing_user.id})")
@@ -25,7 +25,7 @@ def create_test_user():
 
         # Create test user
         test_user = User(
-            email="test@ayka.com",
+            email="test@lyncsea.com",
             password_hash="dummy_hash",  # Not real auth for demo
             full_name="Test User",
             is_active=True

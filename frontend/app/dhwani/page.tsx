@@ -234,13 +234,7 @@ export default function DhwaniPage() {
       const data = await response.json()
       const recordingId = data.recording_id
 
-      // Start actual processing
-      setStatus('diarizing')
-      await new Promise(resolve => setTimeout(resolve, 1000))
-
-      setStatus('transcribing')
-
-      // Call the real /process endpoint
+      // Start processing
       const processResponse = await fetch(`${API_URL}/api/v1/recordings/${recordingId}/process`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` }
@@ -250,21 +244,62 @@ export default function DhwaniPage() {
         throw new Error('Processing failed')
       }
 
-      setStatus('generating_leads')
-      await new Promise(resolve => setTimeout(resolve, 1500))
+      // Poll for status updates
+      const pollStatus = async () => {
+        const statusResponse = await fetch(`${API_URL}/api/v1/recordings/${recordingId}/status`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
 
-      setStatus('complete')
-      fetchRecordings()
+        if (!statusResponse.ok) return
 
-      setTimeout(() => {
-        setStatus('idle')
-        setAudioBlob(null)
-        setRecordingTime(0)
-        setEventName('')
-        setEventDate('')
-        setEventLocation('')
-        setVisitingCards([])
+        const statusData = await statusResponse.json()
+        console.log('Status poll:', statusData)
+
+        // Map backend status to UI state
+        switch (statusData.status) {
+          case 'pending':
+            setStatus('uploading')
+            break
+          case 'processing':
+            // Alternate between diarizing and transcribing for visual effect
+            setStatus(prev => prev === 'diarizing' ? 'transcribing' : 'diarizing')
+            break
+          case 'analyzing':
+            setStatus('generating_leads')
+            break
+          case 'completed':
+            setStatus('complete')
+            fetchRecordings()
+
+            // Clean up after showing completion
+            setTimeout(() => {
+              setStatus('idle')
+              setAudioBlob(null)
+              setRecordingTime(0)
+              setEventName('')
+              setEventDate('')
+              setEventLocation('')
+              setVisitingCards([])
+            }, 2000)
+
+            return true // Stop polling
+          case 'failed':
+            setStatus('stopped')
+            alert('Processing failed')
+            return true // Stop polling
+        }
+
+        return false // Continue polling
+      }
+
+      // Poll every 2 seconds until complete
+      const pollInterval = setInterval(async () => {
+        const done = await pollStatus()
+        if (done) clearInterval(pollInterval)
       }, 2000)
+
+      // Initial poll
+      await pollStatus()
 
     } catch (error) {
       console.error('Upload error:', error)

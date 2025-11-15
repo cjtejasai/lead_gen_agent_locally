@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AYKA Event Discovery Agent
+Lyncsea Event Discovery Agent
 Finds relevant networking events based on user profile
 """
 
@@ -22,15 +22,19 @@ except ImportError:
 
 load_dotenv()
 
+# Configure logging - log to backend/logs/
+log_dir = Path(__file__).parent.parent / 'logs'
+log_dir.mkdir(exist_ok=True)
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('ayka_event_discovery.log'),
+        logging.FileHandler(log_dir / 'events.log'),
         logging.StreamHandler(sys.stdout)
     ]
 )
-logger = logging.getLogger('ayka_events')
+logger = logging.getLogger('lyncsea_events')
 
 
 @tool("read_profile")
@@ -43,8 +47,10 @@ def read_profile_tool(file_path: str) -> dict:
 @tool("save_events")
 def save_events_tool(events_data: dict) -> str:
     """Save discovered events to JSON file"""
-    output_dir = Path("discovered_events")
-    output_dir.mkdir(exist_ok=True)
+    # Save to data/events/ directory (project root)
+    project_root = Path(__file__).parent.parent.parent
+    output_dir = project_root / "data" / "events"
+    output_dir.mkdir(parents=True, exist_ok=True)
 
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     output_file = output_dir / f"events_{timestamp}.json"
@@ -66,6 +72,8 @@ def send_event_email_tool(recipient: str, subject: str, html_body: str) -> str:
 
     email_user = os.getenv("EMAIL_USER")
     email_password = os.getenv("EMAIL_PASSWORD")
+    smtp_server = os.getenv("SMTP_SERVER", "smtp.gmail.com")
+    smtp_port = int(os.getenv("SMTP_PORT", "587"))
 
     if not email_user or not email_password:
         logger.error(f"Email credentials missing")
@@ -78,13 +86,18 @@ def send_event_email_tool(recipient: str, subject: str, html_body: str) -> str:
 
     msg.attach(MIMEText(html_body, 'html'))
 
-    server = smtplib.SMTP("smtp.gmail.com", 587)
-    server.starttls()
+    # Use SSL for port 465, TLS for port 587
+    if smtp_port == 465:
+        server = smtplib.SMTP_SSL(smtp_server, smtp_port)
+    else:
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.starttls()
+
     server.login(email_user, email_password)
     server.send_message(msg)
     server.quit()
 
-    logger.info(f"Event email sent to {recipient}")
+    logger.info(f"Event email sent to {recipient} via {smtp_server}")
     return f"Event recommendations sent to {recipient}"
 
 
@@ -300,9 +313,9 @@ class EventDiscoveryAgent:
 
 def main():
     if len(sys.argv) < 3:
-        print("Usage: python event_discovery.py <user_profile.json> <user_email>")
+        print("Usage: python event_discoverer.py <user_profile.json> <user_email>")
         print("\nExample:")
-        print("  python event_discovery.py user_profile_example.json user@example.com")
+        print("  python event_discoverer.py user_profile_example.json user@example.com")
         sys.exit(1)
 
     profile_file = sys.argv[1]

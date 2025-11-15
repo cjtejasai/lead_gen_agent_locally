@@ -24,9 +24,6 @@ env/
 Thumbs.db
 
 # Project specific
-recordings/
-transcripts/
-processed/
 *.wav
 *.mp3
 
@@ -38,14 +35,15 @@ build/
 
 # Logs
 *.log
-logs/
+backend/logs/
 
 # Data files - should not be committed
-discovered_events/
-leads_data/
+data/
 storage/
 *.bak
-user_profile_example.json
+
+# Infrastructure - keys should not be committed
+infra/keys/
 
 # Database
 *.db

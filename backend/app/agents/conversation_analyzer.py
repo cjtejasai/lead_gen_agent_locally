@@ -12,7 +12,7 @@ class ConversationAnalyzer(BaseAgent):
         )
 
     def get_system_prompt(self) -> str:
-        return """You are an AI analyst for AYKA lead generation platform.
+        return """You are an AI analyst for Lyncsea lead generation platform.
 Analyze networking event conversations and extract actionable insights for connecting people based on skills, needs, and opportunities.
 
 Focus on:

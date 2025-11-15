@@ -109,7 +109,7 @@ export default function AgentWorkingPage() {
     } else if (jobStatus === 'completed' && currentStage === stages.length - 1) {
       // Job complete - show final stage briefly then redirect
       setTimeout(() => {
-        router.push('/events')
+        router.push('/arya')
       }, 3000)
     }
   }, [currentStage, router, jobStatus])

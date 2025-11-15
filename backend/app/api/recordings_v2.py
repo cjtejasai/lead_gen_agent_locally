@@ -2,7 +2,7 @@
 Recording API endpoints - Clean, modular implementation
 """
 
-from fastapi import APIRouter, UploadFile, File, Form, Depends, HTTPException, status
+from fastapi import APIRouter, UploadFile, File, Form, Depends, HTTPException, status, BackgroundTasks
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from typing import List
@@ -179,11 +179,39 @@ async def delete_recording(recording_id: int, db: Session = Depends(get_db)):
     return {"message": "Recording deleted successfully"}
 
 
+def trigger_lead_generation(recording_id: int, user_email: str, db_session):
+    """Background task to generate leads after transcription"""
+    from app.services.lead_generation import get_lead_generation_service
+    try:
+        logger.info(f"Starting lead generation for recording {recording_id}")
+        service = get_lead_generation_service()
+        result = service.generate_leads_from_transcript(recording_id, user_email, db_session)
+
+        # Update recording status to COMPLETED after lead generation
+        recording = db_session.query(Recording).filter(Recording.id == recording_id).first()
+        if recording:
+            recording.status = ProcessingStatus.COMPLETED
+            db_session.commit()
+            logger.info(f"Lead generation completed for recording {recording_id}, status updated to COMPLETED")
+    except Exception as e:
+        logger.error(f"Lead generation failed for recording {recording_id}: {e}")
+        # Update recording status to COMPLETED even if lead generation fails (transcript is still available)
+        recording = db_session.query(Recording).filter(Recording.id == recording_id).first()
+        if recording:
+            recording.status = ProcessingStatus.COMPLETED
+            db_session.commit()
+
+
 @router.post("/{recording_id}/process")
-async def process_recording(recording_id: int, db: Session = Depends(get_db)):
+async def process_recording(
+    recording_id: int,
+    background_tasks: BackgroundTasks,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
     """
-    Process recording: Transcribe with Whisper
-    For now runs synchronously, TODO: Queue as Celery task for production
+    Process recording: Transcribe with Whisper and generate leads
+    Runs transcription synchronously, then triggers lead generation in background
     """
     from app.models.database import Transcript, TranscriptSegment
 
@@ -267,18 +295,21 @@ async def process_recording(recording_id: int, db: Session = Depends(get_db)):
             db.add(segment)
 
         # Update recording
-        recording.status = ProcessingStatus.COMPLETED
+        recording.status = ProcessingStatus.ANALYZING  # Set to analyzing before lead generation
         recording.processing_completed_at = datetime.utcnow()
         recording.duration_seconds = int(normalized_result.get("duration_seconds", 0))
 
         db.commit()
 
-        logger.info(f"Processing completed for recording {recording_id}")
+        logger.info(f"Transcription completed for recording {recording_id}, starting lead generation...")
+
+        # Trigger lead generation in background using FastAPI background tasks
+        background_tasks.add_task(trigger_lead_generation, recording_id, current_user.email, db)
 
         return {
-            "message": "Processing completed successfully",
+            "message": "Transcription completed, lead generation in progress",
             "recording_id": recording_id,
-            "status": "completed",
+            "status": "analyzing",
             "transcript_length": len(normalized_result["full_transcript"]),
             "num_segments": len(normalized_result["segments"]),
             "num_speakers": normalized_result.get("num_speakers", 1),
@@ -292,6 +323,40 @@ async def process_recording(recording_id: int, db: Session = Depends(get_db)):
 
         logger.error(f"Processing failed for recording {recording_id}: {e}")
         raise HTTPException(status_code=500, detail=f"Processing failed: {str(e)}")
+
+
+@router.get("/{recording_id}/status")
+async def get_recording_status(
+    recording_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Get current processing status of a recording"""
+    from app.models.database import LeadGenerationJob
+
+    recording = db.query(Recording).filter(
+        Recording.id == recording_id,
+        Recording.user_id == current_user.id
+    ).first()
+
+    if not recording:
+        raise HTTPException(status_code=404, detail="Recording not found")
+
+    # Check lead generation job status
+    lead_job = db.query(LeadGenerationJob).filter(
+        LeadGenerationJob.recording_id == recording_id
+    ).order_by(LeadGenerationJob.created_at.desc()).first()
+
+    return {
+        "recording_id": recording_id,
+        "status": recording.status.value,
+        "has_transcript": recording.transcript is not None,
+        "has_leads": lead_job is not None and lead_job.status == "completed",
+        "leads_count": lead_job.leads_found if lead_job else 0,
+        "lead_job_status": lead_job.status if lead_job else None,
+        "processing_started_at": recording.processing_started_at,
+        "processing_completed_at": recording.processing_completed_at
+    }
 
 
 @router.get("/{recording_id}/transcript")

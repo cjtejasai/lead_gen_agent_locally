@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AYKA Event Discovery Agent
+Lyncsea Event Discovery Agent
 Finds relevant networking events based on user profile
 """
 
@@ -15,6 +15,7 @@ from dotenv import load_dotenv
 from crewai import Agent, Task, Crew, Process
 from crewai.tools import tool
 
+
 try:
     from crewai_tools import SerperDevTool
 except ImportError:
@@ -22,15 +23,19 @@ except ImportError:
 
 load_dotenv()
 
+# Configure logging - log to backend/logs/
+log_dir = Path(__file__).parent.parent.parent / 'logs'
+log_dir.mkdir(exist_ok=True)
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('ayka_event_discovery.log'),
+        logging.FileHandler(log_dir / 'events.log'),
         logging.StreamHandler(sys.stdout)
     ]
 )
-logger = logging.getLogger('ayka_events')
+logger = logging.getLogger('lyncsea_events')
 
 
 @tool("read_profile")
@@ -43,8 +48,10 @@ def read_profile_tool(file_path: str) -> dict:
 @tool("save_events")
 def save_events_tool(events_data: dict) -> str:
     """Save discovered events to JSON file"""
-    output_dir = Path("discovered_events")
-    output_dir.mkdir(exist_ok=True)
+    # Save to data/events/ directory (project root)
+    project_root = Path(__file__).parent.parent.parent.parent
+    output_dir = project_root / "data" / "events"
+    output_dir.mkdir(parents=True, exist_ok=True)
 
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     output_file = output_dir / f"events_{timestamp}.json"
@@ -66,6 +73,8 @@ def send_event_email_tool(recipient: str, subject: str, html_body: str) -> str:
 
     email_user = os.getenv("EMAIL_USER")
     email_password = os.getenv("EMAIL_PASSWORD")
+    smtp_server = os.getenv("SMTP_SERVER", "smtp.gmail.com")
+    smtp_port = int(os.getenv("SMTP_PORT", "587"))
 
     if not email_user or not email_password:
         logger.error(f"Email credentials missing")
@@ -78,13 +87,18 @@ def send_event_email_tool(recipient: str, subject: str, html_body: str) -> str:
 
     msg.attach(MIMEText(html_body, 'html'))
 
-    server = smtplib.SMTP("smtp.gmail.com", 587)
-    server.starttls()
+    # Use SSL for port 465, TLS for port 587
+    if smtp_port == 465:
+        server = smtplib.SMTP_SSL(smtp_server, smtp_port)
+    else:
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.starttls()
+
     server.login(email_user, email_password)
     server.send_message(msg)
     server.quit()
 
-    logger.info(f"Event email sent to {recipient}")
+    logger.info(f"Event email sent to {recipient} via {smtp_server}")
     return f"Event recommendations sent to {recipient}"
 
 
@@ -125,17 +139,27 @@ class EventDiscoveryAgent:
             allow_delegation=False
         )
 
-        # Agent 3: Event Curator
+        # Agent 3: Exhibitor Research Specialist
+        exhibitor_researcher = Agent(
+            role='Exhibitor Research Specialist',
+            goal='Find exhibitor lists, booth details, and company information for discovered events',
+            backstory='Expert at researching trade show exhibitors, conference sponsors, and booth details. Knows where to find exhibitor lists and company showcase information.',
+            tools=search_tools,
+            verbose=False,
+            allow_delegation=False
+        )
+
+        # Agent 4: Event Curator
         event_curator = Agent(
             role='Event Curation Specialist',
-            goal='Filter, rank, and present the most relevant events with details',
+            goal='Filter, rank, and present the most relevant events with exhibitor details',
             backstory='Expert at evaluating event quality, relevance, and ROI for professionals',
             tools=[save_events_tool],
             verbose=False,
             allow_delegation=False
         )
 
-        # Agent 4: Email Sender
+        # Agent 5: Email Sender
         email_sender = Agent(
             role='Event Communication Manager',
             goal='Create beautifully formatted HTML emails with event recommendations',
@@ -145,11 +169,11 @@ class EventDiscoveryAgent:
             allow_delegation=False
         )
 
-        return profile_analyzer, event_researcher, event_curator, email_sender
+        return profile_analyzer, event_researcher, exhibitor_researcher, event_curator, email_sender
 
     def create_tasks(self, profile_file: str, user_email: str, agents: tuple):
         """Create tasks for event discovery"""
-        profile_analyzer, event_researcher, event_curator, email_sender = agents
+        profile_analyzer, event_researcher, exhibitor_researcher, event_curator, email_sender = agents
 
         current_date = datetime.now().strftime('%B %Y')
 
@@ -205,9 +229,49 @@ class EventDiscoveryAgent:
             context=[analyze_task]
         )
 
-        # Task 3: Curate and rank events
+        # Task 3: Research Exhibitors
+        exhibitor_task = Task(
+            description="""For EACH discovered event (especially conferences, trade shows, expos), research and find:
+
+            1. **Exhibitor List**: Companies that will have booths/exhibits
+            2. **For each exhibitor**:
+               - Company name
+               - Booth number (if available)
+               - Company website
+               - What they're showcasing/presenting
+               - Company category (tech, finance, healthcare, etc.)
+               - Contact person (if publicly available)
+
+            Search patterns to find exhibitor info:
+            - "[event name] exhibitor list"
+            - "[event name] sponsors"
+            - "[event name] floor plan"
+            - "[event name] expo map"
+            - Check event official website for exhibitor/sponsor page
+
+            Return this data structured by event, with exhibitor arrays:
+            {
+                "event_name": "...",
+                "exhibitors": [
+                    {
+                        "company": "...",
+                        "booth": "...",
+                        "website": "...",
+                        "showcase": "...",
+                        "category": "..."
+                    }
+                ]
+            }
+
+            If exhibitor list is not available for an event, note "Exhibitor list not yet published".""",
+            agent=exhibitor_researcher,
+            expected_output="Exhibitor lists with company details for discovered events",
+            context=[analyze_task, research_task]
+        )
+
+        # Task 4: Curate and rank events
         curate_task = Task(
-            description="""Review all discovered events and create a curated list.
+            description="""Review all discovered events WITH their exhibitor lists and create a curated list.
 
             Rank events by:
             1. Relevance score (1-10) based on user interests
@@ -237,13 +301,15 @@ class EventDiscoveryAgent:
                 "must_attend": [event objects],
                 "should_attend": [event objects],
                 "nice_to_attend": [event objects]
-            }""",
+            }
+
+            IMPORTANT: Also include exhibitor information for each event where available.""",
             agent=event_curator,
-            expected_output="Curated and ranked event list saved to JSON file",
-            context=[analyze_task, research_task]
+            expected_output="Curated and ranked event list with exhibitor details saved to JSON file",
+            context=[analyze_task, research_task, exhibitor_task]
         )
 
-        # Task 4: Send email
+        # Task 5: Send email
         email_task = Task(
             description=f"""TODAY IS {current_date}.
 
@@ -273,10 +339,10 @@ class EventDiscoveryAgent:
             - html_body: ONE complete HTML string (not JSON, just HTML)""",
             agent=email_sender,
             expected_output=f"Email sent to {user_email}",
-            context=[analyze_task, research_task, curate_task]
+            context=[analyze_task, research_task, exhibitor_task, curate_task]
         )
 
-        return [analyze_task, research_task, curate_task, email_task]
+        return [analyze_task, research_task, exhibitor_task, curate_task, email_task]
 
     def run(self, profile_file: str, user_email: str):
         """Execute event discovery workflow"""

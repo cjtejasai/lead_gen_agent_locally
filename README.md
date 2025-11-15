@@ -1,4 +1,4 @@
-# Ayka Lead Generation Platform
+# Lyncsea Lead Generation Platform
 
 An AI-powered lead generation platform that processes audio/video recordings from wearable devices at events to identify collaboration opportunities using LLMs and graph-based interest matching.
 

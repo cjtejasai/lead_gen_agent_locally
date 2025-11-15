@@ -7,9 +7,22 @@ import Image from 'next/image'
 import { motion } from 'framer-motion'
 import {
   Calendar, MapPin, ExternalLink, Bookmark,
-  Check, Trash2, RefreshCw, ArrowLeft
+  Check, Trash2, RefreshCw, ArrowLeft, Building2
 } from 'lucide-react'
 import { apiClient } from '@/lib/api'
+
+interface Exhibitor {
+  company: string
+  booth?: string
+  website?: string
+  showcase?: string
+  category?: string
+}
+
+interface ExhibitorData {
+  status: string
+  list: Exhibitor[]
+}
 
 interface Event {
   id: number
@@ -23,6 +36,7 @@ interface Event {
   relevance_reason: string | null
   source: string | null
   matched_interests: string[] | null
+  exhibitors: ExhibitorData | null
   is_saved: boolean
   is_attending: boolean
   created_at: string
@@ -362,6 +376,70 @@ export default function EventsPage() {
                             {interest}
                           </span>
                         ))}
+                      </div>
+                    )}
+
+                    {/* Exhibitors */}
+                    {event.exhibitors && event.exhibitors.list && event.exhibitors.list.length > 0 && (
+                      <div className="mb-4 p-3 bg-purple-50 rounded-lg border border-purple-100">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Building2 className="w-4 h-4 text-purple-600" />
+                          <p className="text-xs text-purple-700 font-semibold">
+                            Featured Exhibitors ({event.exhibitors.list.length})
+                          </p>
+                        </div>
+                        <div className="space-y-2">
+                          {event.exhibitors.list.slice(0, 3).map((exhibitor, idx) => (
+                            <div key={idx} className="text-xs">
+                              <div className="flex items-start justify-between gap-2">
+                                <div className="flex-1">
+                                  <p className="font-semibold text-purple-900">
+                                    {exhibitor.company}
+                                    {exhibitor.booth && (
+                                      <span className="ml-2 text-purple-600 font-normal">
+                                        Booth {exhibitor.booth}
+                                      </span>
+                                    )}
+                                  </p>
+                                  {exhibitor.showcase && (
+                                    <p className="text-purple-600 line-clamp-1">{exhibitor.showcase}</p>
+                                  )}
+                                  {exhibitor.category && (
+                                    <span className="inline-block mt-1 px-2 py-0.5 bg-purple-100 text-purple-700 rounded text-xs">
+                                      {exhibitor.category}
+                                    </span>
+                                  )}
+                                </div>
+                                {exhibitor.website && (
+                                  <a
+                                    href={exhibitor.website}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-purple-600 hover:text-purple-800"
+                                    title="Visit website"
+                                  >
+                                    <ExternalLink className="w-3 h-3" />
+                                  </a>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                          {event.exhibitors.list.length > 3 && (
+                            <p className="text-xs text-purple-600 italic">
+                              +{event.exhibitors.list.length - 3} more exhibitors
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                    {event.exhibitors && event.exhibitors.status && event.exhibitors.status !== 'available' && (
+                      <div className="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                        <div className="flex items-center gap-2">
+                          <Building2 className="w-4 h-4 text-gray-500" />
+                          <p className="text-xs text-gray-600 italic">
+                            Exhibitor list {event.exhibitors.status}
+                          </p>
+                        </div>
                       </div>
                     )}
 

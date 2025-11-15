@@ -1,8 +1,8 @@
-# AYKA Lead Generation - Agent System
+# Lyncsea Lead Generation - Agent System
 
 ## Two Main Workflows
 
-### 1. Lead Generation (ayka_crew.py)
+### 1. Lead Generation (lyncsea_crew.py)
 Process conversation transcripts → extract leads → send email
 - **Transcript Analyst**: Reads and parses conversation transcripts
 - **Lead Generation Specialist**: Identifies opportunities and matches needs/offers
@@ -34,11 +34,11 @@ SERPER_API_KEY=...           # Serper API for web search (get from serper.dev)
 
 ### Lead Generation from Transcripts
 ```bash
-python ayka_crew.py <transcript_file> <recipient_email>
+python lyncsea_crew.py <transcript_file> <recipient_email>
 ```
 Example:
 ```bash
-python ayka_crew.py transcripts/demo_conversation.txt leads@company.com
+python lyncsea_crew.py transcripts/demo_conversation.txt leads@company.com
 ```
 
 ### Event Discovery for Networking
@@ -52,7 +52,7 @@ python event_discovery.py user_profile_example.json user@example.com
 
 ## Output
 
-- **Logs**: `ayka_agent.log` - All agent activities and errors
+- **Logs**: `lyncsea_agent.log` - All agent activities and errors
 - **Leads Data**: `leads_data/leads_TIMESTAMP.json` - Structured lead information
 - **Email**: Sent to specified recipient with insights
 

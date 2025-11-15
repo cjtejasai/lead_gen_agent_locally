@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AYKA Lead Generation - Multi-Agent System
+Lyncsea Lead Generation - Multi-Agent System
 Clean implementation with CrewAI - No mock code
 """
 
@@ -25,16 +25,19 @@ except ImportError:
 
 load_dotenv()
 
-# Configure logging
+# Configure logging - log to backend/logs/
+log_dir = Path(__file__).parent.parent / 'logs'
+log_dir.mkdir(exist_ok=True)
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('ayka_agent.log'),
+        logging.FileHandler(log_dir / 'agents.log'),
         logging.StreamHandler(sys.stdout)
     ]
 )
-logger = logging.getLogger('ayka')
+logger = logging.getLogger('lyncsea')
 
 
 @tool("read_transcript")
@@ -47,8 +50,10 @@ def read_transcript_tool(file_path: str) -> str:
 @tool("save_leads")
 def save_leads_tool(leads_data: dict) -> str:
     """Save lead data to JSON file"""
-    output_dir = Path("leads_data")
-    output_dir.mkdir(exist_ok=True)
+    # Save to data/leads/ directory (project root)
+    project_root = Path(__file__).parent.parent.parent
+    output_dir = project_root / "data" / "leads"
+    output_dir.mkdir(parents=True, exist_ok=True)
 
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     output_file = output_dir / f"leads_{timestamp}.json"
@@ -66,6 +71,8 @@ def send_email_tool(recipient: str, subject: str, html_body: str) -> str:
     load_dotenv(override=True)
     email_user = os.getenv("EMAIL_USER")
     email_password = os.getenv("EMAIL_PASSWORD")
+    smtp_server = os.getenv("SMTP_SERVER", "smtp.gmail.com")
+    smtp_port = int(os.getenv("SMTP_PORT", "587"))
 
     if not email_user or not email_password:
         logger.error(f"Email credentials missing - USER: {bool(email_user)}, PASS: {bool(email_password)}")
@@ -78,18 +85,23 @@ def send_email_tool(recipient: str, subject: str, html_body: str) -> str:
 
     msg.attach(MIMEText(html_body, 'html'))
 
-    server = smtplib.SMTP("smtp.gmail.com", 587)
-    server.starttls()
+    # Use SSL for port 465, TLS for port 587
+    if smtp_port == 465:
+        server = smtplib.SMTP_SSL(smtp_server, smtp_port)
+    else:
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.starttls()
+
     server.login(email_user, email_password)
     server.send_message(msg)
     server.quit()
 
-    logger.info(f"Email sent to {recipient}")
+    logger.info(f"Email sent to {recipient} via {smtp_server}")
     return f"Email sent successfully to {recipient}"
 
 
-class AYKACrew:
-    """AYKA Lead Generation Crew"""
+class LyncseaCrew:
+    """Lyncsea Lead Generation Crew"""
 
     def __init__(self):
         self.openai_api_key = os.getenv("OPENAI_API_KEY")
@@ -231,7 +243,7 @@ class AYKACrew:
 
     def run(self, transcript_file: str, recipient_email: str):
         """Execute the crew workflow"""
-        logger.info(f"Starting AYKA Crew for {transcript_file}")
+        logger.info(f"Starting Lyncsea Crew for {transcript_file}")
 
         agents = self.create_agents()
         tasks = self.create_tasks(transcript_file, recipient_email, agents)
@@ -244,16 +256,16 @@ class AYKACrew:
         )
 
         result = crew.kickoff()
-        logger.info("AYKA Crew completed")
+        logger.info("Lyncsea Crew completed")
 
         return result
 
 
 def main():
     if len(sys.argv) < 3:
-        print("Usage: python ayka_crew.py <transcript_file> <recipient_email>")
+        print("Usage: python lead_generator.py <transcript_file> <recipient_email>")
         print("\nExample:")
-        print("  python ayka_crew.py transcripts/demo_conversation.txt user@example.com")
+        print("  python lead_generator.py data/transcripts/demo_conversation.txt user@example.com")
         sys.exit(1)
 
     transcript_file = sys.argv[1]
@@ -264,7 +276,7 @@ def main():
         sys.exit(1)
 
     try:
-        crew = AYKACrew()
+        crew = LyncseaCrew()
         result = crew.run(transcript_file, recipient_email)
         logger.info(f"Final result: {result}")
     except Exception as e:
