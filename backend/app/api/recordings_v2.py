@@ -186,7 +186,6 @@ async def process_recording(recording_id: int, db: Session = Depends(get_db)):
     For now runs synchronously, TODO: Queue as Celery task for production
     """
     from app.models.database import Transcript, TranscriptSegment
-    from app.services.transcription import get_transcription_service
 
     recording = db.query(Recording).filter(Recording.id == recording_id).first()
 
@@ -211,6 +210,7 @@ async def process_recording(recording_id: int, db: Session = Depends(get_db)):
         # Transcribe based on configured provider
         if settings.STT_PROVIDER == "local_whisper":
             # Use local Whisper + pyannote diarization
+            from app.services.transcription import get_transcription_service
             transcription_service = get_transcription_service(
                 model_size=settings.WHISPER_MODEL_SIZE,
                 enable_diarization=settings.ENABLE_DIARIZATION
