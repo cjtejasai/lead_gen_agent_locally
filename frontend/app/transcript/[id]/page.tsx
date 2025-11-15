@@ -6,6 +6,7 @@ import { ArrowLeft, Download, FileText, Clock, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import Image from 'next/image'
+import { apiClient } from '@/lib/api'
 
 interface TranscriptSegment {
   sequence: number
@@ -49,15 +50,11 @@ export default function TranscriptPage() {
   const fetchData = async () => {
     try {
       // Fetch recording details
-      const recResponse = await fetch(`http://localhost:8000/api/v1/recordings/${recordingId}`)
-      if (!recResponse.ok) throw new Error('Recording not found')
-      const recData = await recResponse.json()
+      const recData = await apiClient.get(`/api/v1/recordings/${recordingId}`)
       setRecording(recData)
 
       // Fetch transcript
-      const transResponse = await fetch(`http://localhost:8000/api/v1/recordings/${recordingId}/transcript`)
-      if (!transResponse.ok) throw new Error('Transcript not found')
-      const transData = await transResponse.json()
+      const transData = await apiClient.get(`/api/v1/recordings/${recordingId}/transcript`)
       setTranscript(transData)
 
       setLoading(false)
