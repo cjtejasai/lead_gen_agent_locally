@@ -9,6 +9,7 @@ import {
   Calendar, MapPin, ExternalLink, Bookmark,
   Check, Trash2, RefreshCw, ArrowLeft
 } from 'lucide-react'
+import { apiClient } from '@/lib/api'
 
 interface Event {
   id: number
@@ -50,23 +51,16 @@ export default function EventsPage() {
       const token = localStorage.getItem('token')
       // Add timestamp to prevent caching
       const timestamp = new Date().getTime()
-      const response = await fetch(`http://localhost:8000/api/v1/events/?_t=${timestamp}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        cache: 'no-store'
+      const data = await apiClient.get(`/api/v1/events/?_t=${timestamp}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
       })
-
-      if (response.ok) {
-        const data = await response.json()
-        setEvents(data)
-      } else if (response.status === 401) {
+      setEvents(data)
+    } catch (err: any) {
+      if (err.message?.includes('401')) {
         router.push('/login')
       } else {
-        setError('Failed to fetch events')
+        setError('Error loading events')
       }
-    } catch (err) {
-      setError('Error loading events')
     } finally {
       setLoading(false)
       setRefreshing(false)
@@ -83,21 +77,11 @@ export default function EventsPage() {
     setDiscovering(true)
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch('http://localhost:8000/api/v1/events/discover', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+      await apiClient.post('/api/v1/events/discover', {}, {
+        headers: { 'Authorization': `Bearer ${token}` }
       })
-
-      if (response.ok) {
-        // Redirect to animation page to show progress
-        router.push('/onboarding/agent-working')
-      } else {
-        setError('Failed to start event discovery')
-        setDiscovering(false)
-      }
+      // Redirect to animation page to show progress
+      router.push('/onboarding/agent-working')
     } catch (err) {
       setError('Error starting discovery')
       setDiscovering(false)
@@ -107,18 +91,12 @@ export default function EventsPage() {
   const handleSaveEvent = async (eventId: number) => {
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch(`http://localhost:8000/api/v1/events/${eventId}/save`, {
-        method: 'PATCH',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+      await apiClient.patch(`/api/v1/events/${eventId}/save`, {}, {
+        headers: { 'Authorization': `Bearer ${token}` }
       })
-
-      if (response.ok) {
-        setEvents(events.map(e =>
-          e.id === eventId ? { ...e, is_saved: true } : e
-        ))
-      }
+      setEvents(events.map(e =>
+        e.id === eventId ? { ...e, is_saved: true } : e
+      ))
     } catch (err) {
       console.error('Error saving event:', err)
     }
@@ -127,18 +105,12 @@ export default function EventsPage() {
   const handleAttendEvent = async (eventId: number) => {
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch(`http://localhost:8000/api/v1/events/${eventId}/attend`, {
-        method: 'PATCH',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+      await apiClient.patch(`/api/v1/events/${eventId}/attend`, {}, {
+        headers: { 'Authorization': `Bearer ${token}` }
       })
-
-      if (response.ok) {
-        setEvents(events.map(e =>
-          e.id === eventId ? { ...e, is_attending: true } : e
-        ))
-      }
+      setEvents(events.map(e =>
+        e.id === eventId ? { ...e, is_attending: true } : e
+      ))
     } catch (err) {
       console.error('Error marking attendance:', err)
     }
@@ -147,16 +119,10 @@ export default function EventsPage() {
   const handleDeleteEvent = async (eventId: number) => {
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch(`http://localhost:8000/api/v1/events/${eventId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+      await apiClient.delete(`/api/v1/events/${eventId}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
       })
-
-      if (response.ok) {
-        setEvents(events.filter(e => e.id !== eventId))
-      }
+      setEvents(events.filter(e => e.id !== eventId))
     } catch (err) {
       console.error('Error deleting event:', err)
     }
@@ -171,11 +137,8 @@ export default function EventsPage() {
       const token = localStorage.getItem('token')
       // Delete all events one by one
       const deletePromises = events.map(event =>
-        fetch(`http://localhost:8000/api/v1/events/${event.id}`, {
-          method: 'DELETE',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
+        apiClient.delete(`/api/v1/events/${event.id}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
         })
       )
 
