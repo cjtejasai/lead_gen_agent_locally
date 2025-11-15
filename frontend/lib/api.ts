@@ -77,6 +77,28 @@ export const apiClient = {
   },
 
   /**
+   * PATCH request
+   */
+  async patch(endpoint: string, data: any, options?: RequestInit) {
+    const response = await fetch(`${API_URL}${endpoint}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        ...options?.headers,
+      },
+      body: JSON.stringify(data),
+      ...options,
+    })
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ detail: 'Request failed' }))
+      throw new Error(error.detail || `HTTP ${response.status}`)
+    }
+
+    return response.json()
+  },
+
+  /**
    * DELETE request
    */
   async delete(endpoint: string, options?: RequestInit) {
