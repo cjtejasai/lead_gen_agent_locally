@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sparkles, Search, Brain, Mail, CheckCircle, Calendar } from 'lucide-react'
+import { Sparkles, Search, Brain, Mail, CheckCircle, Calendar, ArrowLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { apiClient } from '@/lib/api'
 
 const stages = [
   {
@@ -60,19 +62,14 @@ export default function AgentWorkingPage() {
     const checkJobStatus = async () => {
       try {
         const token = localStorage.getItem('token')
-        const response = await fetch('http://localhost:8000/api/v1/events/', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
+        const events = await apiClient.get('/api/v1/events/', {
+          headers: { 'Authorization': `Bearer ${token}` }
         })
 
-        if (response.ok) {
-          const events = await response.json()
-          if (events.length > 0) {
-            setEventsFound(events.length)
-            setJobStatus('completed')
-            setCurrentStage(stages.length - 1) // Jump to completion stage
-          }
+        if (events.length > 0) {
+          setEventsFound(events.length)
+          setJobStatus('completed')
+          setCurrentStage(stages.length - 1) // Jump to completion stage
         }
       } catch (error) {
         console.error('Error checking job status:', error)
@@ -121,6 +118,15 @@ export default function AgentWorkingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 dark:from-gray-950 dark:via-purple-950/20 dark:to-gray-950 flex items-center justify-center p-4">
+      {/* Back Button - Fixed Position */}
+      <Link
+        href="/arya"
+        className="fixed top-6 left-6 flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg shadow-sm hover:shadow-md"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        <span>Back to Events</span>
+      </Link>
+
       <div className="max-w-2xl w-full">
         {/* Header */}
         <div className="text-center mb-12">
