@@ -223,7 +223,55 @@ def trigger_lead_generation(recording_id: int, user_email: str, db_session):
     """Background task to generate leads after transcription"""
     from app.services.lead_generation import get_lead_generation_service
     try:
-        logger.info(f"Starting lead generation for recording {recording_id}")
+        # CIRCUIT BREAKER: Validate transcript before running agent
+        recording = db_session.query(Recording).filter(Recording.id == recording_id).first()
+
+        if not recording:
+            logger.warning(f"Recording {recording_id} not found")
+            return
+
+        if not recording.transcript:
+            logger.warning(f"No transcript found for recording {recording_id}")
+            recording.status = ProcessingStatus.COMPLETED
+            recording.error_message = (
+                "Transcription completed but no transcript was generated. "
+                "This usually happens with very poor audio quality. "
+                "Please try recording again in a quieter environment."
+            )
+            db_session.commit()
+            return
+
+        # Check transcript length to prevent hallucination
+        transcript_text = recording.transcript.full_text.strip()
+        transcript_length = len(transcript_text)
+        MIN_TRANSCRIPT_LENGTH = 50  # Require at least 50 characters
+
+        if transcript_length < MIN_TRANSCRIPT_LENGTH:
+            logger.warning(
+                f"Transcript too short ({transcript_length} chars) for recording {recording_id} - "
+                f"skipping lead generation to prevent AI hallucination"
+            )
+            recording.status = ProcessingStatus.COMPLETED
+            recording.error_message = (
+                f"Audio transcript was too short ({transcript_length} characters). "
+                "Lead generation was skipped to prevent inaccurate results.\n\n"
+                "Common causes:\n"
+                "• Audio quality too low (background noise/music)\n"
+                "• Multiple people speaking simultaneously\n"
+                "• Recording volume too low\n"
+                "• File format not supported properly\n\n"
+                "💡 Tips:\n"
+                "• Record in a quieter environment\n"
+                "• Hold device closer to speakers\n"
+                "• Avoid background music\n"
+                "• Use the playback feature to verify audio quality before processing"
+            )
+            db_session.commit()
+            logger.info(f"Recording {recording_id} marked as completed with helpful error message (no lead generation)")
+            return
+
+        # Transcript is valid, proceed with lead generation
+        logger.info(f"Starting lead generation for recording {recording_id} (transcript: {transcript_length} chars)")
         service = get_lead_generation_service()
         result = service.generate_leads_from_transcript(recording_id, user_email, db_session)
 
@@ -239,6 +287,7 @@ def trigger_lead_generation(recording_id: int, user_email: str, db_session):
         recording = db_session.query(Recording).filter(Recording.id == recording_id).first()
         if recording:
             recording.status = ProcessingStatus.COMPLETED
+            recording.error_message = f"Lead generation failed: {str(e)}"
             db_session.commit()
 
 
@@ -492,6 +541,38 @@ async def get_transcript(recording_id: int, db: Session = Depends(get_db)):
             }
             for seg in sorted(transcript.segments, key=lambda x: x.sequence_number)
         ]
+    }
+
+
+@router.get("/{recording_id}/play")
+async def play_recording(
+    recording_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Get playback URL for recording audio (presigned URL for S3, or streaming URL for local)
+    """
+    recording = db.query(Recording).filter(
+        Recording.id == recording_id,
+        Recording.user_id == current_user.id
+    ).first()
+
+    if not recording:
+        raise HTTPException(status_code=404, detail="Recording not found")
+
+    # Get playback URL (presigned for S3, regular for local)
+    # 1 hour expiration for playback
+    playback_url = storage.get_file_url(recording.file_path, expiration=3600)
+
+    return {
+        "recording_id": recording_id,
+        "title": recording.title,
+        "playback_url": playback_url,
+        "duration_seconds": recording.duration_seconds,
+        "file_size": recording.file_size_bytes,
+        "expires_in_seconds": 3600,
+        "created_at": recording.created_at
     }
 
 

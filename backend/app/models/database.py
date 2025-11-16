@@ -233,3 +233,43 @@ class LeadGenerationJob(Base):
 
     # Relationships
     recording = relationship("Recording")
+
+
+class ActionItem(Base):
+    """Action items extracted from conversation transcripts"""
+    __tablename__ = "action_items"
+
+    id = Column(Integer, primary_key=True, index=True)
+    recording_id = Column(Integer, ForeignKey("recordings.id"), nullable=False)
+
+    # Action details
+    action = Column(Text, nullable=False)  # What needs to be done
+    deadline = Column(DateTime, nullable=True)  # When it should be done
+    deadline_type = Column(String(50))  # specific, week, month, none
+    priority = Column(String(20), default="medium")  # high, medium, low
+    action_type = Column(String(50))  # meeting, follow_up, send_document, call, other
+
+    # Context from conversation
+    quote = Column(Text)  # Exact quote from transcript
+    mentioned_by = Column(String(50))  # SPEAKER_01, etc.
+    speaker_name = Column(String(255))  # Extracted name if available
+    timestamp_seconds = Column(Float)  # Position in audio recording
+    context = Column(Text)  # Surrounding conversation context
+
+    # Contact information (if applicable)
+    contact_email = Column(String(255))  # Email if found/mentioned
+    contact_email_confidence = Column(Float)  # 0.0-1.0 confidence score
+    contact_linkedin = Column(String(500))  # LinkedIn URL if found
+    contact_company = Column(String(255))  # Company name
+
+    # Status tracking
+    status = Column(String(20), default="pending")  # pending, in_progress, completed, cancelled
+    completed_at = Column(DateTime, nullable=True)
+    notes = Column(Text)  # User notes
+
+    # Timestamps
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relationships
+    recording = relationship("Recording")

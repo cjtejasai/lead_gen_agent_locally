@@ -11,7 +11,7 @@ from datetime import datetime
 from typing import Dict, Any, List
 from sqlalchemy.orm import Session
 
-from app.models.database import Recording, Transcript, Lead, LeadGenerationJob
+from app.models.database import Recording, Transcript, Lead, LeadGenerationJob, ActionItem
 
 # Import the Lyncsea Crew from lyncsea_agents module
 # Since we run from backend/, we don't need 'backend.' prefix
@@ -144,7 +144,39 @@ class LeadGenerationService:
                 )
                 db.add(lead)
 
+            # Clear old action items for this recording
+            db.query(ActionItem).filter(ActionItem.recording_id == recording_id).delete()
+
+            # Save action items to database (AI already converted dates!)
+            for action_item in leads_data.get("action_items", []):
+                # Parse deadline if provided (agent gave us YYYY-MM-DD format)
+                deadline = None
+                if action_item.get("deadline") and action_item["deadline"] != "none":
+                    try:
+                        deadline = datetime.strptime(action_item["deadline"], "%Y-%m-%d")
+                    except:
+                        logger.warning(f"Could not parse deadline: {action_item.get('deadline')}")
+
+                action = ActionItem(
+                    recording_id=recording_id,
+                    action=action_item.get("action", ""),
+                    deadline=deadline,
+                    deadline_type=action_item.get("deadline_type", "none"),
+                    priority=action_item.get("priority", "medium"),
+                    action_type=action_item.get("action_type", "other"),
+                    quote=action_item.get("quote"),
+                    mentioned_by=action_item.get("mentioned_by"),
+                    speaker_name=action_item.get("speaker_name"),
+                    contact_email=action_item.get("contact_email"),
+                    contact_company=action_item.get("contact_company"),
+                    status="pending"
+                )
+                db.add(action)
+
             db.commit()
+
+            action_items_count = len(leads_data.get("action_items", []))
+            logger.info(f"Saved {action_items_count} action items for recording {recording_id}")
 
             # Update job
             job.status = "completed"

@@ -22,9 +22,11 @@ export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState('')
   const [user, setUser] = useState<{ full_name: string; email: string } | null>(null)
   const [showProfileMenu, setShowProfileMenu] = useState(false)
+  const [stats, setStats] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchData = async () => {
       try {
         const token = localStorage.getItem('token')
         if (!token) {
@@ -32,19 +34,27 @@ export default function Dashboard() {
           return
         }
 
-        const userData = await apiClient.get('/api/v1/auth/me', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        })
+        // Fetch user data and stats in parallel
+        const [userData, statsData] = await Promise.all([
+          apiClient.get('/api/v1/auth/me', {
+            headers: { 'Authorization': `Bearer ${token}` }
+          }),
+          apiClient.get('/api/v1/dashboard/stats', {
+            headers: { 'Authorization': `Bearer ${token}` }
+          })
+        ])
+
         setUser(userData)
+        setStats(statsData)
       } catch (error) {
-        console.error('Error fetching user:', error)
+        console.error('Error fetching data:', error)
         router.push('/login')
+      } finally {
+        setLoading(false)
       }
     }
 
-    fetchUser()
+    fetchData()
   }, [router])
 
   const handleLogout = () => {
@@ -170,36 +180,48 @@ export default function Dashboard() {
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
         {/* Stats Overview */}
-        <div className="grid md:grid-cols-4 gap-6 mb-8">
-          <StatCard
-            icon={<Upload className="w-6 h-6" />}
-            label="Total Recordings"
-            value="12"
-            change="+3 this week"
-            positive
-          />
-          <StatCard
-            icon={<Users className="w-6 h-6" />}
-            label="Active Matches"
-            value="24"
-            change="+8 new"
-            positive
-          />
-          <StatCard
-            icon={<Sparkles className="w-6 h-6" />}
-            label="Interests Tracked"
-            value="45"
-            change="+12 new"
-            positive
-          />
-          <StatCard
-            icon={<TrendingUp className="w-6 h-6" />}
-            label="Connections Made"
-            value="8"
-            change="+2 this week"
-            positive
-          />
-        </div>
+        {loading ? (
+          <div className="grid md:grid-cols-4 gap-6 mb-8">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="glass-effect rounded-2xl p-6 shadow-lg animate-pulse">
+                <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
+                <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
+                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded"></div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-4 gap-6 mb-8">
+            <StatCard
+              icon={<Upload className="w-6 h-6" />}
+              label="Total Recordings"
+              value={stats?.recordings?.total?.toString() || "0"}
+              change={stats?.recordings?.change || "No activity"}
+              positive={stats?.recordings?.this_week > 0}
+            />
+            <StatCard
+              icon={<Users className="w-6 h-6" />}
+              label="Active Leads"
+              value={stats?.leads?.total?.toString() || "0"}
+              change={stats?.leads?.change || "No new leads"}
+              positive={stats?.leads?.this_week > 0}
+            />
+            <StatCard
+              icon={<Sparkles className="w-6 h-6" />}
+              label="Events Found"
+              value={stats?.events?.total?.toString() || "0"}
+              change={stats?.events?.change || "No events"}
+              positive={stats?.events?.this_week > 0}
+            />
+            <StatCard
+              icon={<TrendingUp className="w-6 h-6" />}
+              label="Connections Made"
+              value={stats?.connections?.total?.toString() || "0"}
+              change={stats?.connections?.change || "No connections"}
+              positive={stats?.connections?.this_week > 0}
+            />
+          </div>
+        )}
 
         {/* Agent Cards Section */}
         <motion.div

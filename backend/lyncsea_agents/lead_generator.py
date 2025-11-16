@@ -47,6 +47,13 @@ def read_transcript_tool(file_path: str) -> str:
         return f.read()
 
 
+@tool("get_current_date")
+def get_current_date_tool() -> str:
+    """Get current date and time for deadline calculations"""
+    now = datetime.now()
+    return f"Today is {now.strftime('%A, %B %d, %Y')} at {now.strftime('%I:%M %p')}. Current date in YYYY-MM-DD format: {now.strftime('%Y-%m-%d')}"
+
+
 @tool("save_leads")
 def save_leads_tool(leads_data: dict) -> str:
     """Save lead data to JSON file"""
@@ -127,8 +134,8 @@ class LyncseaCrew:
         lead_generator = Agent(
             role='Lead Generation Specialist',
             goal='Identify business opportunities, needs, and potential connections from conversations',
-            backstory='Experienced in B2B lead generation, understanding business needs, investment opportunities, and strategic partnerships',
-            tools=[save_leads_tool],
+            backstory='Experienced in B2B lead generation, understanding business needs, investment opportunities, and strategic partnerships. Expert at converting relative dates to absolute dates.',
+            tools=[get_current_date_tool, save_leads_tool],
             verbose=False,
             allow_delegation=False
         )
@@ -180,20 +187,88 @@ class LyncseaCrew:
 
         # Task 2: Generate leads
         generate_task = Task(
-            description="""Based on the transcript analysis, identify:
-            - High-value lead opportunities (investment, partnership, hiring)
-            - Match needs with offers
-            - Priority ranking (high/medium/low)
-            - Specific action items for follow-up
+            description="""⚠️ CRITICAL RULES - READ CAREFULLY:
 
-            Save this data using the save_leads tool with structure:
+            1. ONLY extract information that is EXPLICITLY MENTIONED in the transcript
+            2. NEVER invent, assume, or fabricate names, companies, or details
+            3. If NO clear leads are found, return EMPTY arrays - this is ACCEPTABLE
+            4. Each lead MUST have a direct quote or reference from the transcript
+            5. If you're uncertain about ANY detail, OMIT it rather than guess
+
+            📅 FOR ACTION ITEMS WITH DEADLINES:
+            - FIRST use the get_current_date tool to know today's date
+            - Convert relative dates to absolute dates in YYYY-MM-DD format:
+              - "tomorrow" → calculate tomorrow's date (e.g., 2025-01-16)
+              - "next week" → calculate date 7 days from now
+              - "Friday" → find the next Friday's date
+              - "end of month" → last day of current month
+            - If no specific time mentioned, use "none" for deadline
+
+            Based ONLY on the transcript analysis, identify:
+            - High-value lead opportunities (investment, partnership, hiring) - ONLY if clearly discussed
+            - Match needs with offers - ONLY if both are explicitly stated
+            - Priority ranking (high/medium/low) - based on urgency mentioned in conversation
+            - Action items for follow-up - ONLY if specific commitments were made
+
+            VALIDATION CHECKLIST before saving:
+            ✓ Can I quote the exact sentence where this person/company was mentioned?
+            ✓ Is this information directly stated, not inferred?
+            ✓ Would I be comfortable showing the speaker this extracted data?
+
+            If NO genuine leads found, save:
             {
-                "leads": [{"name": "...", "company": "...", "opportunity": "...", "priority": "..."}],
+                "leads": [],
+                "opportunities": [],
+                "action_items": [],
+                "note": "No clear lead opportunities identified in this conversation"
+            }
+
+            If leads ARE found, save with structure:
+            {
+                "leads": [
+                    {
+                        "name": "Exact name from transcript",
+                        "company": "Exact company name mentioned",
+                        "role": "Their role if stated",
+                        "opportunity": "What they're looking for/offering",
+                        "priority": "high/medium/low",
+                        "evidence_quote": "Direct quote from conversation",
+                        "email": "email if mentioned",
+                        "linkedin": "LinkedIn URL if found"
+                    }
+                ],
                 "opportunities": [{"type": "...", "description": "...", "priority": "..."}],
-                "action_items": ["..."]
-            }""",
+                "action_items": [
+                    {
+                        "action": "Connect with Sarah Chen for coffee meeting",
+                        "deadline": "2025-01-16",
+                        "deadline_type": "specific",
+                        "priority": "high",
+                        "action_type": "meeting",
+                        "quote": "Let's grab coffee tomorrow to discuss the API",
+                        "mentioned_by": "SPEAKER_02",
+                        "speaker_name": "Sarah Chen",
+                        "contact_email": "sarah@company.com",
+                        "contact_company": "TechCorp"
+                    }
+                ]
+            }
+
+            ACTION_ITEM deadline_type options:
+            - "specific" = exact date mentioned (tomorrow, Friday, Jan 15)
+            - "week" = vague week reference (next week, sometime next week)
+            - "month" = vague month reference (next month, end of month)
+            - "none" = no deadline mentioned
+
+            ACTION_ITEM action_type options:
+            - "meeting" = coffee, call, demo, catch up
+            - "follow_up" = circle back, check in, reconnect
+            - "send_document" = send proposal, email deck, share info
+            - "other" = anything else
+
+            REMEMBER: Empty results are BETTER than fake results. Quality over quantity.""",
             agent=lead_generator,
-            expected_output="Lead opportunities saved to JSON file with prioritized action items",
+            expected_output="ACCURATE lead opportunities (or empty arrays) saved to JSON file with evidence quotes and properly formatted dates",
             context=[read_task]
         )
 

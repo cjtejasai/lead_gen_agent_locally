@@ -69,13 +69,15 @@ app.add_middleware(
 )
 
 # Include routers
-from app.api import recordings_v2, events, leads
+from app.api import recordings_v2, events, leads, action_items, dashboard
 
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
 app.include_router(users.router, prefix="/api/v1/users", tags=["Users"])
+app.include_router(dashboard.router, prefix="/api/v1/dashboard", tags=["Dashboard"])
 app.include_router(recordings_v2.router, prefix="/api/v1/recordings", tags=["Recordings"])
 app.include_router(events.router, prefix="/api/v1/events", tags=["Events"])
 app.include_router(leads.router, prefix="/api/v1/leads", tags=["Leads"])
+app.include_router(action_items.router, prefix="/api/v1/action-items", tags=["Action Items"])
 app.include_router(analysis.router, prefix="/api/v1/analysis", tags=["Analysis"])
 app.include_router(matches.router, prefix="/api/v1/matches", tags=["Matches"])
 
