@@ -20,8 +20,8 @@ from app.services.auth import get_current_user
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
-# Get storage service
-storage = get_storage_service("local")
+# Get storage service from settings (local or s3)
+storage = get_storage_service(settings.STORAGE_TYPE)
 
 
 @router.post("/upload", response_model=RecordingUploadResponse)
@@ -79,7 +79,7 @@ async def upload_recording(
             filename = f"{safe_title}_{timestamp}{ext}"
 
         logger.info(f"Generated filename: {filename}")
-        file_path = storage.save_file(file.file, filename)
+        file_path = storage.save_file(file.file, filename, user_id=current_user.id)
 
         # Create database record with authenticated user
         recording = Recording(

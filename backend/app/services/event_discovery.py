@@ -8,6 +8,8 @@ import logging
 from datetime import datetime
 from typing import Dict, List
 from sqlalchemy.orm import Session
+from pathlib import Path
+import glob
 
 from app.models.database import User, UserProfile, Event, EventDiscoveryJob
 
@@ -78,8 +80,6 @@ class EventDiscoveryService:
                 agent.run(temp_profile, user.email)
 
                 # Parse the saved events file (agent saves to data/events/)
-                import glob
-                from pathlib import Path
                 project_root = Path(__file__).parent.parent.parent.parent
                 events_dir = project_root / "data" / "events"
                 event_files = sorted(glob.glob(str(events_dir / 'events_*.json')), reverse=True)
@@ -87,6 +87,20 @@ class EventDiscoveryService:
                 if event_files:
                     with open(event_files[0], 'r') as f:
                         events_data = json.load(f)
+
+                    # Upload JSON to S3 (if S3 storage is enabled)
+                    from app.services.storage import get_storage_service
+                    from app.core.config import settings
+                    if settings.STORAGE_TYPE == "s3":
+                        storage = get_storage_service("s3")
+                        filename = f"events_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.json"
+                        with open(event_files[0], 'rb') as f:
+                            s3_path = storage.save_file(f, filename, user_id=user_id, data_type="events")
+                        logger.info(f"Events JSON uploaded to S3: {s3_path}")
+
+                        # Delete local file after S3 upload
+                        os.remove(event_files[0])
+                        logger.info(f"Local events file deleted: {event_files[0]}")
 
                     # Delete old events for this user before adding new ones
                     self._clear_old_events(user_id)

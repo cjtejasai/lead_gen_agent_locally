@@ -70,6 +70,9 @@ class Settings(BaseSettings):
     # CORS
     CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:3001", "http://localhost:8000"]
 
+    # Storage
+    STORAGE_TYPE: str = "local"  # "local" or "s3"
+
     # File Upload
     MAX_UPLOAD_SIZE: int = 500000000  # 500MB
     ALLOWED_AUDIO_EXTENSIONS: List[str] = [".mp3", ".wav", ".m4a", ".flac"]

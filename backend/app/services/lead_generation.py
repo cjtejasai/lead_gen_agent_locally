@@ -100,6 +100,23 @@ class LeadGenerationService:
             with open(latest_leads_file, 'r') as f:
                 leads_data = json.load(f)
 
+            # Upload JSON to S3 (if S3 storage is enabled)
+            from app.services.storage import get_storage_service
+            from app.core.config import settings
+            if settings.STORAGE_TYPE == "s3":
+                # Get user_id from recording
+                recording = db.query(Recording).filter(Recording.id == recording_id).first()
+                if recording:
+                    storage = get_storage_service("s3")
+                    filename = f"leads_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.json"
+                    with open(latest_leads_file, 'rb') as f:
+                        s3_path = storage.save_file(f, filename, user_id=recording.user_id, data_type="leads")
+                    logger.info(f"Leads JSON uploaded to S3: {s3_path}")
+
+                    # Delete local file after S3 upload
+                    os.remove(latest_leads_file)
+                    logger.info(f"Local leads file deleted: {latest_leads_file}")
+
             # Clear old leads for this recording
             db.query(Lead).filter(Lead.recording_id == recording_id).delete()
 
