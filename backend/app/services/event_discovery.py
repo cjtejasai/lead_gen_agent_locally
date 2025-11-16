@@ -77,9 +77,12 @@ class EventDiscoveryService:
                 agent = EventDiscoveryAgent()
                 agent.run(temp_profile, user.email)
 
-                # Parse the saved events file (agent saves to discovered_events/)
+                # Parse the saved events file (agent saves to data/events/)
                 import glob
-                event_files = sorted(glob.glob('discovered_events/events_*.json'), reverse=True)
+                from pathlib import Path
+                project_root = Path(__file__).parent.parent.parent.parent
+                events_dir = project_root / "data" / "events"
+                event_files = sorted(glob.glob(str(events_dir / 'events_*.json')), reverse=True)
 
                 if event_files:
                     with open(event_files[0], 'r') as f:
