@@ -113,26 +113,56 @@ export default function DhwaniPage() {
         }
       })
 
-      const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' })
+      // FIX 1: Add mimeType fallback for Safari/iOS compatibility
+      const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+        ? 'audio/webm;codecs=opus'
+        : MediaRecorder.isTypeSupported('audio/webm')
+        ? 'audio/webm'
+        : 'audio/mp4'  // Safari/iOS fallback
+
+      console.log('Using mimeType:', mimeType)
+
+      const mediaRecorder = new MediaRecorder(stream, { mimeType })
       mediaRecorderRef.current = mediaRecorder
       audioChunksRef.current = []
 
+      // FIX 2: Add debug logging to track chunk sizes
       mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) audioChunksRef.current.push(event.data)
+        console.log('Audio chunk received:', event.data.size, 'bytes')
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data)
+        } else {
+          console.warn('Received empty audio chunk')
+        }
       }
 
       mediaRecorder.onstop = () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' })
+        const totalSize = audioChunksRef.current.reduce((sum, chunk) => sum + chunk.size, 0)
+        console.log('Recording stopped - Total chunks:', audioChunksRef.current.length, 'Total size:', totalSize, 'bytes')
+
+        if (totalSize === 0) {
+          console.error('No audio data captured!')
+          alert('Recording failed: No audio data captured. Please check microphone permissions.')
+        }
+
+        const audioBlob = new Blob(audioChunksRef.current, { type: mimeType })
         setAudioBlob(audioBlob)
-        stream.getTracks().forEach(track => track.stop())
+
+        // FIX 3: Delay track stop to ensure buffer is fully flushed
+        setTimeout(() => {
+          stream.getTracks().forEach(track => track.stop())
+          console.log('Audio tracks stopped')
+        }, 200)
       }
 
-      mediaRecorder.start(1000)
+      // FIX 4: Remove timeslice to capture complete audio (not 1-second chunks)
+      mediaRecorder.start()  // Changed from start(1000)
       setStatus('recording')
       timerRef.current = setInterval(() => setRecordingTime(prev => prev + 1), 1000)
+      console.log('Recording started with mimeType:', mimeType)
     } catch (error) {
       console.error('Error starting recording:', error)
-      alert('Failed to start recording')
+      alert('Failed to start recording. Please check microphone permissions.')
     }
   }
 
