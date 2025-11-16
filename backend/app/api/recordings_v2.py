@@ -232,36 +232,97 @@ async def process_recording(
         logger.info(f"Starting transcription for recording {recording_id}")
         logger.info(f"Using STT provider: {settings.STT_PROVIDER}")
 
-        # Get audio file path
-        audio_path = storage.get_full_path(recording.file_path)
+        # Handle S3 vs local storage
+        if settings.STORAGE_TYPE == "s3":
+            # For S3 storage, we need to handle differently based on STT provider
+            if settings.STT_PROVIDER == "assemblyai":
+                # AssemblyAI can transcribe from URL directly
+                from app.services.speech_to_text import SpeechToTextService
+                transcription_service = SpeechToTextService(provider=settings.STT_PROVIDER)
+                audio_url = storage.get_file_url(recording.file_path, expiration=7200)  # 2 hour presigned URL
+                logger.info(f"Transcribing from S3 presigned URL (AssemblyAI)")
+                normalized_result = transcription_service.transcribe_from_url(
+                    audio_url=audio_url,
+                    speaker_diarization=settings.ENABLE_DIARIZATION
+                )
+            else:
+                # For Whisper (OpenAI or local), download file to temp location first
+                import tempfile
+                import requests
 
-        # Transcribe based on configured provider
-        if settings.STT_PROVIDER == "local_whisper":
-            # Use local Whisper + pyannote diarization
-            from app.services.transcription import get_transcription_service
-            transcription_service = get_transcription_service(
-                model_size=settings.WHISPER_MODEL_SIZE,
-                enable_diarization=settings.ENABLE_DIARIZATION
-            )
-            result = transcription_service.transcribe(audio_path)
+                logger.info(f"Downloading S3 file to temporary location for {settings.STT_PROVIDER}")
+                audio_url = storage.get_file_url(recording.file_path, expiration=7200)
 
-            # Normalize result format from local Whisper
-            normalized_result = {
-                "full_transcript": result.get("text", ""),
-                "segments": result.get("segments", []),
-                "language": result.get("language", "en"),
-                "confidence": 0.95,
-                "duration_seconds": result.get("duration", 0),
-                "num_speakers": len(set(seg.get("speaker", "SPEAKER_00") for seg in result.get("segments", [])))
-            }
+                # Download to temp file
+                with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(recording.file_path)[1]) as tmp_file:
+                    response = requests.get(audio_url, stream=True)
+                    response.raise_for_status()
+                    for chunk in response.iter_content(chunk_size=8192):
+                        tmp_file.write(chunk)
+                    temp_audio_path = tmp_file.name
+
+                try:
+                    if settings.STT_PROVIDER == "local_whisper":
+                        from app.services.transcription import get_transcription_service
+                        transcription_service = get_transcription_service(
+                            model_size=settings.WHISPER_MODEL_SIZE,
+                            enable_diarization=settings.ENABLE_DIARIZATION
+                        )
+                        result = transcription_service.transcribe(temp_audio_path)
+
+                        # Normalize result format from local Whisper
+                        normalized_result = {
+                            "full_transcript": result.get("text", ""),
+                            "segments": result.get("segments", []),
+                            "language": result.get("language", "en"),
+                            "confidence": 0.95,
+                            "duration_seconds": result.get("duration", 0),
+                            "num_speakers": len(set(seg.get("speaker", "SPEAKER_00") for seg in result.get("segments", [])))
+                        }
+                    else:
+                        # OpenAI Whisper API
+                        from app.services.speech_to_text import SpeechToTextService
+                        transcription_service = SpeechToTextService(provider=settings.STT_PROVIDER)
+                        normalized_result = transcription_service.transcribe(
+                            audio_file_path=temp_audio_path,
+                            speaker_diarization=settings.ENABLE_DIARIZATION
+                        )
+                finally:
+                    # Clean up temp file
+                    if os.path.exists(temp_audio_path):
+                        os.remove(temp_audio_path)
+                        logger.info(f"Deleted temporary audio file: {temp_audio_path}")
         else:
-            # Use cloud API (AssemblyAI or OpenAI Whisper)
-            from app.services.speech_to_text import SpeechToTextService
-            transcription_service = SpeechToTextService(provider=settings.STT_PROVIDER)
-            normalized_result = transcription_service.transcribe(
-                audio_file_path=str(audio_path),
-                speaker_diarization=settings.ENABLE_DIARIZATION
-            )
+            # Local storage - use file path directly
+            audio_path = storage.get_full_path(recording.file_path)
+
+            # Transcribe based on configured provider
+            if settings.STT_PROVIDER == "local_whisper":
+                # Use local Whisper + pyannote diarization
+                from app.services.transcription import get_transcription_service
+                transcription_service = get_transcription_service(
+                    model_size=settings.WHISPER_MODEL_SIZE,
+                    enable_diarization=settings.ENABLE_DIARIZATION
+                )
+                result = transcription_service.transcribe(audio_path)
+
+                # Normalize result format from local Whisper
+                normalized_result = {
+                    "full_transcript": result.get("text", ""),
+                    "segments": result.get("segments", []),
+                    "language": result.get("language", "en"),
+                    "confidence": 0.95,
+                    "duration_seconds": result.get("duration", 0),
+                    "num_speakers": len(set(seg.get("speaker", "SPEAKER_00") for seg in result.get("segments", [])))
+                }
+            else:
+                # Use cloud API (AssemblyAI or OpenAI Whisper)
+                from app.services.speech_to_text import SpeechToTextService
+                transcription_service = SpeechToTextService(provider=settings.STT_PROVIDER)
+                normalized_result = transcription_service.transcribe(
+                    audio_file_path=str(audio_path),
+                    speaker_diarization=settings.ENABLE_DIARIZATION
+                )
 
         # Save transcript to database
         transcript = Transcript(
