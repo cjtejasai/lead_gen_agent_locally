@@ -14,6 +14,7 @@ import { apiClient, API_URL } from '@/lib/api'
 type RecordingStatus = 'idle' | 'recording' | 'paused' | 'stopped' | 'uploading' | 'diarizing' | 'transcribing' | 'generating_leads' | 'complete'
 type ActiveTab = 'record' | 'upload'
 
+
 interface AudioDevice {
   deviceId: string
   label: string
@@ -140,9 +141,14 @@ export default function DhwaniPage() {
         const totalSize = audioChunksRef.current.reduce((sum, chunk) => sum + chunk.size, 0)
         console.log('Recording stopped - Total chunks:', audioChunksRef.current.length, 'Total size:', totalSize, 'bytes')
 
+        // FIX: Don't create blob if no audio data - abort recording
         if (totalSize === 0) {
           console.error('No audio data captured!')
-          alert('Recording failed: No audio data captured. Please check microphone permissions.')
+          alert('Recording failed: No audio data captured. Please check microphone permissions or try a different microphone.')
+          setStatus('idle')
+          setAudioBlob(null)
+          stream.getTracks().forEach(track => track.stop())
+          return  // Stop here - don't create empty blob
         }
 
         const audioBlob = new Blob(audioChunksRef.current, { type: mimeType })
@@ -155,12 +161,27 @@ export default function DhwaniPage() {
         }, 200)
       }
 
-      // FIX 4: Use 250ms timeslice for reliable chunk collection
-      // Flushes 4 times per second - prevents buffer overflow and dropped frames
-      mediaRecorder.start(250)
+      // Add error handler for MediaRecorder
+      mediaRecorder.onerror = (event) => {
+        console.error('MediaRecorder error:', event)
+        alert('Recording error occurred. Please try again.')
+        setStatus('idle')
+      }
+
+      // FIX 4: Smart timeslice based on mimeType
+      // Safari/iOS with audio/mp4 IGNORES timeslice - only flush on stop
+      // Chrome/Firefox with webm/opus supports timeslice properly
+      if (mimeType === 'audio/mp4') {
+        console.log('Using MP4 - no timeslice (Safari/iOS workaround)')
+        mediaRecorder.start()  // No timeslice for MP4
+      } else {
+        console.log('Using WebM/Opus - 250ms timeslice')
+        mediaRecorder.start(250)  // 250ms chunks for webm
+      }
+
       setStatus('recording')
       timerRef.current = setInterval(() => setRecordingTime(prev => prev + 1), 1000)
-      console.log('Recording started with mimeType:', mimeType, '(250ms chunks)')
+      console.log('Recording started with mimeType:', mimeType)
     } catch (error) {
       console.error('Error starting recording:', error)
       alert('Failed to start recording. Please check microphone permissions.')
@@ -216,6 +237,14 @@ export default function DhwaniPage() {
   const uploadRecording = async () => {
     if (!audioBlob) return
 
+    // Validate audioBlob size
+    if (audioBlob.size === 0) {
+      alert('Recording is empty (0 bytes). Please try recording again.')
+      setStatus('idle')
+      setAudioBlob(null)
+      return
+    }
+
     // Validate mandatory event fields
     if (!eventName || !eventDate) {
       alert('Please fill in Event Name and Event Date before uploading')
@@ -240,7 +269,24 @@ export default function DhwaniPage() {
       const token = localStorage.getItem('token')
       const formData = new FormData()
       const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
-      const filename = activeTab === 'record' ? `recording_${timestamp}.webm` : `upload_${timestamp}.${audioBlob.type.split('/')[1]}`
+
+      // FIX: Match file extension to MIME type
+      let extension = 'webm'
+      if (activeTab === 'record') {
+        // Derive extension from blob MIME type
+        if (audioBlob.type.includes('mp4')) {
+          extension = 'm4a'
+        } else if (audioBlob.type.includes('webm')) {
+          extension = 'webm'
+        } else if (audioBlob.type.includes('ogg')) {
+          extension = 'ogg'
+        }
+      } else {
+        // For uploads, use blob type
+        extension = audioBlob.type.split('/')[1] || 'webm'
+      }
+
+      const filename = `recording_${timestamp}.${extension}`
 
       console.log('Generated filename:', filename)
       console.log('Appending to FormData with filename:', filename)
