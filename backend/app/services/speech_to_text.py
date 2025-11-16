@@ -226,11 +226,14 @@ class SpeechToTextService:
 
         num_speakers = len(set(s["speaker_id"] for s in segments)) if segments else 1
 
+        # Get language code from json_response (AssemblyAI detected language)
+        detected_language = transcript.json_response.get("language_code", "en")
+
         return {
             "full_transcript": full_transcript,
             "segments": segments,
             "num_speakers": num_speakers,
-            "language": transcript.language_code or "en",
+            "language": detected_language,
             "confidence": transcript.confidence or 0.0,
             "duration_seconds": transcript.audio_duration or 0,
         }
