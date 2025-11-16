@@ -53,15 +53,17 @@ class LeadGenerationService:
 
         transcript = recording.transcript
 
-        # Create temporary transcript file for the crew
-        temp_dir = Path("temp_transcripts")
-        temp_dir.mkdir(exist_ok=True)
-
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        transcript_file = temp_dir / f"transcript_{recording_id}_{timestamp}.txt"
+        # Create temporary transcript file for the crew (with guaranteed unique filename)
+        import tempfile
+        temp_file = tempfile.NamedTemporaryFile(
+            mode='w',
+            suffix='.txt',
+            prefix=f'transcript_{recording_id}_',
+            delete=False  # We'll delete it manually after processing
+        )
 
         # Write full transcript with speaker labels
-        with open(transcript_file, 'w') as f:
+        with temp_file as f:
             f.write(f"Recording: {recording.title}\n")
             f.write(f"Date: {recording.created_at}\n")
             f.write(f"Duration: {recording.duration_seconds}s\n")
@@ -82,12 +84,16 @@ class LeadGenerationService:
         db.commit()
         db.refresh(job)
 
+        # Get the temp file path
+        transcript_file_path = temp_file.name
+
         logger.info(f"Running Lakshya for recording {recording_id}, job {job.id}")
+        logger.info(f"Temp transcript file: {transcript_file_path}")
 
         try:
             # Run the Lyncsea Crew
             result = self.crew.run(
-                transcript_file=str(transcript_file),
+                transcript_file=transcript_file_path,
                 recipient_email=recipient_email
             )
 
@@ -148,7 +154,9 @@ class LeadGenerationService:
             db.commit()
 
             # Clean up temp file
-            transcript_file.unlink()
+            if os.path.exists(transcript_file_path):
+                os.remove(transcript_file_path)
+                logger.info(f"Deleted temp transcript file: {transcript_file_path}")
 
             logger.info(f"Lead generation completed for recording {recording_id}. Found {job.leads_found} leads")
 
@@ -172,8 +180,9 @@ class LeadGenerationService:
             db.commit()
 
             # Clean up temp file
-            if transcript_file.exists():
-                transcript_file.unlink()
+            if os.path.exists(transcript_file_path):
+                os.remove(transcript_file_path)
+                logger.info(f"Deleted temp transcript file after error: {transcript_file_path}")
 
             return {
                 "success": False,
