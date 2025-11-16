@@ -155,11 +155,12 @@ export default function DhwaniPage() {
         }, 200)
       }
 
-      // FIX 4: Remove timeslice to capture complete audio (not 1-second chunks)
-      mediaRecorder.start()  // Changed from start(1000)
+      // FIX 4: Use 250ms timeslice for reliable chunk collection
+      // Flushes 4 times per second - prevents buffer overflow and dropped frames
+      mediaRecorder.start(250)
       setStatus('recording')
       timerRef.current = setInterval(() => setRecordingTime(prev => prev + 1), 1000)
-      console.log('Recording started with mimeType:', mimeType)
+      console.log('Recording started with mimeType:', mimeType, '(250ms chunks)')
     } catch (error) {
       console.error('Error starting recording:', error)
       alert('Failed to start recording. Please check microphone permissions.')
