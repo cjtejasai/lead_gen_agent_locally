@@ -336,6 +336,23 @@ export default function DhwaniPage() {
     }
   }
 
+  const playRecording = async (id: number) => {
+    try {
+      const token = localStorage.getItem('token')
+      const data = await apiClient.get(`/api/v1/recordings/${id}/play`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+
+      // Open audio in new tab or play inline
+      if (data.playback_url) {
+        window.open(data.playback_url, '_blank')
+      }
+    } catch (error) {
+      console.error('Error playing recording:', error)
+      alert('Failed to load audio playback')
+    }
+  }
+
   // Pagination
   const totalPages = Math.ceil(recordings.length / recordingsPerPage)
   const paginatedRecordings = recordings.slice(
@@ -620,14 +637,23 @@ export default function DhwaniPage() {
                             </span>
                             <span>{new Date(recording.created_at).toLocaleDateString()}</span>
                           </div>
-                          {recording.status === 'completed' && (
-                            <Link href={`/transcript/${recording.id}`}>
-                              <button className="px-3 py-1 text-xs bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors flex items-center gap-1">
-                                <FileText className="w-3 h-3" />
-                                View Transcript
-                              </button>
-                            </Link>
-                          )}
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => playRecording(recording.id)}
+                              className="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors flex items-center gap-1"
+                            >
+                              <Play className="w-3 h-3" />
+                              Play Audio
+                            </button>
+                            {recording.status === 'completed' && (
+                              <Link href={`/transcript/${recording.id}`}>
+                                <button className="px-3 py-1 text-xs bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors flex items-center gap-1">
+                                  <FileText className="w-3 h-3" />
+                                  View Transcript
+                                </button>
+                              </Link>
+                            )}
+                          </div>
                         </div>
                       </div>
                     ))}
