@@ -162,21 +162,46 @@ async def get_recording(recording_id: int, db: Session = Depends(get_db)):
 
 @router.delete("/{recording_id}")
 async def delete_recording(recording_id: int, db: Session = Depends(get_db)):
-    """Delete recording"""
+    """Delete recording and all related data"""
+    from app.models.database import Lead, LeadGenerationJob, Transcript, TranscriptSegment
+
     recording = db.query(Recording).filter(Recording.id == recording_id).first()
 
     if not recording:
         raise HTTPException(status_code=404, detail="Recording not found")
 
-    # Delete file from storage
-    storage.delete_file(recording.file_path)
+    try:
+        # Delete related records in correct order (respecting foreign keys)
 
-    # Delete from database (cascade will handle related records)
-    db.delete(recording)
-    db.commit()
+        # 1. Delete leads
+        db.query(Lead).filter(Lead.recording_id == recording_id).delete()
 
-    logger.info(f"Recording deleted: ID={recording_id}")
-    return {"message": "Recording deleted successfully"}
+        # 2. Delete lead generation jobs
+        db.query(LeadGenerationJob).filter(LeadGenerationJob.recording_id == recording_id).delete()
+
+        # 3. Delete transcript segments (if transcript exists)
+        if recording.transcript:
+            db.query(TranscriptSegment).filter(
+                TranscriptSegment.transcript_id == recording.transcript.id
+            ).delete()
+
+            # 4. Delete transcript
+            db.query(Transcript).filter(Transcript.recording_id == recording_id).delete()
+
+        # 5. Delete file from storage
+        storage.delete_file(recording.file_path)
+
+        # 6. Delete recording itself
+        db.delete(recording)
+        db.commit()
+
+        logger.info(f"Recording deleted: ID={recording_id} (including all related data)")
+        return {"message": "Recording and all related data deleted successfully"}
+
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Failed to delete recording {recording_id}: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to delete recording: {str(e)}")
 
 
 def trigger_lead_generation(recording_id: int, user_email: str, db_session):
