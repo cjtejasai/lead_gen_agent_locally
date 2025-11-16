@@ -114,9 +114,10 @@ async def list_recordings(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """List recordings for the current authenticated user"""
+    """List recordings for the current authenticated user (excluding soft-deleted)"""
     recordings = db.query(Recording).filter(
-        Recording.user_id == current_user.id
+        Recording.user_id == current_user.id,
+        Recording.deleted_at.is_(None)  # Exclude soft-deleted recordings
     ).order_by(Recording.created_at.desc()).offset(skip).limit(limit).all()  # Order by most recent first
 
     return [
@@ -162,7 +163,11 @@ async def get_recording(recording_id: int, db: Session = Depends(get_db)):
 
 @router.delete("/{recording_id}")
 async def delete_recording(recording_id: int, db: Session = Depends(get_db)):
-    """Delete recording and all related data"""
+    """
+    Smart delete: Soft delete for processed recordings, hard delete for unprocessed
+    - If recording has leads/transcripts → Soft delete (restorable)
+    - If recording is unprocessed → Hard delete (permanent)
+    """
     from app.models.database import Lead, LeadGenerationJob, Transcript, TranscriptSegment
 
     recording = db.query(Recording).filter(Recording.id == recording_id).first()
@@ -171,32 +176,42 @@ async def delete_recording(recording_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Recording not found")
 
     try:
-        # Delete related records in correct order (respecting foreign keys)
+        # Check if recording has processed data
+        has_leads = db.query(Lead).filter(Lead.recording_id == recording_id).count() > 0
+        has_transcript = recording.transcript is not None
 
-        # 1. Delete leads
-        db.query(Lead).filter(Lead.recording_id == recording_id).delete()
+        if has_leads or has_transcript:
+            # SOFT DELETE - Recording has valuable processed data
+            recording.deleted_at = datetime.utcnow()
+            db.commit()
 
-        # 2. Delete lead generation jobs
-        db.query(LeadGenerationJob).filter(LeadGenerationJob.recording_id == recording_id).delete()
+            logger.info(f"Recording soft-deleted: ID={recording_id} (has processed data, restorable)")
+            return {
+                "message": "Recording archived (soft deleted)",
+                "type": "soft_delete",
+                "restorable": True,
+                "reason": "Recording has processed data (leads/transcripts)"
+            }
+        else:
+            # HARD DELETE - Unprocessed recording, safe to permanently delete
 
-        # 3. Delete transcript segments (if transcript exists)
-        if recording.transcript:
-            db.query(TranscriptSegment).filter(
-                TranscriptSegment.transcript_id == recording.transcript.id
-            ).delete()
+            # 1. Delete lead generation jobs (if any)
+            db.query(LeadGenerationJob).filter(LeadGenerationJob.recording_id == recording_id).delete()
 
-            # 4. Delete transcript
-            db.query(Transcript).filter(Transcript.recording_id == recording_id).delete()
+            # 2. Delete file from storage
+            storage.delete_file(recording.file_path)
 
-        # 5. Delete file from storage
-        storage.delete_file(recording.file_path)
+            # 3. Delete recording from database
+            db.delete(recording)
+            db.commit()
 
-        # 6. Delete recording itself
-        db.delete(recording)
-        db.commit()
-
-        logger.info(f"Recording deleted: ID={recording_id} (including all related data)")
-        return {"message": "Recording and all related data deleted successfully"}
+            logger.info(f"Recording hard-deleted: ID={recording_id} (no processed data)")
+            return {
+                "message": "Recording permanently deleted",
+                "type": "hard_delete",
+                "restorable": False,
+                "reason": "Recording had no processed data"
+            }
 
     except Exception as e:
         db.rollback()

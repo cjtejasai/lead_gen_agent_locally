@@ -77,6 +77,7 @@ class Recording(Base):
     created_at = Column(DateTime, default=datetime.utcnow, index=True)
     processing_started_at = Column(DateTime)
     processing_completed_at = Column(DateTime)
+    deleted_at = Column(DateTime, nullable=True)  # Soft delete timestamp
 
     # Relationships
     user = relationship("User", back_populates="recordings")
