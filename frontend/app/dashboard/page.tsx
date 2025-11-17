@@ -112,6 +112,9 @@ export default function Dashboard() {
               <Link href="/lakshya" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">
                 💼 Lakshya
               </Link>
+              <Link href="/action-items" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">
+                ✅ Action Items
+              </Link>
             </div>
 
             {/* Search */}
