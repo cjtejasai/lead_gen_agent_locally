@@ -11,6 +11,10 @@ import {
   Bell,
   Search,
   LogOut,
+  Calendar,
+  Clock,
+  AlertCircle,
+  CheckCircle2,
 } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -274,8 +278,9 @@ export default function Dashboard() {
             <RecentRecordings />
           </div>
 
-          {/* Right Column - Recent Activity */}
+          {/* Right Column - Recent Activity & Action Items */}
           <div className="space-y-6">
+            <UpcomingActionItems />
             <RecentActivity />
           </div>
         </div>
@@ -472,6 +477,137 @@ function AgentCard({
         </div>
       </motion.div>
     </Link>
+  )
+}
+
+function UpcomingActionItems() {
+  const [actionItems, setActionItems] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchActionItems = async () => {
+      try {
+        const token = localStorage.getItem('token')
+        if (!token) return
+
+        const data = await apiClient.get('/api/v1/action-items/?status=pending', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
+
+        // Sort by deadline and take top 5
+        const sorted = data
+          .filter((item: any) => item.deadline) // Only items with deadlines
+          .sort((a: any, b: any) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime())
+          .slice(0, 5)
+
+        setActionItems(sorted)
+      } catch (error) {
+        console.error('Error fetching action items:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchActionItems()
+  }, [])
+
+  const formatDeadline = (deadline: string) => {
+    const date = new Date(deadline)
+    const now = new Date()
+    const diffDays = Math.ceil((date.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+
+    if (diffDays < 0) return 'Overdue'
+    if (diffDays === 0) return 'Today'
+    if (diffDays === 1) return 'Tomorrow'
+    if (diffDays < 7) return `${diffDays} days`
+    return date.toLocaleDateString()
+  }
+
+  const getDeadlineColor = (deadline: string) => {
+    const date = new Date(deadline)
+    const now = new Date()
+    const diffDays = Math.ceil((date.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+
+    if (diffDays < 0) return 'text-red-600'
+    if (diffDays === 0) return 'text-orange-600'
+    if (diffDays <= 3) return 'text-yellow-600'
+    return 'text-green-600'
+  }
+
+  if (loading) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.25 }}
+        className="glass-effect rounded-2xl p-6 shadow-lg"
+      >
+        <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white flex items-center gap-2">
+          <CheckCircle2 className="w-5 h-5 text-purple-600" />
+          Upcoming Actions
+        </h3>
+        <div className="text-center py-8 text-gray-500">Loading...</div>
+      </motion.div>
+    )
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: 0.25 }}
+      className="glass-effect rounded-2xl p-6 shadow-lg"
+    >
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+          <CheckCircle2 className="w-5 h-5 text-purple-600" />
+          Upcoming Actions
+        </h3>
+        <Link href="/action-items">
+          <span className="text-sm text-blue-600 dark:text-blue-400 hover:underline cursor-pointer">
+            View all →
+          </span>
+        </Link>
+      </div>
+
+      {actionItems.length === 0 ? (
+        <div className="text-center py-8 text-gray-500">
+          <Calendar className="w-12 h-12 mx-auto mb-2 opacity-50" />
+          <p className="text-sm">No upcoming actions</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {actionItems.map((item) => (
+            <div
+              key={item.id}
+              className="p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-700 transition-colors"
+            >
+              <div className="flex items-start justify-between gap-2 mb-2">
+                <p className="text-sm font-medium text-gray-900 dark:text-white line-clamp-2">
+                  {item.action}
+                </p>
+                {item.priority === 'high' && (
+                  <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0" />
+                )}
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <div className="flex items-center gap-1">
+                  <Clock className="w-3 h-3" />
+                  <span className={getDeadlineColor(item.deadline)}>
+                    {formatDeadline(item.deadline)}
+                  </span>
+                </div>
+                {item.speaker_name && (
+                  <span className="text-gray-500 truncate max-w-[100px]">
+                    {item.speaker_name}
+                  </span>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </motion.div>
   )
 }
 
