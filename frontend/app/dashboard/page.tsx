@@ -117,7 +117,7 @@ export default function Dashboard() {
                 💼 Lakshya
               </Link>
               <Link href="/action-items" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">
-                ✅ Action Items
+                ✅ Karya
               </Link>
             </div>
 

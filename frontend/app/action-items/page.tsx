@@ -217,7 +217,7 @@ END:VCALENDAR`
               </Link>
               <span className="text-2xl font-bold text-gray-400">|</span>
               <span className="text-2xl font-bold bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
-                ✅ Action Items
+                ✅ Karya - Action Manager
               </span>
             </div>
             <Link href="/dashboard">
@@ -312,11 +312,11 @@ END:VCALENDAR`
         {/* Action Items List */}
         <div className="space-y-4">
           {loading ? (
-            <div className="text-center py-12 text-gray-500">Loading action items...</div>
+            <div className="text-center py-12 text-gray-500">Loading Karya...</div>
           ) : filteredItems.length === 0 ? (
             <div className="glass-effect rounded-2xl p-12 text-center">
               <Calendar className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-              <p className="text-gray-600">No action items found</p>
+              <p className="text-gray-600">No tasks found</p>
             </div>
           ) : (
             filteredItems.map((item) => (
